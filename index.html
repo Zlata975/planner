@@ -169,6 +169,7 @@ input[type="number"] { width:55px; text-align:center; flex:0 0 55px!important; }
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <script>
+document.addEventListener('DOMContentLoaded', function() {
 // Firebase init
 try {
 firebase.initializeApp({
@@ -192,7 +193,6 @@ let pendingLogin=null, resetMode='register', currentScreen='calendar';
 let localData = { settings:{}, categories:[], tasks:[], notes:[] };
 let syncTimeout = null;
 
-// Локальные функции работают мгновенно
 function norm(s){return s.trim().toLowerCase().replace(/\s+/g,'');}
 function hashPassword(pw){let h=0;for(let i=0;i<pw.length;i++){h=((h<<5)-h)+pw.charCodeAt(i);h|=0;}return 'pxx_'+Math.abs(h).toString(36);}
 function getUsers(){try{return JSON.parse(localStorage.fd_users||'{}');}catch(e){return{};}}
@@ -219,7 +219,7 @@ function loadLocalData(){
 const saved = localStorage.getItem('fd_data_'+user);
 if(saved) try { localData = JSON.parse(saved); } catch(e) { localData = {settings:{},categories:[],tasks:[],notes:[]}; }
 else localData = {settings:{theme:'dark',accent:'#A9DEF9',accentLight:'#7ab8d4',firstDay:'1',dayStart:'06:00',dayEnd:'23:00'}, categories:JSON.parse(JSON.stringify(DEF_CATS)), tasks:[], notes:[]};
-document.body.className = localData.settings.theme==='light'?'light-theme':'';
+if (document.body) document.body.className = localData.settings.theme==='light'?'light-theme':'';
 applyAccent(localData.settings.accent||'#A9DEF9', localData.settings.accentLight||'#7ab8d4');
 }
 
@@ -246,7 +246,6 @@ try {
 const doc = await db.collection('users').doc(user).get();
 if(doc.exists){
 const cloud = doc.data();
-// Слияние: облачные данные дополняют локальные (если локальных нет)
 if(!localData.tasks.length && cloud.tasks) localData.tasks = cloud.tasks;
 if(!localData.notes.length && cloud.notes) localData.notes = cloud.notes;
 if(cloud.settings && !localData.settings.accent) localData.settings = cloud.settings;
@@ -256,14 +255,21 @@ saveLocalData();
 } catch(e) { console.warn('Load from cloud error:', e); }
 }
 
-// Адаптеры для совместимости с существующим кодом
 function data(){ return localData; }
 function save(update){ Object.assign(localData, update); saveLocalData(); }
 function sett(k,d){ return (localData.settings && localData.settings[k]!==undefined) ? localData.settings[k] : d; }
 function sets(k,v){ if(!localData.settings) localData.settings={}; localData.settings[k]=v; save({settings:localData.settings}); }
 
-function applyAccent(c,l){const r=document.documentElement,i=document.body.classList.contains('light-theme'),a=i?(l||c):c;r.style.setProperty('--accent',a);r.style.setProperty('--accent-light',l||c);const h=a.replace('#','');r.style.setProperty('--accent-rgb',parseInt(h.substring(0,2),16)+','+parseInt(h.substring(2,4),16)+','+parseInt(h.substring(4,6),16));}
+function applyAccent(c,l){
+const root = document.documentElement;
+if (!root) return;
+const i=document.body.classList.contains('light-theme'), a=i?(l||c):c;
+root.style.setProperty('--accent',a); root.style.setProperty('--accent-light',l||c);
+const h=a.replace('#','');
+root.style.setProperty('--accent-rgb',parseInt(h.substring(0,2),16)+','+parseInt(h.substring(2,4),16)+','+parseInt(h.substring(4,6),16));
+}
 function openSets(){
+if (!document.getElementById('sTheme')) return;
 document.getElementById('sTheme').value = sett('theme','dark');
 document.getElementById('sFirstDay').value = sett('firstDay','1');
 document.getElementById('sStart').value = sett('dayStart','06:00');
@@ -273,14 +279,15 @@ document.getElementById('setMod').classList.add('show');
 }
 function selectAccent(c,l){ applyAccent(c,l); sets('accent',c); sets('accentLight',l); openSets(); }
 function applyTheme(){
-const t=document.getElementById('sTheme').value;
-document.body.className=t==='light'?'light-theme':'';
-sets('theme',t);
+const t=document.getElementById('sTheme');
+if (!t) return;
+document.body.className=t.value==='light'?'light-theme':'';
+sets('theme',t.value);
 applyAccent(sett('accent','#A9DEF9'), sett('accentLight','#7ab8d4'));
 }
 function saveBounds(){
-sets('dayStart', document.getElementById('sStart').value);
-sets('dayEnd', document.getElementById('sEnd').value);
+sets('dayStart', document.getElementById('sStart')?.value || '06:00');
+sets('dayEnd', document.getElementById('sEnd')?.value || '23:00');
 }
 
 function getNotes(){ return localData.notes||[]; }
@@ -288,7 +295,9 @@ function saveNotes(n){ save({notes:n}); }
 function openNotes(){ currentScreen='notes'; document.getElementById('calendarView').style.display='none'; document.getElementById('notesView').style.display='flex'; renderNotes(); }
 function renderNotes(){
 const notes = getNotes().sort((a,b)=>b.date-a.date);
-document.getElementById('notesContainer').innerHTML = notes.length===0 ? '<div style="color:var(--sub);text-align:center;padding:40px;">Нет заметок. Создайте первую!</div>' :
+const container = document.getElementById('notesContainer');
+if (!container) return;
+container.innerHTML = notes.length===0 ? '<div style="color:var(--sub);text-align:center;padding:40px;">Нет заметок. Создайте первую!</div>' :
 notes.map(n=>`<div class="note-card"><div class="note-date">${new Date(n.date).toLocaleString()}</div><textarea onchange="updateNote('${n.id}',this.value)">${n.text}</textarea><div class="note-actions"><button class="btn" onclick="deleteNote('${n.id}')">🗑️ Удалить</button></div></div>`).join('');
 }
 function addNote(){ const notes = getNotes(); notes.push({id:'n'+Date.now(), text:'', date:Date.now()}); saveNotes(notes); renderNotes(); }
@@ -300,31 +309,34 @@ document.addEventListener('click',function(e){ if(e.target.closest('.logo')||e.t
 function cats(){ if(!localData.categories||localData.categories.length===0){ localData.categories = JSON.parse(JSON.stringify(DEF_CATS)); save({categories:localData.categories}); } return localData.categories; }
 function catById(id){ return cats().find(c=>c.id===id); }
 function saveCats(c){ save({categories:c}); }
-function renderCatSelect(){ document.getElementById('tc').innerHTML = cats().map(c=>`<option value="${c.id}">${c.emoji} ${c.name}</option>`).join(''); }
+function renderCatSelect(){ const sel = document.getElementById('tc'); if (sel) sel.innerHTML = cats().map(c=>`<option value="${c.id}">${c.emoji} ${c.name}</option>`).join(''); }
 function openCats(){
+if (!document.getElementById('catMod')) return;
 document.getElementById('catList').innerHTML = cats().map(c=>`<div class="cat-item"><span>${c.emoji}</span><span class="cat-dot" style="background:${c.color};"></span><span>${c.name}</span><button class="cat-del" onclick="delCat('${c.id}')">Удалить</button></div>`).join('')||'<div style="color:var(--sub);font-size:11px;text-align:center;">Нет разделов</div>';
 document.getElementById('palette').innerHTML = PALETTE.map(c=>`<div class="swatch${c===selColor?' sel':''}" style="background:${c};" onclick="selColor='${c}';openCats();"></div>`).join('');
 document.getElementById('emojiGrid').innerHTML = EMOJIS.map(e=>`<button onclick="selEmoji='${e}';document.getElementById('emojiBtn').textContent='${e}';document.getElementById('emojiGrid').style.display='none';">${e}</button>`).join('');
 document.getElementById('catMod').classList.add('show');
 }
 function toggleEmoji(){ document.getElementById('emojiGrid').style.display = document.getElementById('emojiGrid').style.display==='none'?'grid':'none'; }
-function addCat(){ const n=document.getElementById('newCatName').value.trim(); if(!n)return; const c=cats(); c.push({id:'c'+Date.now(),name:n,emoji:selEmoji,color:selColor}); saveCats(c); document.getElementById('newCatName').value=''; selEmoji='📁'; selColor=PALETTE[0]; renderCatSelect(); openCats(); drawCal(); }
+function addCat(){ const n=document.getElementById('newCatName')?.value.trim(); if(!n)return; const c=cats(); c.push({id:'c'+Date.now(),name:n,emoji:selEmoji,color:selColor}); saveCats(c); document.getElementById('newCatName').value=''; selEmoji='📁'; selColor=PALETTE[0]; renderCatSelect(); openCats(); drawCal(); }
 function delCat(id){ saveCats(cats().filter(c=>c.id!==id)); saveTasks(tasks().filter(t=>t.catId!==id)); renderCatSelect(); openCats(); drawCal(); }
 function tasks(){ return localData.tasks||[]; }
 function saveTasks(t){ save({tasks:t}); }
 function addTask(){
-const n=document.getElementById('tn').value.trim(), cid=document.getElementById('tc').value;
-const ti=document.getElementById('tt').value, d=parseInt(document.getElementById('td').value)||30;
-const u=document.getElementById('tu').value, f=document.getElementById('tf').checked;
+const tn = document.getElementById('tn');
+if (!tn) return;
+const n=tn.value.trim(), cid=document.getElementById('tc')?.value;
+const ti=document.getElementById('tt')?.value, d=parseInt(document.getElementById('td')?.value)||30;
+const u=document.getElementById('tu')?.value, f=document.getElementById('tf')?.checked;
 if(!n)return; let m=u==='h'?d*60:d; if(m<5)m=5;
 const ds=curDate.toISOString().split('T')[0], s=new Date(ds+'T'+ti+':00'), e=new Date(s.getTime()+m*60000);
 const c=catById(cid), all=tasks();
 all.push({id:'t'+Date.now(),title:n,start:s.toISOString(),end:e.toISOString(),duration:m,catId:cid,color:c?.color||PALETTE[0],emoji:c?.emoji||'📌',fixed:f});
-saveTasks(all); document.getElementById('tn').value=''; drawCal();
+saveTasks(all); tn.value=''; drawCal();
 }
 function delTask(id){ saveTasks(tasks().filter(t=>t.id!==id)); drawCal(); }
 function updateTask(id,ns,ne){ const all=tasks(); const t=all.find(t=>t.id===id); if(t&&!t.fixed){ t.start=ns.toISOString(); t.end=ne.toISOString(); saveTasks(all); } }
-function setView(m){ viewMode=m; document.getElementById('btnDay').classList.toggle('active',m==='day'); document.getElementById('btnWeek').classList.toggle('active',m==='week'); document.getElementById('btnMonth').classList.toggle('active',m==='month'); drawCal(); }
+function setView(m){ viewMode=m; document.getElementById('btnDay')?.classList.toggle('active',m==='day'); document.getElementById('btnWeek')?.classList.toggle('active',m==='week'); document.getElementById('btnMonth')?.classList.toggle('active',m==='month'); drawCal(); }
 function chView(d){ if(viewMode==='day')curDate.setDate(curDate.getDate()+d); else if(viewMode==='week')curDate.setDate(curDate.getDate()+d*7); else curDate.setMonth(curDate.getMonth()+d); drawCal(); }
 function goToday(){ curDate=new Date(); drawCal(); }
 function dayTasks(dt){ return tasks().filter(t=>t.start.startsWith(dt.toISOString().split('T')[0])); }
@@ -354,7 +366,7 @@ h+=`<div class="task-block${t.fixed?' fixed':''}" data-id="${t.id}" style="top:$
 });
 if(isToday&&showNow){ const nm=now.getHours()*60+now.getMinutes(); if(nm>=sh*60&&nm<=(eh+1)*60) h+=`<div class="now-line" style="top:${(nm-sh*60)/5*SLOT}px;"></div>`; }
 h+='</div>'; document.getElementById('grid').innerHTML=h; setupDayDrag(SLOT,sh);
-document.querySelectorAll('.day-slot').forEach(s=>s.addEventListener('click',function(e){ if(e.target.closest('.task-block'))return; document.getElementById('tt').value=String(parseInt(this.dataset.h)).padStart(2,'0')+':'+String(parseInt(this.dataset.m)).padStart(2,'0'); document.getElementById('tn').focus(); }));
+document.querySelectorAll('.day-slot').forEach(s=>s.addEventListener('click',function(e){ if(e.target.closest('.task-block'))return; document.getElementById('tt').value=String(parseInt(this.dataset.h)).padStart(2,'0')+':'+String(parseInt(this.dataset.m)).padStart(2,'0'); document.getElementById('tn')?.focus(); }));
 if(isToday){
 const nowH=now.getHours(), nowM=Math.floor(now.getMinutes()/5)*5;
 const targetSlot=document.querySelector(`.day-slot[data-h="${nowH}"][data-m="${nowM}"]`);
@@ -426,35 +438,124 @@ for(let i=0;i<pad;i++)h+='<div class="month-day"></div>';
 for(let d=1;d<=last.getDate();d++){ const dt=new Date(y,m,d), ds=dt.toISOString().split('T')[0], isToday=dt.toDateString()===new Date().toDateString(); h+=`<div class="month-day" onclick="curDate=new Date('${ds}');setView('day');"><div class="month-day-num" style="${isToday?'color:var(--accent);':''}">${d}</div>`; dayTasks(dt).slice(0,3).forEach(t=>h+=`<div class="month-task" style="background:${t.color};color:${isLight(t.color)?'#2d2a24':'#fff'};">${t.emoji||''}${t.title}</div>`); if(dayTasks(dt).length>3)h+=`<div style="font-size:9px;color:var(--sub);">+${dayTasks(dt).length-3}</div>`; h+='</div>'; }
 h+='</div>'; document.getElementById('grid').innerHTML=h;
 }
-function closeMod(id){ document.getElementById(id).classList.remove('show'); }
+function closeMod(id){ document.getElementById(id)?.classList.remove('show'); }
 document.addEventListener('click',e=>{ if(e.target.classList.contains('modal-bg')) e.target.classList.remove('show'); });
 
 function init(){
+if (!document.getElementById('tc')) return;
 renderCatSelect(); setView('day');
-const now=new Date(); document.getElementById('tt').value=String(now.getHours()).padStart(2,'0')+':'+String(Math.floor(now.getMinutes()/5)*5).padStart(2,'0');
+const now=new Date();
+const tt = document.getElementById('tt'); if (tt) tt.value = String(now.getHours()).padStart(2,'0')+':'+String(Math.floor(now.getMinutes()/5)*5).padStart(2,'0');
 setInterval(()=>{ if(user&&viewMode==='day'&&curDate.toDateString()===new Date().toDateString()) drawCal(); },60000);
-// Загружаем облачные данные в фоне
 loadFromCloud();
 }
 
-// Авторизация
-function goToPassword(){const i=document.getElementById('loginInput').value.trim();if(!i){document.getElementById('loginErr').textContent='Введите email или телефон';return;}pendingLogin=norm(i);const users=getUsers();if(!users[pendingLogin]){resetMode='register';document.getElementById('resetTitle').textContent='Новый аккаунт';document.getElementById('resetDesc').textContent='Придумайте пароль для '+i;showStep('stepReset');}else{document.getElementById('passwordLabel').textContent='Введите пароль для '+i;showStep('stepPassword');}document.getElementById('loginErr').textContent='';}
-function loginWithPassword(){const pw=document.getElementById('passwordInput').value;if(!pw){document.getElementById('passwordErr').textContent='Введите пароль';return;}const users=getUsers();if(!users[pendingLogin]||users[pendingLogin].password!==hashPassword(pw)){document.getElementById('passwordErr').textContent='Неверный пароль';return;}doLogin(pendingLogin,hashPassword(pw));}
-function setNewPassword(){const p1=document.getElementById('newPassword1').value,p2=document.getElementById('newPassword2').value;if(!p1||p1.length<4){document.getElementById('resetErr').textContent='Минимум 4 символа';return;}if(p1!==p2){document.getElementById('resetErr').textContent='Пароли не совпадают';return;}const users=getUsers();if(resetMode==='register'&&users[pendingLogin]&&users[pendingLogin].password){document.getElementById('resetErr').textContent='Аккаунт уже существует';return;}const hashedPw=hashPassword(p1);users[pendingLogin]={password:hashedPw};saveUsers(users);doLogin(pendingLogin,hashedPw);}
-function forgotPassword(){resetMode='reset';document.getElementById('resetTitle').textContent='Сброс пароля';document.getElementById('resetDesc').textContent='Придумайте новый пароль';document.getElementById('newPassword1').value='';document.getElementById('newPassword2').value='';document.getElementById('resetErr').textContent='';showStep('stepReset');}
-function goBackToLogin(){document.getElementById('passwordInput').value='';document.getElementById('passwordErr').textContent='';document.getElementById('newPassword1').value='';document.getElementById('newPassword2').value='';document.getElementById('resetErr').textContent='';showStep('stepLogin');}
-function changePassword(){const p1=document.getElementById('changePassword1').value,p2=document.getElementById('changePassword2').value,err=document.getElementById('changePasswordErr');if(!p1||p1.length<4){err.textContent='Минимум 4 символа';err.style.color='var(--danger)';return;}if(p1!==p2){err.textContent='Пароли не совпадают';err.style.color='var(--danger)';return;}const users=getUsers();if(!users[user])return;const hashedPw=hashPassword(p1);users[user].password=hashedPw;saveUsers(users);updateSession(hashedPw);document.getElementById('changePassword1').value='';document.getElementById('changePassword2').value='';err.style.color='var(--success)';err.textContent='✅ Пароль изменён!';setTimeout(()=>{err.textContent='';err.style.color='var(--danger)';},2000);}
-document.addEventListener('keydown',function(e){if(e.key==='Enter'){if(document.getElementById('stepLogin').classList.contains('active'))goToPassword();else if(document.getElementById('stepPassword').classList.contains('active'))loginWithPassword();else if(document.getElementById('stepReset').classList.contains('active'))setNewPassword();}});
-function updateSession(hashedPw){localStorage.setItem('fd_session',JSON.stringify({user:user,hash:hashedPw,expiry:Date.now()+30*24*60*60*1000}));}
-function doLogin(k,hashedPw){
-user=k; updateSession(hashedPw);
-document.getElementById('auth').style.display='none'; document.getElementById('app').style.display='flex';
-loadLocalData(); init();
+function goToPassword(){
+const input = document.getElementById('loginInput');
+const err = document.getElementById('loginErr');
+if (!input || !err) return;
+const i = input.value.trim();
+if (!i) { err.textContent = 'Введите email или телефон'; return; }
+pendingLogin = norm(i);
+const users = getUsers();
+if (!users[pendingLogin]) {
+resetMode = 'register';
+const rt = document.getElementById('resetTitle'); if (rt) rt.textContent = 'Новый аккаунт';
+const rd = document.getElementById('resetDesc'); if (rd) rd.textContent = 'Придумайте пароль для ' + i;
+showStep('stepReset');
+} else {
+const pl = document.getElementById('passwordLabel'); if (pl) pl.textContent = 'Введите пароль для ' + i;
+showStep('stepPassword');
 }
-function logout(){ user=null; localStorage.removeItem('fd_session'); document.getElementById('auth').style.display='flex'; document.getElementById('app').style.display='none'; showStep('stepLogin'); }
+err.textContent = '';
+}
+function loginWithPassword(){
+const pw = document.getElementById('passwordInput')?.value;
+if (!pw) { const err = document.getElementById('passwordErr'); if (err) err.textContent = 'Введите пароль'; return; }
+const users = getUsers();
+if (!users[pendingLogin] || users[pendingLogin].password !== hashPassword(pw)) {
+const err = document.getElementById('passwordErr'); if (err) err.textContent = 'Неверный пароль';
+return;
+}
+doLogin(pendingLogin, hashPassword(pw));
+}
+function setNewPassword(){
+const p1 = document.getElementById('newPassword1')?.value, p2 = document.getElementById('newPassword2')?.value;
+const err = document.getElementById('resetErr');
+if (!p1 || p1.length < 4) { if (err) err.textContent = 'Минимум 4 символа'; return; }
+if (p1 !== p2) { if (err) err.textContent = 'Пароли не совпадают'; return; }
+const users = getUsers();
+if (resetMode === 'register' && users[pendingLogin] && users[pendingLogin].password) {
+if (err) err.textContent = 'Аккаунт уже существует';
+return;
+}
+const hashedPw = hashPassword(p1);
+users[pendingLogin] = { password: hashedPw };
+saveUsers(users);
+doLogin(pendingLogin, hashedPw);
+}
+function forgotPassword(){
+resetMode='reset';
+const rt = document.getElementById('resetTitle'); if (rt) rt.textContent = 'Сброс пароля';
+const rd = document.getElementById('resetDesc'); if (rd) rd.textContent = 'Придумайте новый пароль';
+const p1 = document.getElementById('newPassword1'); if (p1) p1.value = '';
+const p2 = document.getElementById('newPassword2'); if (p2) p2.value = '';
+const err = document.getElementById('resetErr'); if (err) err.textContent = '';
+showStep('stepReset');
+}
+function goBackToLogin(){
+const pi = document.getElementById('passwordInput'); if (pi) pi.value = '';
+const pe = document.getElementById('passwordErr'); if (pe) pe.textContent = '';
+const p1 = document.getElementById('newPassword1'); if (p1) p1.value = '';
+const p2 = document.getElementById('newPassword2'); if (p2) p2.value = '';
+const re = document.getElementById('resetErr'); if (re) re.textContent = '';
+showStep('stepLogin');
+}
+function changePassword(){
+const p1 = document.getElementById('changePassword1')?.value, p2 = document.getElementById('changePassword2')?.value;
+const err = document.getElementById('changePasswordErr');
+if (!p1 || p1.length < 4) { if (err) { err.textContent = 'Минимум 4 символа'; err.style.color = 'var(--danger)'; } return; }
+if (p1 !== p2) { if (err) { err.textContent = 'Пароли не совпадают'; err.style.color = 'var(--danger)'; } return; }
+const users = getUsers();
+if (!users[user]) return;
+const hashedPw = hashPassword(p1);
+users[user].password = hashedPw;
+saveUsers(users);
+updateSession(hashedPw);
+const cp1 = document.getElementById('changePassword1'); if (cp1) cp1.value = '';
+const cp2 = document.getElementById('changePassword2'); if (cp2) cp2.value = '';
+if (err) { err.style.color = 'var(--success)'; err.textContent = '✅ Пароль изменён!'; }
+setTimeout(() => { if (err) { err.textContent = ''; err.style.color = 'var(--danger)'; } }, 2000);
+}
+document.addEventListener('keydown',function(e){
+if(e.key==='Enter'){
+if(document.getElementById('stepLogin')?.classList.contains('active')) goToPassword();
+else if(document.getElementById('stepPassword')?.classList.contains('active')) loginWithPassword();
+else if(document.getElementById('stepReset')?.classList.contains('active')) setNewPassword();
+}
+});
+function updateSession(hashedPw){ localStorage.setItem('fd_session', JSON.stringify({user:user, hash:hashedPw, expiry:Date.now()+30*24*60*60*1000})); }
+function doLogin(k, hashedPw){
+user = k;
+updateSession(hashedPw);
+document.getElementById('auth').style.display = 'none';
+document.getElementById('app').style.display = 'flex';
+loadLocalData();
+init();
+}
+function logout(){
+user = null;
+localStorage.removeItem('fd_session');
+document.getElementById('auth').style.display = 'flex';
+document.getElementById('app').style.display = 'none';
+showStep('stepLogin');
+}
 
-if(!checkSession()){ document.getElementById('auth').style.display='flex'; }
-document.getElementById('app').style.display='none';
+if (!checkSession()) {
+document.getElementById('auth').style.display = 'flex';
+}
+document.getElementById('app').style.display = 'none';
+});
 </script>
 </body>
 </html>
