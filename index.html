@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>FlexiDay Planner</title>
 
-<!-- PWA ИКОНКИ -->
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23A9DEF9'/%3E%3Cpath d='M35 30 L65 30 L65 35 L35 35 Z M35 42 L65 42 L65 47 L35 47 Z M35 54 L55 54 L55 59 L35 59 Z' fill='white'/%3E%3Ccircle cx='72' cy='28' r='7' fill='white'/%3E%3Ccircle cx='72' cy='56' r='5' fill='white'/%3E%3C/svg%3E">
-<link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%23A9DEF9'/%3E%3Ctext x='256' y='350' font-size='280' font-family='Arial' fill='white' text-anchor='middle' font-weight='bold'%3EF%3C/text%3E%3C/svg%3E">
-<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22FlexiDay%22%2C%22short_name%22%3A%22FlexiDay%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%231a1d2e%22%2C%22theme_color%22%3A%22%231a1d2e%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20512%20512'%3E%253Crect%20width%3D'512'%20height%3D'512'%20rx%3D'100'%20fill%3D'%2523A9DEF9'%2F%3E%253Ctext%20x%3D'256'%20y%3D'350'%20font-size%3D'280'%20font-family%3D'Arial'%20fill%3D'white'%20text-anchor%3D'middle'%20font-weight%3D'bold'%3EF%3C%2Ftext%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Crect x='3' y='4' width='18' height='18' rx='3' fill='%23A9DEF9'/%3E%3Crect x='3' y='4' width='18' height='6' rx='3' fill='%237ab8d4'/%3E%3Cline x1='8' y1='2' x2='8' y2='6' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3Cline x1='16' y1='2' x2='16' y2='6' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3Cline x1='8' y1='13' x2='12' y2='13' stroke='white' stroke-width='1.5' stroke-linecap='round'/%3E%3Cline x1='8' y1='17' x2='16' y2='17' stroke='white' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Crect x='3' y='4' width='18' height='18' rx='3' fill='%23A9DEF9'/%3E%3Crect x='3' y='4' width='18' height='6' rx='3' fill='%237ab8d4'/%3E%3Cline x1='8' y1='2' x2='8' y2='6' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3Cline x1='16' y1='2' x2='16' y2='6' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3Cline x1='8' y1='13' x2='12' y2='13' stroke='white' stroke-width='1.5' stroke-linecap='round'/%3E%3Cline x1='8' y1='17' x2='16' y2='17' stroke='white' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E">
+
 <meta name="theme-color" content="#1a1d2e">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="FlexiDay">
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22FlexiDay%20Planner%22%2C%22short_name%22%3A%22FlexiDay%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%231a1d2e%22%2C%22theme_color%22%3A%22%231a1d2e%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%3E%253Crect%20x%3D'3'%20y%3D'4'%20width%3D'18'%20height%3D'18'%20rx%3D'3'%20fill%3D'%2523A9DEF9'%2F%3E%253Crect%20x%3D'3'%20y%3D'4'%20width%3D'18'%20height%3D'6'%20rx%3D'3'%20fill%3D'%25237ab8d4'%2F%3E%253Cline%20x1%3D'8'%20y1%3D'2'%20x2%3D'8'%20y2%3D'6'%20stroke%3D'white'%20stroke-width%3D'2'%20stroke-linecap%3D'round'%2F%3E%253Cline%20x1%3D'16'%20y1%3D'2'%20x2%3D'16'%20y2%3D'6'%20stroke%3D'white'%20stroke-width%3D'2'%20stroke-linecap%3D'round'%2F%3E%253Cline%20x1%3D'8'%20y1%3D'13'%20x2%3D'12'%20y2%3D'13'%20stroke%3D'white'%20stroke-width%3D'1.5'%20stroke-linecap%3D'round'%2F%3E%253Cline%20x1%3D'8'%20y1%3D'17'%20x2%3D'16'%20y2%3D'17'%20stroke%3D'white'%20stroke-width%3D'1.5'%20stroke-linecap%3D'round'%2F%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%2224x24%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
 
 <style>
 :root {
@@ -170,7 +170,6 @@ input[type="number"] { width: 55px; text-align: center; flex: 0 0 55px !importan
 </head>
 <body>
 
-<!-- ВХОД -->
 <div class="auth-overlay" id="auth">
 <div class="auth-card active" id="stepLogin">
 <div class="auth-logo">📅</div>
@@ -203,30 +202,17 @@ input[type="number"] { width: 55px; text-align: center; flex: 0 0 55px !importan
 </div>
 </div>
 
-<!-- ПРИЛОЖЕНИЕ -->
 <div id="app" style="display:none;flex-direction:column;height:100vh;">
 <div class="header"><h1><span class="logo">📅</span>FlexiDay</h1><div style="display:flex;gap:4px;"><button class="btn" onclick="openNotes()">📝</button><button class="btn" onclick="openCats()">🎨</button><button class="btn" onclick="openSets()">⚙️</button><button class="btn" onclick="logout()">🚪</button></div></div>
-
 <div id="mainContent" style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
 <div id="calendarView" style="display:flex;flex-direction:column;height:100%;">
-<div class="panel">
-<div class="row"><input type="text" id="tn" placeholder="Название задачи"><select id="tc"></select></div>
-<div class="row"><input type="time" id="tt" value="12:00" step="300"><input type="number" id="td" value="30" min="5" max="480" step="5"><select id="tu" style="width:55px;flex:0 0 55px !important;"><option value="m">мин</option><option value="h">ч</option></select><label class="pin"><input type="checkbox" id="tf" checked>📌</label></div>
-<button class="btn accent" onclick="addTask()" style="width:100%;padding:10px;">✨ Добавить</button>
-</div>
+<div class="panel"><div class="row"><input type="text" id="tn" placeholder="Название задачи"><select id="tc"></select></div><div class="row"><input type="time" id="tt" value="12:00" step="300"><input type="number" id="td" value="30" min="5" max="480" step="5"><select id="tu" style="width:55px;flex:0 0 55px !important;"><option value="m">мин</option><option value="h">ч</option></select><label class="pin"><input type="checkbox" id="tf" checked>📌</label></div><button class="btn accent" onclick="addTask()" style="width:100%;padding:10px;">✨ Добавить</button></div>
 <div class="cal"><div class="nav"><button onclick="chView(-1)">◀</button><span id="dateLabel"></span><button onclick="chView(1)">▶</button><button onclick="goToday()" style="font-size:10px;">Сегодня</button><button id="btnDay" class="active" onclick="setView('day')">День</button><button id="btnWeek" onclick="setView('week')">Неделя</button><button id="btnMonth" onclick="setView('month')">Месяц</button><label class="now-toggle"><input type="checkbox" id="showNow" checked onchange="drawCal()"> линия времени</label></div><div class="grid" id="grid"></div></div>
 </div>
-
-<div id="notesView" style="display:none;flex-direction:column;height:100%;">
-<div style="padding:12px 16px;display:flex;gap:6px;">
-<button class="btn accent" onclick="addNote()" style="flex:1;">➕ Новая заметка</button>
-</div>
-<div class="notes-container" id="notesContainer" style="flex:1;overflow-y:auto;"></div>
-</div>
+<div id="notesView" style="display:none;flex-direction:column;height:100%;"><div style="padding:12px 16px;display:flex;gap:6px;"><button class="btn accent" onclick="addNote()" style="flex:1;">➕ Новая заметка</button></div><div class="notes-container" id="notesContainer" style="flex:1;overflow-y:auto;"></div></div>
 </div>
 </div>
 
-<!-- МОДАЛКИ -->
 <div class="modal-bg" id="catMod"><div class="modal"><h3>🎨 Разделы</h3><div id="catList"></div><div class="cat-row"><button class="emoji-btn" id="emojiBtn" onclick="toggleEmoji()">📁</button><input type="text" id="newCatName" placeholder="Название"></div><div class="emoji-grid" id="emojiGrid" style="display:none;"></div><div class="colors" id="palette"></div><button class="btn accent" onclick="addCat()" style="width:100%;">➕ Добавить</button><button class="btn" onclick="closeMod('catMod')">Закрыть</button></div></div>
 <div class="modal-bg" id="setMod"><div class="modal"><h3>⚙️ Настройки</h3><label>Тема</label><select id="sTheme" onchange="applyTheme()"><option value="dark">Тёмная</option><option value="light">Светлая</option></select><label>Акцентный цвет</label><div class="accent-colors" id="accentPalette"></div><label>Сменить пароль</label><input type="password" id="changePassword1" placeholder="Новый пароль"><input type="password" id="changePassword2" placeholder="Повторите пароль"><button class="btn accent" onclick="changePassword()" style="width:100%;">Сменить пароль</button><div class="auth-error" id="changePasswordErr"></div><label>Первый день недели</label><select id="sFirstDay" onchange="sets('firstDay',this.value);drawCal();"><option value="1">Понедельник</option><option value="0">Воскресенье</option><option value="6">Суббота</option></select><label>Начало дня</label><input type="time" id="sStart" value="06:00" onchange="saveBounds()"><label>Конец дня</label><input type="time" id="sEnd" value="23:00" onchange="saveBounds()"><button class="btn accent" onclick="closeMod('setMod');drawCal();">Готово</button></div></div>
 
@@ -239,22 +225,18 @@ const ACCENT_COLORS=[{name:'Голубой',color:'#A9DEF9',light:'#7ab8d4'},{na
 let user=null,curDate=new Date(),viewMode='day',selEmoji='📁',selColor=PALETTE[0];
 let pendingLogin=null,resetMode='register',currentScreen='calendar';
 
-// ====== АВТОРИЗАЦИЯ (С СОХРАНЕНИЕМ СЕССИИ) ======
 function norm(s){return s.trim().toLowerCase().replace(/\s+/g,'');}
 function hashPassword(pw){let h=0;for(let i=0;i<pw.length;i++){h=((h<<5)-h)+pw.charCodeAt(i);h|=0;}return 'pxx_'+Math.abs(h).toString(36);}
 function getUsers(){try{return JSON.parse(localStorage.fd_users||'{}');}catch(e){return{};}}
 function saveUsers(u){localStorage.fd_users=JSON.stringify(u);}
 function showStep(s){document.querySelectorAll('#auth .auth-card').forEach(e=>e.classList.remove('active'));document.getElementById(s).classList.add('active');}
 
-// Проверка сохранённой сессии при загрузке
 function checkSession(){
 const savedSession = localStorage.getItem('fd_session');
 if(savedSession){
 const session = JSON.parse(savedSession);
 const users = getUsers();
-// Проверяем что сессия не истекла (30 дней)
 if(session.expiry > Date.now() && users[session.user] && users[session.user].password === session.hash){
-// Автоматический вход
 user = session.user;
 document.getElementById('auth').style.display = 'none';
 document.getElementById('app').style.display = 'flex';
@@ -263,7 +245,6 @@ applyAccent(users[session.user].settings.accent||'#A9DEF9', users[session.user].
 init();
 return true;
 } else {
-// Сессия истекла — удаляем
 localStorage.removeItem('fd_session');
 }
 }
@@ -272,42 +253,15 @@ return false;
 
 function goToPassword(){const i=document.getElementById('loginInput').value.trim();if(!i){document.getElementById('loginErr').textContent='Введите email или телефон';return;}pendingLogin=norm(i);const users=getUsers();if(!users[pendingLogin]){resetMode='register';document.getElementById('resetTitle').textContent='Новый аккаунт';document.getElementById('resetDesc').textContent='Придумайте пароль для '+i;showStep('stepReset');}else{document.getElementById('passwordLabel').textContent='Введите пароль для '+i;showStep('stepPassword');}document.getElementById('loginErr').textContent='';}
 function loginWithPassword(){const pw=document.getElementById('passwordInput').value;if(!pw){document.getElementById('passwordErr').textContent='Введите пароль';return;}const users=getUsers();if(!users[pendingLogin]||users[pendingLogin].password!==hashPassword(pw)){document.getElementById('passwordErr').textContent='Неверный пароль';return;}doLogin(pendingLogin, hashPassword(pw));}
-function setNewPassword(){const p1=document.getElementById('newPassword1').value,p2=document.getElementById('newPassword2').value;if(!p1||p1.length<4){document.getElementById('resetErr').textContent='Минимум 4 символа';return;}if(p1!==p2){document.getElementById('resetErr').textContent='Пароли не совпадают';return;}const users=getUsers();if(resetMode==='register'&&users[pendingLogin]&&users[pendingLogin].password){document.getElementById('resetErr').textContent='Аккаунт уже существует';return;}if(!users[pendingLogin])users[pendingLogin]={settings:{theme:'dark',accent:'#A9DEF9',accentLight:'#7ab8d4',firstDay:'1',dayStart:'06:00',dayEnd:'23:00'},categories:JSON.parse(JSON.stringify(DEF_CATS)),tasks:[],notes:[]};const hashedPw = hashPassword(p1);users[pendingLogin].password = hashedPw;saveUsers(users);doLogin(pendingLogin, hashedPw);}
+function setNewPassword(){const p1=document.getElementById('newPassword1').value,p2=document.getElementById('newPassword2').value;if(!p1||p1.length<4){document.getElementById('resetErr').textContent='Минимум 4 символа';return;}if(p1!==p2){document.getElementById('resetErr').textContent='Пароли не совпадают';return;}const users=getUsers();if(resetMode==='register'&&users[pendingLogin]&&users[pendingLogin].password){document.getElementById('resetErr').textContent='Аккаунт уже существует';return;}if(!users[pendingLogin])users[pendingLogin]={settings:{theme:'dark',accent:'#A9DEF9',accentLight:'#7ab8d4',firstDay:'1',dayStart:'06:00',dayEnd:'23:00'},categories:JSON.parse(JSON.stringify(DEF_CATS)),tasks:[],notes:[]};const hashedPw=hashPassword(p1);users[pendingLogin].password=hashedPw;saveUsers(users);doLogin(pendingLogin,hashedPw);}
 function forgotPassword(){resetMode='reset';document.getElementById('resetTitle').textContent='Сброс пароля';document.getElementById('resetDesc').textContent='Придумайте новый пароль';document.getElementById('newPassword1').value='';document.getElementById('newPassword2').value='';document.getElementById('resetErr').textContent='';showStep('stepReset');}
 function goBackToLogin(){document.getElementById('passwordInput').value='';document.getElementById('passwordErr').textContent='';document.getElementById('newPassword1').value='';document.getElementById('newPassword2').value='';document.getElementById('resetErr').textContent='';showStep('stepLogin');}
-function changePassword(){const p1=document.getElementById('changePassword1').value,p2=document.getElementById('changePassword2').value,err=document.getElementById('changePasswordErr');if(!p1||p1.length<4){err.textContent='Минимум 4 символа';err.style.color='var(--danger)';return;}if(p1!==p2){err.textContent='Пароли не совпадают';err.style.color='var(--danger)';return;}const users=getUsers();if(!users[user])return;const hashedPw = hashPassword(p1);users[user].password = hashedPw;saveUsers(users);updateSession(hashedPw);document.getElementById('changePassword1').value='';document.getElementById('changePassword2').value='';err.style.color='var(--success)';err.textContent='✅ Пароль изменён!';setTimeout(()=>{err.textContent='';err.style.color='var(--danger)';},2000);}
+function changePassword(){const p1=document.getElementById('changePassword1').value,p2=document.getElementById('changePassword2').value,err=document.getElementById('changePasswordErr');if(!p1||p1.length<4){err.textContent='Минимум 4 символа';err.style.color='var(--danger)';return;}if(p1!==p2){err.textContent='Пароли не совпадают';err.style.color='var(--danger)';return;}const users=getUsers();if(!users[user])return;const hashedPw=hashPassword(p1);users[user].password=hashedPw;saveUsers(users);updateSession(hashedPw);document.getElementById('changePassword1').value='';document.getElementById('changePassword2').value='';err.style.color='var(--success)';err.textContent='✅ Пароль изменён!';setTimeout(()=>{err.textContent='';err.style.color='var(--danger)';},2000);}
 document.addEventListener('keydown',function(e){if(e.key==='Enter'){if(document.getElementById('stepLogin').classList.contains('active'))goToPassword();else if(document.getElementById('stepPassword').classList.contains('active'))loginWithPassword();else if(document.getElementById('stepReset').classList.contains('active'))setNewPassword();}});
 
-function updateSession(hashedPw){
-localStorage.setItem('fd_session', JSON.stringify({
-user: user,
-hash: hashedPw,
-expiry: Date.now() + 30 * 24 * 60 * 60 * 1000 // 30 дней
-}));
-}
-
-function doLogin(k, hashedPw){
-const u=getUsers();
-user=k;
-// Сохраняем сессию на 30 дней
-updateSession(hashedPw);
-document.getElementById('auth').style.display='none';
-document.getElementById('app').style.display='flex';
-document.body.className=u[k].settings.theme==='light'?'light-theme':'';
-applyAccent(u[k].settings.accent||'#A9DEF9',u[k].settings.accentLight||'#7ab8d4');
-document.getElementById('loginInput').value='';
-document.getElementById('passwordInput').value='';
-init();
-}
-
-function logout(){
-user=null;
-localStorage.removeItem('fd_session');
-document.getElementById('auth').style.display='flex';
-document.getElementById('app').style.display='none';
-showStep('stepLogin');
-}
-
+function updateSession(hashedPw){localStorage.setItem('fd_session',JSON.stringify({user:user,hash:hashedPw,expiry:Date.now()+30*24*60*60*1000}));}
+function doLogin(k,hashedPw){const u=getUsers();user=k;updateSession(hashedPw);document.getElementById('auth').style.display='none';document.getElementById('app').style.display='flex';document.body.className=u[k].settings.theme==='light'?'light-theme':'';applyAccent(u[k].settings.accent||'#A9DEF9',u[k].settings.accentLight||'#7ab8d4');document.getElementById('loginInput').value='';document.getElementById('passwordInput').value='';init();}
+function logout(){user=null;localStorage.removeItem('fd_session');document.getElementById('auth').style.display='flex';document.getElementById('app').style.display='none';showStep('stepLogin');}
 function data(){const u=getUsers();return(user&&u[user])?u[user]:null;}
 function save(d){const u=getUsers();if(!user||!u[user])return;u[user]={...u[user],...d};saveUsers(u);}
 function sett(k,d){const u=data();return(u&&u.settings&&u.settings[k]!==undefined)?u.settings[k]:d;}
@@ -395,11 +349,7 @@ function drawMonth(){const y=curDate.getFullYear(),m=curDate.getMonth(),fd=parse
 function closeMod(id){document.getElementById(id).classList.remove('show');}
 document.addEventListener('click',e=>{if(e.target.classList.contains('modal-bg'))e.target.classList.remove('show');});
 function init(){renderCatSelect();setView('day');const now=new Date();document.getElementById('tt').value=String(now.getHours()).padStart(2,'0')+':'+String(Math.floor(now.getMinutes()/5)*5).padStart(2,'0');setInterval(()=>{if(user&&viewMode==='day'&&curDate.toDateString()===new Date().toDateString())drawCal();},60000);}
-
-// Проверяем сессию при загрузке
-if(!checkSession()){
-document.getElementById('auth').style.display='flex';
-}
+if(!checkSession()){document.getElementById('auth').style.display='flex';}
 document.getElementById('app').style.display='none';
 </script>
 </body>
