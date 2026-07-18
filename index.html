@@ -166,12 +166,16 @@ input[type="number"] { width:55px; text-align:center; flex:0 0 55px!important; }
 <div class="modal-bg" id="catMod"><div class="modal"><h3>🎨 Разделы</h3><div id="catList"></div><div class="cat-row"><button class="emoji-btn" id="emojiBtn" onclick="toggleEmoji()">📁</button><input type="text" id="newCatName" placeholder="Название"></div><div class="emoji-grid" id="emojiGrid" style="display:none;"></div><div class="colors" id="palette"></div><button class="btn accent" onclick="addCat()" style="width:100%;">➕ Добавить</button><button class="btn" onclick="closeMod('catMod')">Закрыть</button></div></div>
 <div class="modal-bg" id="setMod"><div class="modal"><h3>⚙️ Настройки</h3><label>Тема</label><select id="sTheme" onchange="applyTheme()"><option value="dark">Тёмная</option><option value="light">Светлая</option></select><label>Акцентный цвет</label><div class="accent-colors" id="accentPalette"></div><label>Сменить пароль</label><input type="password" id="changePassword1" placeholder="Новый пароль"><input type="password" id="changePassword2" placeholder="Повторите пароль"><button class="btn accent" onclick="changePassword()" style="width:100%;">Сменить пароль</button><div class="auth-error" id="changePasswordErr"></div><label>Первый день недели</label><select id="sFirstDay" onchange="sets('firstDay',this.value);drawCal();"><option value="1">Понедельник</option><option value="0">Воскресенье</option><option value="6">Суббота</option></select><label>Начало дня</label><input type="time" id="sStart" value="06:00" onchange="saveBounds()"><label>Конец дня</label><input type="time" id="sEnd" value="23:00" onchange="saveBounds()"><button class="btn accent" onclick="closeMod('setMod');drawCal();">Готово</button></div></div>
 
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<!-- Firebase скрипты с defer, чтобы не блокировать отрисовку -->
+<script defer src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-// Firebase init
+// Попытка инициализации Firebase
+let db = null;
 try {
+if (typeof firebase !== 'undefined') {
 firebase.initializeApp({
 apiKey: "AIzaSyDRrT4JYwdprJUoS8SybOkaHm2trqYSmSA",
 authDomain: "flexiday-76445.firebaseapp.com",
@@ -180,8 +184,12 @@ storageBucket: "flexiday-76445.firebasestorage.app",
 messagingSenderId: "889265422",
 appId: "1:889265422:web:1368ae19258fefa6bd8b5f"
 });
-} catch(e) { console.warn('Firebase init error:', e); }
-const db = firebase.firestore();
+db = firebase.firestore();
+console.log('Firebase ready');
+}
+} catch(e) {
+console.warn('Firebase unavailable, running locally');
+}
 
 const PALETTE=['#FFB3BA','#FFC8A2','#FFE5A0','#D4F0A0','#A8E6CF','#A0D2F0','#B3CDFF','#C4B3FF','#E8B3FF','#FFB3E0','#FFD0B3','#B3F0E0'];
 const EMOJIS=['🏋️','💼','🌱','📚','🎨','🎵','💻','🏃','🧘','🍳','🧹','🛒','✈️','🚗','🏠','💤','⏰','📝','💡','🎯','💰','❤️','🌟','🔥','🎉','📞','✉️','🗓️','☕','🍽️','🐱','🐶','🎮','📷','🎬','🧠','💪','🤝','🛠️','📊','🔬','🌍','🎪','🏆','💎','🌈','🍀','🎁','📌','🔔','⚡','🎈','🌙','☀️','🌸','🍕','🎧','📱','💊','🧩'];
@@ -229,19 +237,20 @@ scheduleSync();
 }
 
 function scheduleSync(){
+if(!db) return;
 if(syncTimeout) clearTimeout(syncTimeout);
 syncTimeout = setTimeout(()=> syncToCloud(), 1000);
 }
 
 async function syncToCloud(){
-if(!user) return;
+if(!user || !db) return;
 try {
 await db.collection('users').doc(user).set(localData, {merge:true});
 } catch(e) { console.warn('Sync error:', e); }
 }
 
 async function loadFromCloud(){
-if(!user) return;
+if(!user || !db) return;
 try {
 const doc = await db.collection('users').doc(user).get();
 if(doc.exists){
@@ -252,7 +261,7 @@ if(cloud.settings && !localData.settings.accent) localData.settings = cloud.sett
 if(cloud.categories && !localData.categories.length) localData.categories = cloud.categories;
 saveLocalData();
 }
-} catch(e) { console.warn('Load from cloud error:', e); }
+} catch(e) { console.warn('Load error:', e); }
 }
 
 function data(){ return localData; }
@@ -447,7 +456,7 @@ renderCatSelect(); setView('day');
 const now=new Date();
 const tt = document.getElementById('tt'); if (tt) tt.value = String(now.getHours()).padStart(2,'0')+':'+String(Math.floor(now.getMinutes()/5)*5).padStart(2,'0');
 setInterval(()=>{ if(user&&viewMode==='day'&&curDate.toDateString()===new Date().toDateString()) drawCal(); },60000);
-loadFromCloud();
+if(db) loadFromCloud();
 }
 
 function goToPassword(){
