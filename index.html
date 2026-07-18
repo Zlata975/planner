@@ -14,6 +14,10 @@
 <meta name="apple-mobile-web-app-title" content="FlexiDay">
 <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22FlexiDay%20Planner%22%2C%22short_name%22%3A%22FlexiDay%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%231a1d2e%22%2C%22theme_color%22%3A%22%231a1d2e%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20192%20192'%3E%253Crect%20width%3D'192'%20height%3D'192'%20rx%3D'42'%20fill%3D'%2523A9DEF9'%2F%3E%253Ctext%20x%3D'96'%20y%3D'138'%20font-size%3D'125'%20font-family%3D'Arial'%20fill%3D'white'%20text-anchor%3D'middle'%20font-weight%3D'bold'%3EF%3C%2Ftext%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20512%20512'%3E%253Crect%20width%3D'512'%20height%3D'512'%20rx%3D'112'%20fill%3D'%2523A9DEF9'%2F%3E%253Ctext%20x%3D'256'%20y%3D'368'%20font-size%3D'333'%20font-family%3D'Arial'%20fill%3D'white'%20text-anchor%3D'middle'%20font-weight%3D'bold'%3EF%3C%2Ftext%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
 
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
 <style>
 :root {
 --bg: #1a1d2e;
@@ -248,6 +252,19 @@ input[type="number"] { width: 55px; text-align: center; flex: 0 0 55px !importan
 <div class="modal-bg" id="setMod"><div class="modal"><h3>⚙️ Настройки</h3><label>Тема</label><select id="sTheme" onchange="applyTheme()"><option value="dark">Тёмная</option><option value="light">Светлая</option></select><label>Акцентный цвет</label><div class="accent-colors" id="accentPalette"></div><label>Сменить пароль</label><input type="password" id="changePassword1" placeholder="Новый пароль"><input type="password" id="changePassword2" placeholder="Повторите пароль"><button class="btn accent" onclick="changePassword()" style="width:100%;">Сменить пароль</button><div class="auth-error" id="changePasswordErr"></div><label>Первый день недели</label><select id="sFirstDay" onchange="sets('firstDay',this.value);drawCal();"><option value="1">Понедельник</option><option value="0">Воскресенье</option><option value="6">Суббота</option></select><label>Начало дня</label><input type="time" id="sStart" value="06:00" onchange="saveBounds()"><label>Конец дня</label><input type="time" id="sEnd" value="23:00" onchange="saveBounds()"><button class="btn accent" onclick="closeMod('setMod');drawCal();">Готово</button></div></div>
 
 <script>
+// Инициализация Firebase
+const firebaseConfig = {
+apiKey: "AIzaSyDRrT4JYwdprJUoS8SybOkaHm2trqYSmSA",
+authDomain: "flexiday-76445.firebaseapp.com",
+projectId: "flexiday-76445",
+storageBucket: "flexiday-76445.firebasestorage.app",
+messagingSenderId: "889265422",
+appId: "1:889265422:web:1368ae19258fefa6bd8b5f"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+db.enablePersistence().catch(() => {}); // оффлайн-поддержка
+
 const PALETTE=['#FFB3BA','#FFC8A2','#FFE5A0','#D4F0A0','#A8E6CF','#A0D2F0','#B3CDFF','#C4B3FF','#E8B3FF','#FFB3E0','#FFD0B3','#B3F0E0'];
 const EMOJIS=['🏋️','💼','🌱','📚','🎨','🎵','💻','🏃','🧘','🍳','🧹','🛒','✈️','🚗','🏠','💤','⏰','📝','💡','🎯','💰','❤️','🌟','🔥','🎉','📞','✉️','🗓️','☕','🍽️','🐱','🐶','🎮','📷','🎬','🧠','💪','🤝','🛠️','📊','🔬','🌍','🎪','🏆','💎','🌈','🍀','🎁','📌','🔔','⚡','🎈','🌙','☀️','🌸','🍕','🎧','📱','💊','🧩'];
 const DEF_CATS=[{id:'c1',name:'Спорт',emoji:'🏋️',color:'#FFB3BA'},{id:'c2',name:'Работа',emoji:'💼',color:'#A0D2F0'},{id:'c3',name:'Личное',emoji:'🌱',color:'#A8E6CF'}];
@@ -255,25 +272,22 @@ const ACCENT_COLORS=[{name:'Голубой',color:'#A9DEF9',light:'#7ab8d4'},{na
 
 let user=null,curDate=new Date(),viewMode='day',selEmoji='📁',selColor=PALETTE[0];
 let pendingLogin=null,resetMode='register',currentScreen='calendar';
+let userDocRef = null; // ссылка на документ пользователя в Firestore
 
 function norm(s){return s.trim().toLowerCase().replace(/\s+/g,'');}
 function hashPassword(pw){let h=0;for(let i=0;i<pw.length;i++){h=((h<<5)-h)+pw.charCodeAt(i);h|=0;}return 'pxx_'+Math.abs(h).toString(36);}
-function getUsers(){try{return JSON.parse(localStorage.fd_users||'{}');}catch(e){return{};}}
-function saveUsers(u){localStorage.fd_users=JSON.stringify(u);}
 function showStep(s){document.querySelectorAll('#auth .auth-card').forEach(e=>e.classList.remove('active'));document.getElementById(s).classList.add('active');}
 
 function checkSession(){
 const savedSession = localStorage.getItem('fd_session');
 if(savedSession){
 const session = JSON.parse(savedSession);
-const users = getUsers();
-if(session.expiry > Date.now() && users[session.user] && users[session.user].password === session.hash){
+if(session.expiry > Date.now()){
 user = session.user;
+userDocRef = db.collection('users').doc(user);
 document.getElementById('auth').style.display = 'none';
 document.getElementById('app').style.display = 'flex';
-document.body.className = users[session.user].settings.theme === 'light' ? 'light-theme' : '';
-applyAccent(users[session.user].settings.accent||'#A9DEF9', users[session.user].settings.accentLight||'#7ab8d4');
-init();
+loadUserDataAndInit();
 return true;
 } else {
 localStorage.removeItem('fd_session');
@@ -282,62 +296,151 @@ localStorage.removeItem('fd_session');
 return false;
 }
 
+async function loadUserDataAndInit(){
+try {
+const doc = await userDocRef.get();
+if(doc.exists){
+const data = doc.data();
+document.body.className = data.settings?.theme === 'light' ? 'light-theme' : '';
+applyAccent(data.settings?.accent||'#A9DEF9', data.settings?.accentLight||'#7ab8d4');
+} else {
+// Новый пользователь в Firestore — создаём с дефолтными настройками
+await userDocRef.set({
+settings: {theme:'dark',accent:'#A9DEF9',accentLight:'#7ab8d4',firstDay:'1',dayStart:'06:00',dayEnd:'23:00'},
+categories: JSON.parse(JSON.stringify(DEF_CATS)),
+tasks: [],
+notes: []
+});
+}
+} catch(e) {
+console.error('Ошибка загрузки данных:', e);
+document.body.className = '';
+}
+init();
+}
+
 function goToPassword(){const i=document.getElementById('loginInput').value.trim();if(!i){document.getElementById('loginErr').textContent='Введите email или телефон';return;}pendingLogin=norm(i);const users=getUsers();if(!users[pendingLogin]){resetMode='register';document.getElementById('resetTitle').textContent='Новый аккаунт';document.getElementById('resetDesc').textContent='Придумайте пароль для '+i;showStep('stepReset');}else{document.getElementById('passwordLabel').textContent='Введите пароль для '+i;showStep('stepPassword');}document.getElementById('loginErr').textContent='';}
 function loginWithPassword(){const pw=document.getElementById('passwordInput').value;if(!pw){document.getElementById('passwordErr').textContent='Введите пароль';return;}const users=getUsers();if(!users[pendingLogin]||users[pendingLogin].password!==hashPassword(pw)){document.getElementById('passwordErr').textContent='Неверный пароль';return;}doLogin(pendingLogin, hashPassword(pw));}
-function setNewPassword(){const p1=document.getElementById('newPassword1').value,p2=document.getElementById('newPassword2').value;if(!p1||p1.length<4){document.getElementById('resetErr').textContent='Минимум 4 символа';return;}if(p1!==p2){document.getElementById('resetErr').textContent='Пароли не совпадают';return;}const users=getUsers();if(resetMode==='register'&&users[pendingLogin]&&users[pendingLogin].password){document.getElementById('resetErr').textContent='Аккаунт уже существует';return;}if(!users[pendingLogin])users[pendingLogin]={settings:{theme:'dark',accent:'#A9DEF9',accentLight:'#7ab8d4',firstDay:'1',dayStart:'06:00',dayEnd:'23:00'},categories:JSON.parse(JSON.stringify(DEF_CATS)),tasks:[],notes:[]};const hashedPw=hashPassword(p1);users[pendingLogin].password=hashedPw;saveUsers(users);doLogin(pendingLogin,hashedPw);}
+function setNewPassword(){const p1=document.getElementById('newPassword1').value,p2=document.getElementById('newPassword2').value;if(!p1||p1.length<4){document.getElementById('resetErr').textContent='Минимум 4 символа';return;}if(p1!==p2){document.getElementById('resetErr').textContent='Пароли не совпадают';return;}const users=getUsers();if(resetMode==='register'&&users[pendingLogin]&&users[pendingLogin].password){document.getElementById('resetErr').textContent='Аккаунт уже существует';return;}const hashedPw=hashPassword(p1);users[pendingLogin]={password:hashedPw};saveUsers(users);doLogin(pendingLogin,hashedPw);}
 function forgotPassword(){resetMode='reset';document.getElementById('resetTitle').textContent='Сброс пароля';document.getElementById('resetDesc').textContent='Придумайте новый пароль';document.getElementById('newPassword1').value='';document.getElementById('newPassword2').value='';document.getElementById('resetErr').textContent='';showStep('stepReset');}
 function goBackToLogin(){document.getElementById('passwordInput').value='';document.getElementById('passwordErr').textContent='';document.getElementById('newPassword1').value='';document.getElementById('newPassword2').value='';document.getElementById('resetErr').textContent='';showStep('stepLogin');}
 function changePassword(){const p1=document.getElementById('changePassword1').value,p2=document.getElementById('changePassword2').value,err=document.getElementById('changePasswordErr');if(!p1||p1.length<4){err.textContent='Минимум 4 символа';err.style.color='var(--danger)';return;}if(p1!==p2){err.textContent='Пароли не совпадают';err.style.color='var(--danger)';return;}const users=getUsers();if(!users[user])return;const hashedPw=hashPassword(p1);users[user].password=hashedPw;saveUsers(users);updateSession(hashedPw);document.getElementById('changePassword1').value='';document.getElementById('changePassword2').value='';err.style.color='var(--success)';err.textContent='✅ Пароль изменён!';setTimeout(()=>{err.textContent='';err.style.color='var(--danger)';},2000);}
 document.addEventListener('keydown',function(e){if(e.key==='Enter'){if(document.getElementById('stepLogin').classList.contains('active'))goToPassword();else if(document.getElementById('stepPassword').classList.contains('active'))loginWithPassword();else if(document.getElementById('stepReset').classList.contains('active'))setNewPassword();}});
 
 function updateSession(hashedPw){localStorage.setItem('fd_session',JSON.stringify({user:user,hash:hashedPw,expiry:Date.now()+30*24*60*60*1000}));}
-function doLogin(k,hashedPw){const u=getUsers();user=k;updateSession(hashedPw);document.getElementById('auth').style.display='none';document.getElementById('app').style.display='flex';document.body.className=u[k].settings.theme==='light'?'light-theme':'';applyAccent(u[k].settings.accent||'#A9DEF9',u[k].settings.accentLight||'#7ab8d4');document.getElementById('loginInput').value='';document.getElementById('passwordInput').value='';init();}
-function logout(){user=null;localStorage.removeItem('fd_session');document.getElementById('auth').style.display='flex';document.getElementById('app').style.display='none';showStep('stepLogin');}
-function data(){const u=getUsers();return(user&&u[user])?u[user]:null;}
-function save(d){const u=getUsers();if(!user||!u[user])return;u[user]={...u[user],...d};saveUsers(u);}
-function sett(k,d){const u=data();return(u&&u.settings&&u.settings[k]!==undefined)?u.settings[k]:d;}
-function sets(k,v){const u=data();if(!u)return;if(!u.settings)u.settings={};u.settings[k]=v;save({settings:u.settings});}
-function applyAccent(c,l){const r=document.documentElement,i=document.body.classList.contains('light-theme'),a=i?(l||c):c;r.style.setProperty('--accent',a);r.style.setProperty('--accent-light',l||c);const h=a.replace('#','');r.style.setProperty('--accent-rgb',parseInt(h.substring(0,2),16)+','+parseInt(h.substring(2,4),16)+','+parseInt(h.substring(4,6),16));}
-function openSets(){document.getElementById('sTheme').value=sett('theme','dark');document.getElementById('sFirstDay').value=sett('firstDay','1');document.getElementById('sStart').value=sett('dayStart','06:00');document.getElementById('sEnd').value=sett('dayEnd','23:00');document.getElementById('accentPalette').innerHTML=ACCENT_COLORS.map(c=>`<div class="accent-swatch${c.color===sett('accent','#A9DEF9')||c.light===sett('accent','#A9DEF9')?' selected':''}" style="background:${c.color};" onclick="selectAccent('${c.color}','${c.light}')">${c.name}</div>`).join('');document.getElementById('setMod').classList.add('show');}
-function selectAccent(c,l){applyAccent(c,l);sets('accent',c);sets('accentLight',l);openSets();}
-function applyTheme(){const t=document.getElementById('sTheme').value;document.body.className=t==='light'?'light-theme':'';sets('theme',t);applyAccent(sett('accent','#A9DEF9'),sett('accentLight','#7ab8d4'));}
-function saveBounds(){sets('dayStart',document.getElementById('sStart').value);sets('dayEnd',document.getElementById('sEnd').value);}
+function doLogin(k,hashedPw){
+user=k;
+userDocRef = db.collection('users').doc(user);
+updateSession(hashedPw);
+document.getElementById('auth').style.display='none';
+document.getElementById('app').style.display='flex';
+loadUserDataAndInit();
+}
+function logout(){
+user=null;
+userDocRef=null;
+localStorage.removeItem('fd_session');
+document.getElementById('auth').style.display='flex';
+document.getElementById('app').style.display='none';
+showStep('stepLogin');
+}
 
-function getNotes(){const u=data();return(u&&u.notes)?u.notes:[];}
-function saveNotes(n){save({notes:n});}
-function openNotes(){currentScreen='notes';document.getElementById('calendarView').style.display='none';document.getElementById('notesView').style.display='flex';renderNotes();}
-function openCalendar(){currentScreen='calendar';document.getElementById('notesView').style.display='none';document.getElementById('calendarView').style.display='flex';drawCal();}
-function renderNotes(){const notes=getNotes().sort((a,b)=>b.date-a.date);document.getElementById('notesContainer').innerHTML=notes.length===0?'<div style="color:var(--sub);text-align:center;padding:40px;">Нет заметок. Создайте первую!</div>':notes.map(n=>`<div class="note-card"><div class="note-date">${new Date(n.date).toLocaleString()}</div><textarea onchange="updateNote('${n.id}',this.value)">${n.text}</textarea><div class="note-actions"><button class="btn" onclick="deleteNote('${n.id}')">🗑️ Удалить</button></div></div>`).join('');}
-function addNote(){const notes=getNotes();notes.push({id:'n'+Date.now(),text:'',date:Date.now()});saveNotes(notes);renderNotes();}
-function updateNote(id,text){const notes=getNotes();const n=notes.find(n=>n.id===id);if(n){n.text=text;saveNotes(notes);}}
-function deleteNote(id){if(confirm('Удалить заметку?')){saveNotes(getNotes().filter(n=>n.id!==id));renderNotes();}}
+// Упрощённые геттеры/сеттеры для совместимости с существующим кодом
+// Теперь всё идёт через Firestore
+function getUsers(){try{return JSON.parse(localStorage.fd_users||'{}');}catch(e){return{};}}
+function saveUsers(u){localStorage.fd_users=JSON.stringify(u);}
+
+// Переопределяем data(), save(), sett(), sets() для работы с Firestore
+async function data(){
+if(!userDocRef) return null;
+const doc = await userDocRef.get();
+return doc.exists ? doc.data() : null;
+}
+async function save(update){
+if(!userDocRef) return;
+await userDocRef.set(update, {merge: true});
+}
+async function sett(k,d){
+const u = await data();
+return (u&&u.settings&&u.settings[k]!==undefined) ? u.settings[k] : d;
+}
+async function sets(k,v){
+if(!userDocRef) return;
+const u = await data();
+if(!u) return;
+const settings = u.settings || {};
+settings[k]=v;
+await userDocRef.set({settings}, {merge: true});
+}
+
+function applyAccent(c,l){const r=document.documentElement,i=document.body.classList.contains('light-theme'),a=i?(l||c):c;r.style.setProperty('--accent',a);r.style.setProperty('--accent-light',l||c);const h=a.replace('#','');r.style.setProperty('--accent-rgb',parseInt(h.substring(0,2),16)+','+parseInt(h.substring(2,4),16)+','+parseInt(h.substring(4,6),16));}
+async function openSets(){
+const u = await data();
+const s = u?.settings || {theme:'dark',firstDay:'1',dayStart:'06:00',dayEnd:'23:00'};
+document.getElementById('sTheme').value = s.theme||'dark';
+document.getElementById('sFirstDay').value = s.firstDay||'1';
+document.getElementById('sStart').value = s.dayStart||'06:00';
+document.getElementById('sEnd').value = s.dayEnd||'23:00';
+document.getElementById('accentPalette').innerHTML = ACCENT_COLORS.map(c=>`<div class="accent-swatch${c.color===s.accent?' selected':''}" style="background:${c.color};" onclick="selectAccent('${c.color}','${c.light}')">${c.name}</div>`).join('');
+document.getElementById('setMod').classList.add('show');
+}
+function selectAccent(c,l){applyAccent(c,l);sets('accent',c);sets('accentLight',l);openSets();}
+function applyTheme(){
+const t=document.getElementById('sTheme').value;
+document.body.className=t==='light'?'light-theme':'';
+sets('theme',t);
+const accent=document.querySelector('.accent-swatch.selected')?.dataset?.color||'#A9DEF9';
+applyAccent(accent, accent);
+}
+function saveBounds(){
+sets('dayStart',document.getElementById('sStart').value);
+sets('dayEnd',document.getElementById('sEnd').value);
+}
+
+// Заметки через Firestore
+async function getNotes(){const u=await data();return u?.notes||[];}
+async function saveNotes(n){await save({notes:n});}
+async function openNotes(){currentScreen='notes';document.getElementById('calendarView').style.display='none';document.getElementById('notesView').style.display='flex';await renderNotes();}
+async function renderNotes(){const notes=(await getNotes()).sort((a,b)=>b.date-a.date);document.getElementById('notesContainer').innerHTML=notes.length===0?'<div style="color:var(--sub);text-align:center;padding:40px;">Нет заметок. Создайте первую!</div>':notes.map(n=>`<div class="note-card"><div class="note-date">${new Date(n.date).toLocaleString()}</div><textarea onchange="updateNote('${n.id}',this.value)">${n.text}</textarea><div class="note-actions"><button class="btn" onclick="deleteNote('${n.id}')">🗑️ Удалить</button></div></div>`).join('');}
+async function addNote(){const notes=await getNotes();notes.push({id:'n'+Date.now(),text:'',date:Date.now()});await saveNotes(notes);await renderNotes();}
+async function updateNote(id,text){const notes=await getNotes();const n=notes.find(n=>n.id===id);if(n){n.text=text;await saveNotes(notes);}}
+async function deleteNote(id){if(confirm('Удалить заметку?')){const notes=(await getNotes()).filter(n=>n.id!==id);await saveNotes(notes);await renderNotes();}}
+
+async function openCalendar(){currentScreen='calendar';document.getElementById('notesView').style.display='none';document.getElementById('calendarView').style.display='flex';await drawCal();}
 document.addEventListener('click',function(e){if(e.target.closest('.logo')||e.target.closest('h1'))openCalendar();});
 
-function cats(){const u=data();if(!u||!u.categories||u.categories.length===0){save({categories:JSON.parse(JSON.stringify(DEF_CATS))});return JSON.parse(JSON.stringify(DEF_CATS));}return u.categories;}
-function catById(id){return cats().find(c=>c.id===id);}
-function saveCats(c){save({categories:c});}
-function renderCatSelect(){document.getElementById('tc').innerHTML=cats().map(c=>`<option value="${c.id}">${c.emoji} ${c.name}</option>`).join('');}
-function openCats(){document.getElementById('catList').innerHTML=cats().map(c=>`<div class="cat-item"><span>${c.emoji}</span><span class="cat-dot" style="background:${c.color};"></span><span>${c.name}</span><button class="cat-del" onclick="delCat('${c.id}')">Удалить</button></div>`).join('')||'<div style="color:var(--sub);font-size:11px;text-align:center;">Нет разделов</div>';document.getElementById('palette').innerHTML=PALETTE.map(c=>`<div class="swatch${c===selColor?' sel':''}" style="background:${c};" onclick="selColor='${c}';openCats();"></div>`).join('');document.getElementById('emojiGrid').innerHTML=EMOJIS.map(e=>`<button onclick="selEmoji='${e}';document.getElementById('emojiBtn').textContent='${e}';document.getElementById('emojiGrid').style.display='none';">${e}</button>`).join('');document.getElementById('catMod').classList.add('show');}
+// Категории через Firestore
+async function cats(){const u=await data();if(!u||!u.categories||u.categories.length===0){const def=JSON.parse(JSON.stringify(DEF_CATS));await save({categories:def});return def;}return u.categories;}
+async function catById(id){const c=await cats();return c.find(c=>c.id===id);}
+async function saveCats(c){await save({categories:c});}
+async function renderCatSelect(){const c=await cats();document.getElementById('tc').innerHTML=c.map(c=>`<option value="${c.id}">${c.emoji} ${c.name}</option>`).join('');}
+async function openCats(){
+const c=await cats();
+document.getElementById('catList').innerHTML=c.map(c=>`<div class="cat-item"><span>${c.emoji}</span><span class="cat-dot" style="background:${c.color};"></span><span>${c.name}</span><button class="cat-del" onclick="delCat('${c.id}')">Удалить</button></div>`).join('')||'<div style="color:var(--sub);font-size:11px;text-align:center;">Нет разделов</div>';
+document.getElementById('palette').innerHTML=PALETTE.map(c=>`<div class="swatch${c===selColor?' sel':''}" style="background:${c};" onclick="selColor='${c}';openCats();"></div>`).join('');
+document.getElementById('emojiGrid').innerHTML=EMOJIS.map(e=>`<button onclick="selEmoji='${e}';document.getElementById('emojiBtn').textContent='${e}';document.getElementById('emojiGrid').style.display='none';">${e}</button>`).join('');
+document.getElementById('catMod').classList.add('show');
+}
 function toggleEmoji(){document.getElementById('emojiGrid').style.display=document.getElementById('emojiGrid').style.display==='none'?'grid':'none';}
-function addCat(){const n=document.getElementById('newCatName').value.trim();if(!n)return;saveCats([...cats(),{id:'c'+Date.now(),name:n,emoji:selEmoji,color:selColor}]);document.getElementById('newCatName').value='';selEmoji='📁';selColor=PALETTE[0];renderCatSelect();openCats();drawCal();}
-function delCat(id){saveCats(cats().filter(c=>c.id!==id));saveTasks(tasks().filter(t=>t.catId!==id));renderCatSelect();openCats();drawCal();}
-function tasks(){const u=data();return(u&&u.tasks)?u.tasks:[];}
-function saveTasks(t){save({tasks:t});}
-function addTask(){const n=document.getElementById('tn').value.trim(),cid=document.getElementById('tc').value,ti=document.getElementById('tt').value,d=parseInt(document.getElementById('td').value)||30,u=document.getElementById('tu').value,f=document.getElementById('tf').checked;if(!n)return;let m=u==='h'?d*60:d;if(m<5)m=5;const ds=curDate.toISOString().split('T')[0],s=new Date(ds+'T'+ti+':00'),e=new Date(s.getTime()+m*60000),c=catById(cid),a=tasks();a.push({id:'t'+Date.now(),title:n,start:s.toISOString(),end:e.toISOString(),duration:m,catId:cid,color:c?.color||PALETTE[0],emoji:c?.emoji||'📌',fixed:f});saveTasks(a);document.getElementById('tn').value='';drawCal();}
-function delTask(id){saveTasks(tasks().filter(t=>t.id!==id));drawCal();}
-function updateTask(id,ns,ne){const a=tasks(),t=a.find(t=>t.id===id);if(t&&!t.fixed){t.start=ns.toISOString();t.end=ne.toISOString();saveTasks(a);}}
+async function addCat(){const n=document.getElementById('newCatName').value.trim();if(!n)return;const c=await cats();c.push({id:'c'+Date.now(),name:n,emoji:selEmoji,color:selColor});await saveCats(c);document.getElementById('newCatName').value='';selEmoji='📁';selColor=PALETTE[0];await renderCatSelect();await openCats();await drawCal();}
+async function delCat(id){const c=(await cats()).filter(c=>c.id!==id);await saveCats(c);const t=(await tasks()).filter(t=>t.catId!==id);await saveTasks(t);await renderCatSelect();await openCats();await drawCal();}
+async function tasks(){const u=await data();return u?.tasks||[];}
+async function saveTasks(t){await save({tasks:t});}
+async function addTask(){const n=document.getElementById('tn').value.trim(),cid=document.getElementById('tc').value,ti=document.getElementById('tt').value,d=parseInt(document.getElementById('td').value)||30,u=document.getElementById('tu').value,f=document.getElementById('tf').checked;if(!n)return;let m=u==='h'?d*60:d;if(m<5)m=5;const ds=curDate.toISOString().split('T')[0],s=new Date(ds+'T'+ti+':00'),e=new Date(s.getTime()+m*60000),c=await catById(cid),a=await tasks();a.push({id:'t'+Date.now(),title:n,start:s.toISOString(),end:e.toISOString(),duration:m,catId:cid,color:c?.color||PALETTE[0],emoji:c?.emoji||'📌',fixed:f});await saveTasks(a);document.getElementById('tn').value='';await drawCal();}
+async function delTask(id){const t=(await tasks()).filter(t=>t.id!==id);await saveTasks(t);await drawCal();}
+async function updateTask(id,ns,ne){const a=await tasks();const t=a.find(t=>t.id===id);if(t&&!t.fixed){t.start=ns.toISOString();t.end=ne.toISOString();await saveTasks(a);}}
 function setView(m){viewMode=m;document.getElementById('btnDay').classList.toggle('active',m==='day');document.getElementById('btnWeek').classList.toggle('active',m==='week');document.getElementById('btnMonth').classList.toggle('active',m==='month');drawCal();}
 function chView(d){if(viewMode==='day')curDate.setDate(curDate.getDate()+d);else if(viewMode==='week')curDate.setDate(curDate.getDate()+d*7);else curDate.setMonth(curDate.getMonth()+d);drawCal();}
 function goToday(){curDate=new Date();drawCal();}
-function dayTasks(dt){return tasks().filter(t=>t.start.startsWith(dt.toISOString().split('T')[0]));}
+async function dayTasks(dt){const all=await tasks();return all.filter(t=>t.start.startsWith(dt.toISOString().split('T')[0]));}
 function isLight(h){const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return(0.299*r+0.587*g+0.114*b)/255>0.65;}
 function fmtTime(iso){const d=new Date(iso);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
 function fmtDuration(mins){return mins>=60?(mins/60)+' ч':mins+' мин';}
 
-function drawCal(){if(currentScreen!=='calendar')return;const ms=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];if(viewMode==='day'){document.getElementById('dateLabel').textContent=`${['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][curDate.getDay()]}, ${curDate.getDate()} ${ms[curDate.getMonth()]}`;drawDay();}else if(viewMode==='week'){const w=getWeek(curDate);document.getElementById('dateLabel').textContent=`${w[0].getDate()} ${ms[w[0].getMonth()]} — ${w[6].getDate()} ${ms[w[6].getMonth()]}`;drawWeek(w);}else{document.getElementById('dateLabel').textContent=`${ms[curDate.getMonth()]} ${curDate.getFullYear()}`;drawMonth();}}
+async function drawCal(){if(currentScreen!=='calendar')return;const ms=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];if(viewMode==='day'){document.getElementById('dateLabel').textContent=`${['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][curDate.getDay()]}, ${curDate.getDate()} ${ms[curDate.getMonth()]}`;await drawDay();}else if(viewMode==='week'){const w=getWeek(curDate);document.getElementById('dateLabel').textContent=`${w[0].getDate()} ${ms[w[0].getMonth()]} — ${w[6].getDate()} ${ms[w[6].getMonth()]}`;await drawWeek(w);}else{document.getElementById('dateLabel').textContent=`${ms[curDate.getMonth()]} ${curDate.getFullYear()}`;await drawMonth();}}
 
-function drawDay(){
-const sh=parseInt(sett('dayStart','06:00')),eh=parseInt(sett('dayEnd','23:00')),all=dayTasks(curDate),now=new Date(),isToday=curDate.toDateString()===now.toDateString(),SLOT=20,showNow=document.getElementById('showNow')?.checked??true;
+async function drawDay(){
+const sh=parseInt((await sett('dayStart','06:00'))),eh=parseInt((await sett('dayEnd','23:00'))),all=await dayTasks(curDate),now=new Date(),isToday=curDate.toDateString()===now.toDateString(),SLOT=20,showNow=document.getElementById('showNow')?.checked??true;
 let h='<div class="day-grid" style="position:relative;">';
 for(let hh=sh;hh<=eh;hh++)for(let m=0;m<60;m+=5)h+=`<div class="day-slot" data-h="${hh}" data-m="${m}"><div class="day-hour">${m===0?String(hh).padStart(2,'0')+':00':''}</div><div class="day-content"></div></div>`;
 all.forEach(t=>{
@@ -350,26 +453,18 @@ h+=`<div class="task-block${t.fixed?' fixed':''}" data-id="${t.id}" style="top:$
 if(isToday&&showNow){const nm=now.getHours()*60+now.getMinutes();if(nm>=sh*60&&nm<=(eh+1)*60)h+=`<div class="now-line" style="top:${(nm-sh*60)/5*SLOT}px;"></div>`;}
 h+='</div>';document.getElementById('grid').innerHTML=h;setupDayDrag(SLOT,sh);
 document.querySelectorAll('.day-slot').forEach(s=>s.addEventListener('click',function(e){if(e.target.closest('.task-block'))return;document.getElementById('tt').value=String(parseInt(this.dataset.h)).padStart(2,'0')+':'+String(parseInt(this.dataset.m)).padStart(2,'0');document.getElementById('tn').focus();}));
-// Прокрутка к текущему времени
 if(isToday){
-const nowH = now.getHours();
-const nowM = Math.floor(now.getMinutes()/5)*5;
-const targetSlot = document.querySelector(`.day-slot[data-h="${nowH}"][data-m="${nowM}"]`);
-if(targetSlot){
-setTimeout(()=>{
-targetSlot.scrollIntoView({behavior:'smooth',block:'center'});
-},50);
-}
+const nowH=now.getHours(),nowM=Math.floor(now.getMinutes()/5)*5;
+const targetSlot=document.querySelector(`.day-slot[data-h="${nowH}"][data-m="${nowM}"]`);
+if(targetSlot) setTimeout(()=>{targetSlot.scrollIntoView({behavior:'smooth',block:'center'});},50);
 }
 }
 
 function setupDayDrag(SLOT, sh) {
 const g = document.querySelector('.day-grid');
 if (!g) return;
-
 const isTouch = 'ontouchstart' in window;
 let el = null, startY = 0, startTop = 0, startHeight = 0, tid = null, resizing = false;
-
 function onStart(e) {
 const point = isTouch ? e.touches[0] : e;
 if (isTouch && e.target.closest('.task-del')) return;
@@ -382,7 +477,6 @@ tb.classList.add('dragging');
 if (!isTouch) tb.setPointerCapture(e.pointerId);
 e.preventDefault();
 }
-
 function onMove(e) {
 if (!el) return;
 const point = isTouch ? e.touches[0] : e;
@@ -391,18 +485,16 @@ if (resizing) el.style.height = Math.max(22, startHeight + dy) + 'px';
 else el.style.top = Math.max(0, startTop + Math.round(dy / SLOT) * SLOT) + 'px';
 if (isTouch) e.preventDefault();
 }
-
-function onEnd() {
+async function onEnd() {
 if (!tid || !el) return;
 const gs = sh * 60;
 const ns = gs + Math.round(parseInt(el.style.top || 0) / SLOT) * 5;
 const ne = ns + Math.round(parseInt(el.style.height || 22) / SLOT) * 5;
 const ds = curDate.toISOString().split('T')[0];
-updateTask(tid, new Date(ds + 'T' + String(Math.floor(ns / 60)).padStart(2, '0') + ':' + String(ns % 60).padStart(2, '0') + ':00'), new Date(ds + 'T' + String(Math.floor(ne / 60)).padStart(2, '0') + ':' + String(ne % 60).padStart(2, '0') + ':00'));
+await updateTask(tid, new Date(ds + 'T' + String(Math.floor(ns / 60)).padStart(2, '0') + ':' + String(ns % 60).padStart(2, '0') + ':00'), new Date(ds + 'T' + String(Math.floor(ne / 60)).padStart(2, '0') + ':' + String(ne % 60).padStart(2, '0') + ':00'));
 el.classList.remove('dragging'); el = null; tid = null; resizing = false;
 drawCal();
 }
-
 if (isTouch) {
 g.addEventListener('touchstart', onStart, { passive: false });
 g.addEventListener('touchmove', onMove, { passive: false });
@@ -414,106 +506,53 @@ g.addEventListener('pointerup', onEnd);
 }
 }
 
-function getWeek(dt){const fd=parseInt(sett('firstDay','1')),diff=(dt.getDay()-fd+7)%7,mon=new Date(dt);mon.setDate(dt.getDate()-diff);return Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d;});}
+function getWeek(dt){const fd=1,diff=(dt.getDay()-fd+7)%7,mon=new Date(dt);mon.setDate(dt.getDate()-diff);return Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d;});}
 
-function drawWeek(week){
-const days=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],fd=parseInt(sett('firstDay','1')),od=Array.from({length:7},(_,i)=>days[(fd+i)%7]),sh=parseInt(sett('dayStart','06:00')),eh=parseInt(sett('dayEnd','23:00')),ROWH=36;
+async function drawWeek(week){
+const days=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],sh=parseInt((await sett('dayStart','06:00'))),eh=parseInt((await sett('dayEnd','23:00'))),ROWH=36;
 let h='<div class="week-scroll"><div class="week-table"><div class="week-header"><div class="whour"></div>';
-od.forEach((d,i)=>{const dt=week[i];h+=`<div class="wday" data-day="${i}" style="${dt.toDateString()===new Date().toDateString()?'color:var(--accent);':''}">${d}<br>${dt.getDate()}</div>`;});
+for(let i=0;i<7;i++){const dt=week[i];h+=`<div class="wday" data-day="${i}" style="${dt.toDateString()===new Date().toDateString()?'color:var(--accent);':''}">${days[i]}<br>${dt.getDate()}</div>`;}
 h+='</div>';
-for(let hh=sh;hh<=eh;hh++){h+='<div class="week-row"><div class="whour">'+String(hh).padStart(2,'0')+':00</div>';week.forEach((date,di)=>{h+='<div class="wday" data-day="'+di+'">';dayTasks(date).forEach(t=>{const s=new Date(t.start),e=new Date(t.end);if(s.getHours()===hh||(s.getHours()<hh&&e.getHours()>hh)){const sm=s.getHours()*60+s.getMinutes(),em=e.getHours()*60+e.getMinutes(),top=Math.max(0,(sm-hh*60)/60*ROWH),hgt=Math.max(Math.min(ROWH-top,(em-Math.max(hh*60,sm))/60*ROWH),18),tc=isLight(t.color)?'#2d2a24':'#fff';h+=`<div class="week-task${t.fixed?' fixed':''}" data-id="${t.id}" data-day="${di}" style="top:${top}px;height:${hgt}px;background:${t.color};color:${tc};" onclick="event.stopPropagation();">${t.emoji||''}${t.title}<span class="task-del" onclick="event.stopPropagation();delTask('${t.id}')" title="Удалить">✕</span>${t.fixed?'':'<div class="resize-handle"></div>'}</div>`;}});h+='</div>';});h+='</div>';}
+for(let hh=sh;hh<=eh;hh++){h+='<div class="week-row"><div class="whour">'+String(hh).padStart(2,'0')+':00</div>';for(let di=0;di<7;di++){const date=week[di];h+='<div class="wday" data-day="'+di+'">';(await dayTasks(date)).forEach(t=>{const s=new Date(t.start),e=new Date(t.end);if(s.getHours()===hh||(s.getHours()<hh&&e.getHours()>hh)){const sm=s.getHours()*60+s.getMinutes(),em=e.getHours()*60+e.getMinutes(),top=Math.max(0,(sm-hh*60)/60*ROWH),hgt=Math.max(Math.min(ROWH-top,(em-Math.max(hh*60,sm))/60*ROWH),18),tc=isLight(t.color)?'#2d2a24':'#fff';h+=`<div class="week-task${t.fixed?' fixed':''}" data-id="${t.id}" data-day="${di}" style="top:${top}px;height:${hgt}px;background:${t.color};color:${tc};" onclick="event.stopPropagation();">${t.emoji||''}${t.title}<span class="task-del" onclick="event.stopPropagation();delTask('${t.id}')" title="Удалить">✕</span>${t.fixed?'':'<div class="resize-handle"></div>'}</div>`;}});h+='</div>';}h+='</div>';}
 h+='</div></div>';document.getElementById('grid').innerHTML=h;setupWeekDrag(week,ROWH);
 }
 
 function setupWeekDrag(week, ROWH) {
 const table = document.querySelector('.week-table');
 if (!table) return;
-
 const isTouch = 'ontouchstart' in window;
-let el = null, startY = 0, startTop = 0, startHeight = 0, tid = null, resizing = false;
-let currentDay = 0;
-
-function getDayColumns() {
-const hd = table.querySelectorAll('.week-header .wday');
-const c = [];
-hd.forEach(d => {
-const r = d.getBoundingClientRect();
-c.push({ day: parseInt(d.dataset.day), left: r.left, right: r.right });
-});
-return c;
+let el = null, startY = 0, startTop = 0, startHeight = 0, tid = null, resizing = false, currentDay = 0;
+function getDayColumns(){const hd=table.querySelectorAll('.week-header .wday');const c=[];hd.forEach(d=>{const r=d.getBoundingClientRect();c.push({day:parseInt(d.dataset.day),left:r.left,right:r.right});});return c;}
+function getDayFromX(cx){const c=getDayColumns();for(let x of c) if(cx>=x.left&&cx<=x.right)return x.day;if(c.length>0&&cx<c[0].left)return c[0].day;if(c.length>0&&cx>c[c.length-1].right)return c[c.length-1].day;return currentDay;}
+function onStart(e){const point=isTouch?e.touches[0]:e;const tb=(!isTouch?e.target:document.elementFromPoint(point.clientX,point.clientY))?.closest('.week-task');if(!tb||tb.classList.contains('fixed'))return;resizing=!!((isTouch?document.elementFromPoint(point.clientX,point.clientY):e.target)?.closest('.resize-handle'));el=tb;tid=tb.dataset.id;currentDay=parseInt(tb.dataset.day);startY=point.clientY;startTop=tb.offsetTop;startHeight=tb.offsetHeight;tb.classList.add('dragging');if(!isTouch)tb.setPointerCapture(e.pointerId);e.preventDefault();}
+function onMove(e){if(!el)return;const point=isTouch?e.touches[0]:e;const nd=getDayFromX(point.clientX);if(nd!==currentDay){currentDay=nd;el.dataset.day=currentDay;const tr=el.closest('.week-row');if(tr){const tc=tr.querySelector(`.wday[data-day="${currentDay}"]`);if(tc&&el.parentElement!==tc){tc.appendChild(el);startY=point.clientY;startTop=0;el.style.top='0px';}}}const dy=point.clientY-startY;if(resizing)el.style.height=Math.max(18,startHeight+dy)+'px';else el.style.top=Math.max(0,startTop+Math.round(dy/ROWH)*ROWH)+'px';if(isTouch)e.preventDefault();}
+async function onEnd(){if(!tid||!el)return;const dt=new Date(week[currentDay]),hh=parseInt((await sett('dayStart','06:00'))),ft=parseInt(el.style.top||0),fh=parseInt(el.style.height||18),ns=hh*60+Math.round(ft/ROWH)*60,ne=ns+Math.round(fh/ROWH)*60,ds=dt.toISOString().split('T')[0];await updateTask(tid,new Date(ds+'T'+String(Math.floor(ns/60)).padStart(2,'0')+':'+String(ns%60).padStart(2,'0')+':00'),new Date(ds+'T'+String(Math.floor(ne/60)).padStart(2,'0')+':'+String(ne%60).padStart(2,'0')+':00'));el.classList.remove('dragging');el=null;tid=null;currentDay=0;resizing=false;drawCal();}
+if(isTouch){table.addEventListener('touchstart',onStart,{passive:false});table.addEventListener('touchmove',onMove,{passive:false});table.addEventListener('touchend',onEnd);}
+else{table.addEventListener('pointerdown',onStart);table.addEventListener('pointermove',onMove);table.addEventListener('pointerup',onEnd);}
 }
 
-function getDayFromX(cx) {
-const c = getDayColumns();
-for (let x of c) if (cx >= x.left && cx <= x.right) return x.day;
-if (c.length > 0 && cx < c[0].left) return c[0].day;
-if (c.length > 0 && cx > c[c.length - 1].right) return c[c.length - 1].day;
-return currentDay;
+async function drawMonth(){
+const y=curDate.getFullYear(),m=curDate.getMonth(),first=new Date(y,m,1),last=new Date(y,m+1,0),pad=(first.getDay()+6)%7;
+let h='<div class="month-grid">';
+['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].forEach(d=>h+=`<div class="month-day-name">${d}</div>`);
+for(let i=0;i<pad;i++)h+='<div class="month-day"></div>';
+for(let d=1;d<=last.getDate();d++){const dt=new Date(y,m,d),ds=dt.toISOString().split('T')[0],isToday=dt.toDateString()===new Date().toDateString();h+=`<div class="month-day" onclick="curDate=new Date('${ds}');setView('day');"><div class="month-day-num" style="${isToday?'color:var(--accent);':''}">${d}</div>`;(await dayTasks(dt)).slice(0,3).forEach(t=>h+=`<div class="month-task" style="background:${t.color};color:${isLight(t.color)?'#2d2a24':'#fff'};">${t.emoji||''}${t.title}</div>`);if((await dayTasks(dt)).length>3)h+=`<div style="font-size:9px;color:var(--sub);">+${(await dayTasks(dt)).length-3}</div>`;h+='</div>';}
+h+='</div>';document.getElementById('grid').innerHTML=h;
 }
-
-function onStart(e) {
-const point = isTouch ? e.touches[0] : e;
-const tb = (!isTouch ? e.target : document.elementFromPoint(point.clientX, point.clientY))?.closest('.week-task');
-if (!tb || tb.classList.contains('fixed')) return;
-resizing = !!((isTouch ? document.elementFromPoint(point.clientX, point.clientY) : e.target)?.closest('.resize-handle'));
-el = tb; tid = tb.dataset.id; currentDay = parseInt(tb.dataset.day);
-startY = point.clientY; startTop = tb.offsetTop; startHeight = tb.offsetHeight;
-tb.classList.add('dragging');
-if (!isTouch) tb.setPointerCapture(e.pointerId);
-e.preventDefault();
-}
-
-function onMove(e) {
-if (!el) return;
-const point = isTouch ? e.touches[0] : e;
-const nd = getDayFromX(point.clientX);
-if (nd !== currentDay) {
-currentDay = nd;
-el.dataset.day = currentDay;
-const tr = el.closest('.week-row');
-if (tr) {
-const tc = tr.querySelector(`.wday[data-day="${currentDay}"]`);
-if (tc && el.parentElement !== tc) {
-tc.appendChild(el);
-startY = point.clientY;
-startTop = 0;
-el.style.top = '0px';
-}
-}
-}
-const dy = point.clientY - startY;
-if (resizing) el.style.height = Math.max(18, startHeight + dy) + 'px';
-else el.style.top = Math.max(0, startTop + Math.round(dy / ROWH) * ROWH) + 'px';
-if (isTouch) e.preventDefault();
-}
-
-function onEnd() {
-if (!tid || !el) return;
-const dt = new Date(week[currentDay]), hh = parseInt(sett('dayStart', '06:00'));
-const ft = parseInt(el.style.top || 0), fh = parseInt(el.style.height || 18);
-const ns = hh * 60 + Math.round(ft / ROWH) * 60, ne = ns + Math.round(fh / ROWH) * 60;
-const ds = dt.toISOString().split('T')[0];
-updateTask(tid, new Date(ds + 'T' + String(Math.floor(ns / 60)).padStart(2, '0') + ':' + String(ns % 60).padStart(2, '0') + ':00'), new Date(ds + 'T' + String(Math.floor(ne / 60)).padStart(2, '0') + ':' + String(ne % 60).padStart(2, '0') + ':00'));
-el.classList.remove('dragging'); el = null; tid = null; currentDay = 0; resizing = false;
-drawCal();
-}
-
-if (isTouch) {
-table.addEventListener('touchstart', onStart, { passive: false });
-table.addEventListener('touchmove', onMove, { passive: false });
-table.addEventListener('touchend', onEnd);
-} else {
-table.addEventListener('pointerdown', onStart);
-table.addEventListener('pointermove', onMove);
-table.addEventListener('pointerup', onEnd);
-}
-}
-
-function drawMonth(){const y=curDate.getFullYear(),m=curDate.getMonth(),fd=parseInt(sett('firstDay','1')),first=new Date(y,m,1),last=new Date(y,m+1,0),pad=(first.getDay()-fd+7)%7,od=Array.from({length:7},(_,i)=>['Пн','Вт','Ср','Чт','Пт','Сб','Вс'][(fd+i)%7]);let h='<div class="month-grid">';od.forEach(d=>h+=`<div class="month-day-name">${d}</div>`);for(let i=0;i<pad;i++)h+='<div class="month-day"></div>';for(let d=1;d<=last.getDate();d++){const dt=new Date(y,m,d),ds=dt.toISOString().split('T')[0],isToday=dt.toDateString()===new Date().toDateString();h+=`<div class="month-day" onclick="curDate=new Date('${ds}');setView('day');"><div class="month-day-num" style="${isToday?'color:var(--accent);':''}">${d}</div>`;dayTasks(dt).slice(0,3).forEach(t=>h+=`<div class="month-task" style="background:${t.color};color:${isLight(t.color)?'#2d2a24':'#fff'};">${t.emoji||''}${t.title}</div>`);if(dayTasks(dt).length>3)h+=`<div style="font-size:9px;color:var(--sub);">+${dayTasks(dt).length-3}</div>`;h+='</div>';}h+='</div>';document.getElementById('grid').innerHTML=h;}
 function closeMod(id){document.getElementById(id).classList.remove('show');}
 document.addEventListener('click',e=>{if(e.target.classList.contains('modal-bg'))e.target.classList.remove('show');});
-function init(){renderCatSelect();setView('day');const now=new Date();document.getElementById('tt').value=String(now.getHours()).padStart(2,'0')+':'+String(Math.floor(now.getMinutes()/5)*5).padStart(2,'0');setInterval(()=>{if(user&&viewMode==='day'&&curDate.toDateString()===new Date().toDateString())drawCal();},60000);}
-if(!checkSession()){document.getElementById('auth').style.display='flex';}
+
+async function init(){
+await renderCatSelect();
+setView('day');
+const now=new Date();
+document.getElementById('tt').value=String(now.getHours()).padStart(2,'0')+':'+String(Math.floor(now.getMinutes()/5)*5).padStart(2,'0');
+setInterval(async ()=>{if(user&&viewMode==='day'&&curDate.toDateString()===new Date().toDateString())await drawCal();},60000);
+}
+
+if(!checkSession()){
+document.getElementById('auth').style.display='flex';
+}
 document.getElementById('app').style.display='none';
 </script>
 </body>
