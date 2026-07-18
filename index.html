@@ -63,7 +63,7 @@ input[type="time"]::-webkit-calendar-picker-indicator { cursor: pointer; opacity
 .auth-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg); z-index: 200; display: flex; align-items: center; justify-content: center; }
 .auth-card { background: var(--card); backdrop-filter: blur(30px); border-radius: 20px; padding: 30px; width: 90%; max-width: 380px; border: 1px solid var(--border); text-align: center; display: none; flex-direction: column; gap: 14px; }
 .auth-card.active { display: flex; }
-.auth-logo { width: 50px; height: 50px; background: var(--accent); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto; }
+.auth-logo { width: 50px; height: 50px; background: var(--accent); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto; }
 .auth-logo svg { width: 28px; height: 28px; }
 .auth-card h2 { font-size: 20px; }
 .auth-card p { color: var(--sub); font-size: 13px; }
@@ -173,7 +173,6 @@ input[type="number"] { width: 55px; text-align: center; flex: 0 0 55px !importan
 
 <!-- ВХОД -->
 <div class="auth-overlay" id="auth">
-<!-- Шаг 1 -->
 <div class="auth-card active" id="stepLogin">
 <div class="auth-logo">
 <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
@@ -192,7 +191,6 @@ input[type="number"] { width: 55px; text-align: center; flex: 0 0 55px !importan
 <button class="auth-btn" onclick="goToPassword()">Далее</button>
 <p style="font-size:11px;color:var(--sub);">Новый аккаунт? Просто введите данные и придумайте пароль</p>
 </div>
-<!-- Шаг 2 -->
 <div class="auth-card" id="stepPassword">
 <div class="auth-logo">
 <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
@@ -212,7 +210,6 @@ input[type="number"] { width: 55px; text-align: center; flex: 0 0 55px !importan
 <button class="auth-btn secondary" onclick="goBackToLogin()">← Назад</button>
 <span class="auth-link" onclick="forgotPassword()">Забыли пароль?</span>
 </div>
-<!-- Шаг 3 -->
 <div class="auth-card" id="stepReset">
 <div class="auth-logo">
 <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
@@ -240,7 +237,7 @@ input[type="number"] { width: 55px; text-align: center; flex: 0 0 55px !importan
 <div id="mainContent" style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
 <div id="calendarView" style="display:flex;flex-direction:column;height:100%;">
 <div class="panel"><div class="row"><input type="text" id="tn" placeholder="Название задачи"><select id="tc"></select></div><div class="row"><input type="time" id="tt" value="12:00" step="300"><input type="number" id="td" value="30" min="5" max="480" step="5"><select id="tu" style="width:55px;flex:0 0 55px !important;"><option value="m">мин</option><option value="h">ч</option></select><label class="pin"><input type="checkbox" id="tf" checked>📌</label></div><button class="btn accent" onclick="addTask()" style="width:100%;padding:10px;">✨ Добавить</button></div>
-<div class="cal"><div class="nav"><button onclick="chView(-1)">◀</button><span id="dateLabel"></span><button onclick="chView(1)">▶</button><button onclick="goToday()" style="font-size:10px;">Сегодня</button><button id="btnDay" class="active" onclick="setView('day')">День</button><button id="btnWeek" onclick="setView('week')">Неделя</button><button id="btnMonth" onclick="setView('month')">Месяц</button><label class="now-toggle"><input type="checkbox" id="showNow" checked onchange="drawCal()"> линия времени</label></div><div class="grid" id="grid"></div></div>
+<div class="cal" id="calContainer"><div class="nav"><button onclick="chView(-1)">◀</button><span id="dateLabel"></span><button onclick="chView(1)">▶</button><button onclick="goToday()" style="font-size:10px;">Сегодня</button><button id="btnDay" class="active" onclick="setView('day')">День</button><button id="btnWeek" onclick="setView('week')">Неделя</button><button id="btnMonth" onclick="setView('month')">Месяц</button><label class="now-toggle"><input type="checkbox" id="showNow" checked onchange="drawCal()"> линия времени</label></div><div class="grid" id="grid"></div></div>
 </div>
 <div id="notesView" style="display:none;flex-direction:column;height:100%;"><div style="padding:12px 16px;display:flex;gap:6px;"><button class="btn accent" onclick="addNote()" style="flex:1;">➕ Новая заметка</button></div><div class="notes-container" id="notesContainer" style="flex:1;overflow-y:auto;"></div></div>
 </div>
@@ -353,9 +350,69 @@ h+=`<div class="task-block${t.fixed?' fixed':''}" data-id="${t.id}" style="top:$
 if(isToday&&showNow){const nm=now.getHours()*60+now.getMinutes();if(nm>=sh*60&&nm<=(eh+1)*60)h+=`<div class="now-line" style="top:${(nm-sh*60)/5*SLOT}px;"></div>`;}
 h+='</div>';document.getElementById('grid').innerHTML=h;setupDayDrag(SLOT,sh);
 document.querySelectorAll('.day-slot').forEach(s=>s.addEventListener('click',function(e){if(e.target.closest('.task-block'))return;document.getElementById('tt').value=String(parseInt(this.dataset.h)).padStart(2,'0')+':'+String(parseInt(this.dataset.m)).padStart(2,'0');document.getElementById('tn').focus();}));
+// Прокрутка к текущему времени
+if(isToday){
+const nowH = now.getHours();
+const nowM = Math.floor(now.getMinutes()/5)*5;
+const targetSlot = document.querySelector(`.day-slot[data-h="${nowH}"][data-m="${nowM}"]`);
+if(targetSlot){
+setTimeout(()=>{
+targetSlot.scrollIntoView({behavior:'smooth',block:'center'});
+},50);
+}
+}
 }
 
-function setupDayDrag(SLOT,sh){const g=document.querySelector('.day-grid');if(!g)return;let el=null,ty=0,tt=0,th=0,tid=null,resizing=false;g.addEventListener('pointerdown',function(e){if(e.target.closest('.task-del'))return;const tb=e.target.closest('.task-block');if(!tb||tb.classList.contains('fixed'))return;resizing=!!e.target.closest('.resize-handle');el=tb;tid=tb.dataset.id;ty=e.clientY;tt=tb.offsetTop;th=tb.offsetHeight;tb.classList.add('dragging');tb.setPointerCapture(e.pointerId);e.preventDefault();});g.addEventListener('pointermove',function(e){if(!el)return;const dy=e.clientY-ty;if(resizing)el.style.height=Math.max(22,th+dy)+'px';else el.style.top=Math.max(0,tt+Math.round(dy/SLOT)*SLOT)+'px';});g.addEventListener('pointerup',function(){if(!tid)return;const gs=sh*60,ns=gs+Math.round(parseInt(el.style.top||0)/SLOT)*5,ne=ns+Math.round(parseInt(el.style.height||22)/SLOT)*5,ds=curDate.toISOString().split('T')[0];updateTask(tid,new Date(ds+'T'+String(Math.floor(ns/60)).padStart(2,'0')+':'+String(ns%60).padStart(2,'0')+':00'),new Date(ds+'T'+String(Math.floor(ne/60)).padStart(2,'0')+':'+String(ne%60).padStart(2,'0')+':00'));el.classList.remove('dragging');el=null;tid=null;resizing=false;drawCal();});}
+function setupDayDrag(SLOT, sh) {
+const g = document.querySelector('.day-grid');
+if (!g) return;
+
+const isTouch = 'ontouchstart' in window;
+let el = null, startY = 0, startTop = 0, startHeight = 0, tid = null, resizing = false;
+
+function onStart(e) {
+const point = isTouch ? e.touches[0] : e;
+if (isTouch && e.target.closest('.task-del')) return;
+const tb = (!isTouch ? e.target : document.elementFromPoint(point.clientX, point.clientY))?.closest('.task-block');
+if (!tb || tb.classList.contains('fixed')) return;
+resizing = !!((isTouch ? document.elementFromPoint(point.clientX, point.clientY) : e.target)?.closest('.resize-handle'));
+el = tb; tid = tb.dataset.id;
+startY = point.clientY; startTop = tb.offsetTop; startHeight = tb.offsetHeight;
+tb.classList.add('dragging');
+if (!isTouch) tb.setPointerCapture(e.pointerId);
+e.preventDefault();
+}
+
+function onMove(e) {
+if (!el) return;
+const point = isTouch ? e.touches[0] : e;
+const dy = point.clientY - startY;
+if (resizing) el.style.height = Math.max(22, startHeight + dy) + 'px';
+else el.style.top = Math.max(0, startTop + Math.round(dy / SLOT) * SLOT) + 'px';
+if (isTouch) e.preventDefault();
+}
+
+function onEnd() {
+if (!tid || !el) return;
+const gs = sh * 60;
+const ns = gs + Math.round(parseInt(el.style.top || 0) / SLOT) * 5;
+const ne = ns + Math.round(parseInt(el.style.height || 22) / SLOT) * 5;
+const ds = curDate.toISOString().split('T')[0];
+updateTask(tid, new Date(ds + 'T' + String(Math.floor(ns / 60)).padStart(2, '0') + ':' + String(ns % 60).padStart(2, '0') + ':00'), new Date(ds + 'T' + String(Math.floor(ne / 60)).padStart(2, '0') + ':' + String(ne % 60).padStart(2, '0') + ':00'));
+el.classList.remove('dragging'); el = null; tid = null; resizing = false;
+drawCal();
+}
+
+if (isTouch) {
+g.addEventListener('touchstart', onStart, { passive: false });
+g.addEventListener('touchmove', onMove, { passive: false });
+g.addEventListener('touchend', onEnd);
+} else {
+g.addEventListener('pointerdown', onStart);
+g.addEventListener('pointermove', onMove);
+g.addEventListener('pointerup', onEnd);
+}
+}
 
 function getWeek(dt){const fd=parseInt(sett('firstDay','1')),diff=(dt.getDay()-fd+7)%7,mon=new Date(dt);mon.setDate(dt.getDate()-diff);return Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d;});}
 
@@ -369,14 +426,87 @@ h+='</div></div>';document.getElementById('grid').innerHTML=h;setupWeekDrag(week
 }
 
 function setupWeekDrag(week, ROWH) {
-const table = document.querySelector('.week-table'); if (!table) return;
-let el = null, tid = null, resizing = false;
-let startY = 0, startTop = 0, startHeight = 0, currentDay = 0;
-function getDayColumns(){const hd=table.querySelectorAll('.week-header .wday');const c=[];hd.forEach(d=>{const r=d.getBoundingClientRect();c.push({day:parseInt(d.dataset.day),left:r.left,right:r.right});});return c;}
-function getDayFromX(cx){const c=getDayColumns();for(let x of c){if(cx>=x.left&&cx<=x.right)return x.day;}if(c.length>0&&cx<c[0].left)return c[0].day;if(c.length>0&&cx>c[c.length-1].right)return c[c.length-1].day;return currentDay;}
-table.addEventListener('pointerdown',function(e){if(e.target.closest('.task-del'))return;const tb=e.target.closest('.week-task');if(!tb||tb.classList.contains('fixed'))return;resizing=!!e.target.closest('.resize-handle');el=tb;tid=tb.dataset.id;currentDay=parseInt(tb.dataset.day);startY=e.clientY;startTop=tb.offsetTop;startHeight=tb.offsetHeight;tb.classList.add('dragging');tb.setPointerCapture(e.pointerId);e.preventDefault();});
-table.addEventListener('pointermove',function(e){if(!el)return;const nd=getDayFromX(e.clientX);if(nd!==currentDay){currentDay=nd;el.dataset.day=currentDay;const tr=el.closest('.week-row');if(tr){const tc=tr.querySelector(`.wday[data-day="${currentDay}"]`);if(tc&&el.parentElement!==tc){tc.appendChild(el);startY=e.clientY;startTop=0;el.style.top='0px';}}}const dy=e.clientY-startY;if(resizing)el.style.height=Math.max(18,startHeight+dy)+'px';else el.style.top=Math.max(0,startTop+Math.round(dy/ROWH)*ROWH)+'px';});
-table.addEventListener('pointerup',function(){if(!tid||!el)return;const dt=new Date(week[currentDay]),hh=parseInt(sett('dayStart','06:00')),ft=parseInt(el.style.top||0),fh=parseInt(el.style.height||18),ns=hh*60+Math.round(ft/ROWH)*60,ne=ns+Math.round(fh/ROWH)*60,ds=dt.toISOString().split('T')[0];updateTask(tid,new Date(ds+'T'+String(Math.floor(ns/60)).padStart(2,'0')+':'+String(ns%60).padStart(2,'0')+':00'),new Date(ds+'T'+String(Math.floor(ne/60)).padStart(2,'0')+':'+String(ne%60).padStart(2,'0')+':00'));el.classList.remove('dragging');el=null;tid=null;currentDay=0;resizing=false;drawCal();});
+const table = document.querySelector('.week-table');
+if (!table) return;
+
+const isTouch = 'ontouchstart' in window;
+let el = null, startY = 0, startTop = 0, startHeight = 0, tid = null, resizing = false;
+let currentDay = 0;
+
+function getDayColumns() {
+const hd = table.querySelectorAll('.week-header .wday');
+const c = [];
+hd.forEach(d => {
+const r = d.getBoundingClientRect();
+c.push({ day: parseInt(d.dataset.day), left: r.left, right: r.right });
+});
+return c;
+}
+
+function getDayFromX(cx) {
+const c = getDayColumns();
+for (let x of c) if (cx >= x.left && cx <= x.right) return x.day;
+if (c.length > 0 && cx < c[0].left) return c[0].day;
+if (c.length > 0 && cx > c[c.length - 1].right) return c[c.length - 1].day;
+return currentDay;
+}
+
+function onStart(e) {
+const point = isTouch ? e.touches[0] : e;
+const tb = (!isTouch ? e.target : document.elementFromPoint(point.clientX, point.clientY))?.closest('.week-task');
+if (!tb || tb.classList.contains('fixed')) return;
+resizing = !!((isTouch ? document.elementFromPoint(point.clientX, point.clientY) : e.target)?.closest('.resize-handle'));
+el = tb; tid = tb.dataset.id; currentDay = parseInt(tb.dataset.day);
+startY = point.clientY; startTop = tb.offsetTop; startHeight = tb.offsetHeight;
+tb.classList.add('dragging');
+if (!isTouch) tb.setPointerCapture(e.pointerId);
+e.preventDefault();
+}
+
+function onMove(e) {
+if (!el) return;
+const point = isTouch ? e.touches[0] : e;
+const nd = getDayFromX(point.clientX);
+if (nd !== currentDay) {
+currentDay = nd;
+el.dataset.day = currentDay;
+const tr = el.closest('.week-row');
+if (tr) {
+const tc = tr.querySelector(`.wday[data-day="${currentDay}"]`);
+if (tc && el.parentElement !== tc) {
+tc.appendChild(el);
+startY = point.clientY;
+startTop = 0;
+el.style.top = '0px';
+}
+}
+}
+const dy = point.clientY - startY;
+if (resizing) el.style.height = Math.max(18, startHeight + dy) + 'px';
+else el.style.top = Math.max(0, startTop + Math.round(dy / ROWH) * ROWH) + 'px';
+if (isTouch) e.preventDefault();
+}
+
+function onEnd() {
+if (!tid || !el) return;
+const dt = new Date(week[currentDay]), hh = parseInt(sett('dayStart', '06:00'));
+const ft = parseInt(el.style.top || 0), fh = parseInt(el.style.height || 18);
+const ns = hh * 60 + Math.round(ft / ROWH) * 60, ne = ns + Math.round(fh / ROWH) * 60;
+const ds = dt.toISOString().split('T')[0];
+updateTask(tid, new Date(ds + 'T' + String(Math.floor(ns / 60)).padStart(2, '0') + ':' + String(ns % 60).padStart(2, '0') + ':00'), new Date(ds + 'T' + String(Math.floor(ne / 60)).padStart(2, '0') + ':' + String(ne % 60).padStart(2, '0') + ':00'));
+el.classList.remove('dragging'); el = null; tid = null; currentDay = 0; resizing = false;
+drawCal();
+}
+
+if (isTouch) {
+table.addEventListener('touchstart', onStart, { passive: false });
+table.addEventListener('touchmove', onMove, { passive: false });
+table.addEventListener('touchend', onEnd);
+} else {
+table.addEventListener('pointerdown', onStart);
+table.addEventListener('pointermove', onMove);
+table.addEventListener('pointerup', onEnd);
+}
 }
 
 function drawMonth(){const y=curDate.getFullYear(),m=curDate.getMonth(),fd=parseInt(sett('firstDay','1')),first=new Date(y,m,1),last=new Date(y,m+1,0),pad=(first.getDay()-fd+7)%7,od=Array.from({length:7},(_,i)=>['Пн','Вт','Ср','Чт','Пт','Сб','Вс'][(fd+i)%7]);let h='<div class="month-grid">';od.forEach(d=>h+=`<div class="month-day-name">${d}</div>`);for(let i=0;i<pad;i++)h+='<div class="month-day"></div>';for(let d=1;d<=last.getDate();d++){const dt=new Date(y,m,d),ds=dt.toISOString().split('T')[0],isToday=dt.toDateString()===new Date().toDateString();h+=`<div class="month-day" onclick="curDate=new Date('${ds}');setView('day');"><div class="month-day-num" style="${isToday?'color:var(--accent);':''}">${d}</div>`;dayTasks(dt).slice(0,3).forEach(t=>h+=`<div class="month-task" style="background:${t.color};color:${isLight(t.color)?'#2d2a24':'#fff'};">${t.emoji||''}${t.title}</div>`);if(dayTasks(dt).length>3)h+=`<div style="font-size:9px;color:var(--sub);">+${dayTasks(dt).length-3}</div>`;h+='</div>';}h+='</div>';document.getElementById('grid').innerHTML=h;}
