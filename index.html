@@ -145,11 +145,12 @@ let localData = {
 settings: { theme:'dark', accent:'#A9DEF9', accentLight:'#7ab8d4', firstDay:'1', dayStart:'06:00', dayEnd:'23:00' },
 categories: JSON.parse(JSON.stringify(DEF_CATS)),
 tasks: [],
-notes: []
+notes: [],
+updatedAt: Date.now()
 };
 let curDate=new Date(), viewMode='day', selEmoji='📁', selColor=PALETTE[0], currentScreen='calendar';
 let db = null, unsubscribe = null;
-let lastSentJSON = null; // JSON последних отправленных или полученных данных
+let lastSentJSON = null;
 
 // ========== ИНИЦИАЛИЗАЦИЯ FIREBASE ==========
 function initFirebase() {
@@ -167,6 +168,7 @@ appId: "1:889265422:web:1368ae19258fefa6bd8b5f"
 }
 db = firebase.firestore();
 startSync();
+initialLoadFromCloud(); // первичная загрузка
 } catch(e) { console.warn('Firebase not available'); }
 }
 
@@ -176,11 +178,13 @@ const saved = localStorage.getItem('flexiday_data_v2');
 if (saved) {
 try { localData = JSON.parse(saved); } catch(e) {}
 }
+if (!localData.updatedAt) localData.updatedAt = Date.now();
 lastSentJSON = JSON.stringify(localData);
 applySettings();
 }
 
 function saveLocal() {
+localData.updatedAt = Date.now();
 localStorage.setItem('flexiday_data_v2', JSON.stringify(localData));
 if (db) syncToCloud();
 }
@@ -207,11 +211,9 @@ unsubscribe = db.collection('users').doc(USER_DOC_ID).onSnapshot((doc) => {
 if (doc.exists) {
 const cloud = doc.data();
 const cloudJSON = JSON.stringify(cloud);
-// Игнорируем, если это наше собственное изменение
 if (cloudJSON === lastSentJSON) return;
-// Принимаем облачные данные
 localData = cloud;
-lastSentJSON = cloudJSON; // важно: обновляем, чтобы не отправлять обратно
+lastSentJSON = cloudJSON;
 saveLocalSilent();
 applySettings();
 refreshUI();
@@ -219,7 +221,28 @@ refreshUI();
 }, (err) => { console.warn('Sync offline'); });
 }
 
-// Ручная синхронизация (для проверки)
+// Первичная загрузка из облака при старте
+async function initialLoadFromCloud() {
+if (!db) return;
+try {
+const doc = await db.collection('users').doc(USER_DOC_ID).get();
+if (doc.exists) {
+const cloud = doc.data();
+const cloudJSON = JSON.stringify(cloud);
+const localEmpty = !localData.tasks.length && !localData.notes.length && !localData.categories.length;
+// если локальные данные пустые или облачные новее, обновляем
+if (localEmpty || (cloud.updatedAt && cloud.updatedAt > localData.updatedAt)) {
+localData = cloud;
+lastSentJSON = cloudJSON;
+saveLocalSilent();
+applySettings();
+refreshUI();
+}
+}
+} catch(e) { console.warn('Initial load error:', e); }
+}
+
+// Ручная синхронизация
 async function manualSync() {
 if (!db) { alert('Синхронизация недоступна, Firebase не загружен'); return; }
 // Сначала отправляем локальные данные
