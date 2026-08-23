@@ -63,8 +63,8 @@ input[type="number"] { width:55px; text-align:center; flex:0 0 55px!important; }
 .task-block .resize-handle { position:absolute; bottom:0; left:0; right:0; height:6px; cursor:ns-resize; z-index:5; }
 .task-block.fixed .resize-handle { display:none; }
 .task-time { margin-left:auto; font-size:9px; opacity:0.8; flex-shrink:0; white-space:nowrap; }
-.task-del { margin-left:4px; cursor:pointer; opacity:0.6; font-size:12px; flex-shrink:0; z-index:10; }
-.task-del:hover { opacity:1; }
+.task-del, .task-dup { margin-left:4px; cursor:pointer; opacity:0.6; font-size:12px; flex-shrink:0; z-index:10; }
+.task-del:hover, .task-dup:hover { opacity:1; }
 .now-line { position:absolute; left:46px; right:0; height:2px; background:var(--danger); z-index:3; pointer-events:none; }
 .now-line::before { content:''; position:absolute; left:-4px; top:-3px; width:8px; height:8px; background:var(--danger); border-radius:50%; }
 .week-scroll { overflow-x:auto; -webkit-overflow-scrolling:touch; }
@@ -79,7 +79,7 @@ input[type="number"] { width:55px; text-align:center; flex:0 0 55px!important; }
 .week-task.fixed { cursor:default!important; border-left:2px solid rgba(255,255,255,0.5); }
 .week-task .resize-handle { position:absolute; bottom:0; left:0; right:0; height:4px; cursor:ns-resize; z-index:5; }
 .week-task.fixed .resize-handle { display:none; }
-.week-task .task-del { margin-left:2px; font-size:10px; }
+.week-task .task-del, .week-task .task-dup { margin-left:2px; font-size:10px; }
 .month-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:1px; background:var(--border); border-radius:12px; overflow:hidden; }
 .month-day-name { background:var(--card); text-align:center; padding:6px; font-size:11px; font-weight:700; color:var(--sub); }
 .month-day { background:var(--card); min-height:70px; padding:4px; cursor:pointer; }
@@ -121,7 +121,7 @@ input[type="number"] { width:55px; text-align:center; flex:0 0 55px!important; }
 <div id="mainContent" style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
 <div id="calendarView" style="display:flex;flex-direction:column;height:100%;">
 <div class="panel"><div class="row"><input type="text" id="tn" placeholder="Название задачи"><select id="tc"></select></div><div class="row"><input type="time" id="tt" value="12:00" step="300"><input type="number" id="td" value="30" min="5" max="480" step="5"><select id="tu" style="width:55px;flex:0 0 55px!important;"><option value="m">мин</option><option value="h">ч</option></select><label class="pin"><input type="checkbox" id="tf" checked>📌</label></div><button class="btn accent" onclick="addTask()" style="width:100%;padding:10px;">✨ Добавить</button></div>
-<div class="cal" id="calContainer"><div class="nav"><button onclick="chView(-1)">◀</button><span id="dateLabel"></span><button onclick="chView(1)">▶</button><button onclick="goToday()" style="font-size:10px;">Сегодня</button><button id="btnDay" class="active" onclick="setView('day')">День</button><button id="btnWeek" onclick="setView('week')">Неделя</button><button id="btnMonth" onclick="setView('month')">Месяц</button><label class="now-toggle"><input type="checkbox" id="showNow" checked onchange="drawCal()"> линия времени</label></div><div class="grid" id="grid"></div></div>
+<div class="cal" id="calContainer"><div class="nav"><button onclick="chView(-1)">◀</button><span id="dateLabel"></span><button onclick="chView(1)">▶</button><button onclick="goToday()" style="font-size:10px;">Сегодня</button><button id="btnDay" class="active" onclick="setView('day')">День</button><button id="btnWeek" onclick="setView('week')">Неделя</button><button id="btnMonth" onclick="setView('month')">Месяц</button><label class="now-toggle"><input type="checkbox" id="showNow" checked onchange="drawCal()"> линия времени</label><button class="btn" onclick="scrollToNow()" style="font-size:10px;">Сейчас</button></div><div class="grid" id="grid"></div></div>
 </div>
 <div id="notesView" style="display:none;flex-direction:column;height:100%;"><div style="padding:12px 16px;display:flex;gap:6px;"><button class="btn accent" onclick="addNote()" style="flex:1;">➕ Новая заметка</button></div><div class="notes-container" id="notesContainer" style="flex:1;overflow-y:auto;"></div></div>
 </div>
@@ -129,7 +129,6 @@ input[type="number"] { width:55px; text-align:center; flex:0 0 55px!important; }
 <div class="modal-bg" id="catMod"><div class="modal"><h3>🎨 Разделы</h3><div id="catList"></div><div class="cat-row"><button class="emoji-btn" id="emojiBtn" onclick="toggleEmoji()">📁</button><input type="text" id="newCatName" placeholder="Название"></div><div class="emoji-grid" id="emojiGrid" style="display:none;"></div><div class="colors" id="palette"></div><button class="btn accent" onclick="addCat()" style="width:100%;">➕ Добавить</button><button class="btn" onclick="closeMod('catMod')">Закрыть</button></div></div>
 <div class="modal-bg" id="setMod"><div class="modal"><h3>⚙️ Настройки</h3><label>Тема</label><select id="sTheme" onchange="applyTheme()"><option value="dark">Тёмная</option><option value="light">Светлая</option></select><label>Акцентный цвет</label><div class="accent-colors" id="accentPalette"></div><label>Первый день недели</label><select id="sFirstDay" onchange="sets('firstDay',this.value);drawCal();"><option value="1">Понедельник</option><option value="0">Воскресенье</option><option value="6">Суббота</option></select><label>Начало дня</label><input type="time" id="sStart" value="06:00" onchange="saveBounds()"><label>Конец дня</label><input type="time" id="sEnd" value="23:00" onchange="saveBounds()"><button class="btn accent" onclick="closeMod('setMod');drawCal();">Готово</button></div></div>
 
-<!-- Загружаем Firebase после отрисовки интерфейса -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
@@ -139,13 +138,19 @@ const PALETTE=['#FFB3BA','#FFC8A2','#FFE5A0','#D4F0A0','#A8E6CF','#A0D2F0','#B3C
 const EMOJIS=['🏋️','💼','🌱','📚','🎨','🎵','💻','🏃','🧘','🍳','🧹','🛒','✈️','🚗','🏠','💤','⏰','📝','💡','🎯','💰','❤️','🌟','🔥','🎉','📞','✉️','🗓️','☕','🍽️','🐱','🐶','🎮','📷','🎬','🧠','💪','🤝','🛠️','📊','🔬','🌍','🎪','🏆','💎','🌈','🍀','🎁','📌','🔔','⚡','🎈','🌙','☀️','🌸','🍕','🎧','📱','💊','🧩'];
 const DEF_CATS=[{id:'c1',name:'Спорт',emoji:'🏋️',color:'#FFB3BA'},{id:'c2',name:'Работа',emoji:'💼',color:'#A0D2F0'},{id:'c3',name:'Личное',emoji:'🌱',color:'#A8E6CF'}];
 const ACCENT_COLORS=[{name:'Голубой',color:'#A9DEF9',light:'#7ab8d4'},{name:'Коричневый',color:'#A57149',light:'#8b5a35'},{name:'Оливковый',color:'#A5AF5D',light:'#8a9442'},{name:'Жёлтый',color:'#F2D965',light:'#d4bb2e'},{name:'Бордовый',color:'#830626',light:'#6b0019'},{name:'Розовый',color:'#D56989',light:'#c04a6e'}];
-const USER_DOC_ID = 'my_user_data'; // один документ для синхронизации
+const USER_DOC_ID = 'my_user_data';
 
 // ========== СОСТОЯНИЕ ==========
-let localData = { settings:{theme:'dark',accent:'#A9DEF9',accentLight:'#7ab8d4',firstDay:'1',dayStart:'06:00',dayEnd:'23:00'}, categories:JSON.parse(JSON.stringify(DEF_CATS)), tasks:[], notes:[] };
+let localData = {
+settings: { theme:'dark', accent:'#A9DEF9', accentLight:'#7ab8d4', firstDay:'1', dayStart:'06:00', dayEnd:'23:00' },
+categories: JSON.parse(JSON.stringify(DEF_CATS)),
+tasks: [],
+notes: [],
+updatedAt: Date.now()
+};
 let curDate=new Date(), viewMode='day', selEmoji='📁', selColor=PALETTE[0], currentScreen='calendar';
-let db = null; // ссылка на Firestore после инициализации
-let unsubscribe = null; // слушатель Firestore
+let db = null, unsubscribe = null;
+let lastSentJSON = null; // чтобы не реагировать на собственные изменения
 
 // ========== ИНИЦИАЛИЗАЦИЯ FIREBASE ==========
 function initFirebase() {
@@ -162,39 +167,39 @@ appId: "1:889265422:web:1368ae19258fefa6bd8b5f"
 });
 }
 db = firebase.firestore();
-// Включаем оффлайн-режим
 db.enablePersistence().catch(() => {});
 startSync();
-} catch(e) {
-console.warn('Firebase не загружен, работаем оффлайн');
-}
+} catch(e) { console.warn('Firebase not available'); }
 }
 
-// ========== ЗАГРУЗКА ДАННЫХ ==========
+// ========== ЛОКАЛЬНОЕ ХРАНИЛИЩЕ ==========
 function loadLocal() {
-const saved = localStorage.getItem('flexiday_data');
+const saved = localStorage.getItem('flexiday_data_v2');
 if (saved) {
 try { localData = JSON.parse(saved); } catch(e) {}
-} else {
-localData = {
-settings: {theme:'dark',accent:'#A9DEF9',accentLight:'#7ab8d4',firstDay:'1',dayStart:'06:00',dayEnd:'23:00'},
-categories: JSON.parse(JSON.stringify(DEF_CATS)),
-tasks: [],
-notes: []
-};
-saveLocal();
 }
+// обновляем updatedAt, если его нет
+if (!localData.updatedAt) localData.updatedAt = Date.now();
+saveLocalSilent();
 applySettings();
 }
 
 function saveLocal() {
-localStorage.setItem('flexiday_data', JSON.stringify(localData));
+localData.updatedAt = Date.now();
+localStorage.setItem('flexiday_data_v2', JSON.stringify(localData));
 if (db) syncToCloud();
+}
+
+function saveLocalSilent() {
+localStorage.setItem('flexiday_data_v2', JSON.stringify(localData));
 }
 
 // ========== ОБЛАЧНАЯ СИНХРОНИЗАЦИЯ ==========
 function syncToCloud() {
 if (!db) return;
+const json = JSON.stringify(localData);
+if (json === lastSentJSON) return; // не отправляем то же самое
+lastSentJSON = json;
 try {
 db.collection('users').doc(USER_DOC_ID).set(localData, {merge:true});
 } catch(e) {}
@@ -202,28 +207,21 @@ db.collection('users').doc(USER_DOC_ID).set(localData, {merge:true});
 
 function startSync() {
 if (!db) return;
-unsubscribe = db.collection('users').doc(USER_DOC_ID)
-.onSnapshot((doc) => {
+unsubscribe = db.collection('users').doc(USER_DOC_ID).onSnapshot((doc) => {
 if (doc.exists) {
 const cloud = doc.data();
-// Проверяем, не мы ли сами отправили эти данные (чтобы избежать цикла)
-// Просто обновляем локальные данные, если они отличаются
-const localJSON = JSON.stringify(localData);
 const cloudJSON = JSON.stringify(cloud);
-if (localJSON !== cloudJSON) {
+// игнорируем собственные изменения (чтобы не было петель)
+if (cloudJSON === lastSentJSON) return;
+// обновляем локальные данные только если облако новее
+if (!localData.updatedAt || (cloud.updatedAt && cloud.updatedAt > localData.updatedAt)) {
 localData = cloud;
-saveLocalSilent(); // сохраняем без повторной отправки в облако
+saveLocalSilent();
 applySettings();
 refreshUI();
 }
 }
-}, (err) => {
-console.warn('Синхронизация недоступна, работаем локально');
-});
-}
-
-function saveLocalSilent() {
-localStorage.setItem('flexiday_data', JSON.stringify(localData));
+}, (err) => { console.warn('Sync offline'); });
 }
 
 function applySettings() {
@@ -237,10 +235,9 @@ else if (currentScreen === 'notes') renderNotes();
 if (document.getElementById('tc')) renderCatSelect();
 }
 
-// ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
+// ========== ВСПОМОГАТЕЛЬНЫЕ ==========
 function sett(k,d) { return localData.settings[k] !== undefined ? localData.settings[k] : d; }
 function sets(k,v) { localData.settings[k]=v; saveLocal(); }
-
 function applyAccent(c,l){
 const root=document.documentElement;
 const isLight=document.body.classList.contains('light-theme');
@@ -250,7 +247,6 @@ root.style.setProperty('--accent-light',l||c);
 const h=a.replace('#','');
 root.style.setProperty('--accent-rgb',parseInt(h.substring(0,2),16)+','+parseInt(h.substring(2,4),16)+','+parseInt(h.substring(4,6),16));
 }
-
 function openSets() {
 document.getElementById('sTheme').value = sett('theme','dark');
 document.getElementById('sFirstDay').value = sett('firstDay','1');
@@ -260,92 +256,87 @@ document.getElementById('accentPalette').innerHTML = ACCENT_COLORS.map(c=>`<div 
 document.getElementById('setMod').classList.add('show');
 }
 function selectAccent(c,l){ applyAccent(c,l); sets('accent',c); sets('accentLight',l); openSets(); }
-function applyTheme() {
-const t = document.getElementById('sTheme').value;
-document.body.className = t==='light'?'light-theme':'';
-sets('theme',t);
-applyAccent(sett('accent','#A9DEF9'), sett('accentLight','#7ab8d4'));
-}
-function saveBounds() {
-sets('dayStart', document.getElementById('sStart').value);
-sets('dayEnd', document.getElementById('sEnd').value);
-}
+function applyTheme(){ const t=document.getElementById('sTheme').value; document.body.className=t==='light'?'light-theme':''; sets('theme',t); applyAccent(sett('accent','#A9DEF9'),sett('accentLight','#7ab8d4')); }
+function saveBounds(){ sets('dayStart',document.getElementById('sStart').value); sets('dayEnd',document.getElementById('sEnd').value); }
 
 // Заметки
-function openNotes() { currentScreen='notes'; document.getElementById('calendarView').style.display='none'; document.getElementById('notesView').style.display='flex'; renderNotes(); }
-function renderNotes() {
-const notes = localData.notes || [];
-document.getElementById('notesContainer').innerHTML = notes.length===0 ? '<div style="color:var(--sub);text-align:center;padding:40px;">Нет заметок</div>' :
+function openNotes(){ currentScreen='notes'; document.getElementById('calendarView').style.display='none'; document.getElementById('notesView').style.display='flex'; renderNotes(); }
+function renderNotes(){
+const notes=localData.notes||[];
+document.getElementById('notesContainer').innerHTML=notes.length===0?'<div style="color:var(--sub);text-align:center;padding:40px;">Нет заметок</div>':
 notes.sort((a,b)=>b.date-a.date).map(n=>`<div class="note-card"><div class="note-date">${new Date(n.date).toLocaleString()}</div><textarea onchange="updateNote('${n.id}',this.value)">${n.text}</textarea><div class="note-actions"><button class="btn" onclick="deleteNote('${n.id}')">🗑️</button></div></div>`).join('');
 }
-function addNote() { localData.notes.push({id:'n'+Date.now(), text:'', date:Date.now()}); saveLocal(); renderNotes(); }
-function updateNote(id,text) { const n = localData.notes.find(n=>n.id===id); if(n){ n.text=text; saveLocal(); } }
-function deleteNote(id) { if(confirm('Удалить заметку?')){ localData.notes=localData.notes.filter(n=>n.id!==id); saveLocal(); renderNotes(); } }
-function openCalendar() { currentScreen='calendar'; document.getElementById('notesView').style.display='none'; document.getElementById('calendarView').style.display='flex'; drawCal(); }
+function addNote(){ localData.notes.push({id:'n'+Date.now(),text:'',date:Date.now()}); saveLocal(); renderNotes(); }
+function updateNote(id,text){ const n=localData.notes.find(n=>n.id===id); if(n){n.text=text; saveLocal();} }
+function deleteNote(id){ if(confirm('Удалить заметку?')){ localData.notes=localData.notes.filter(n=>n.id!==id); saveLocal(); renderNotes(); } }
+function openCalendar(){ currentScreen='calendar'; document.getElementById('notesView').style.display='none'; document.getElementById('calendarView').style.display='flex'; drawCal(); }
 
 // Разделы
-function cats() { if(!localData.categories||localData.categories.length===0){ localData.categories=JSON.parse(JSON.stringify(DEF_CATS)); saveLocal(); } return localData.categories; }
-function catById(id) { return cats().find(c=>c.id===id); }
-function renderCatSelect() { const sel=document.getElementById('tc'); if(sel) sel.innerHTML = cats().map(c=>`<option value="${c.id}">${c.emoji} ${c.name}</option>`).join(''); }
-function openCats() {
+function cats(){ if(!localData.categories||localData.categories.length===0){ localData.categories=JSON.parse(JSON.stringify(DEF_CATS)); saveLocal(); } return localData.categories; }
+function catById(id){ return cats().find(c=>c.id===id); }
+function renderCatSelect(){ const sel=document.getElementById('tc'); if(sel) sel.innerHTML = cats().map(c=>`<option value="${c.id}">${c.emoji} ${c.name}</option>`).join(''); }
+function openCats(){
 document.getElementById('catList').innerHTML = cats().map(c=>`<div class="cat-item"><span>${c.emoji}</span><span class="cat-dot" style="background:${c.color};"></span><span>${c.name}</span><button class="cat-del" onclick="delCat('${c.id}')">Удалить</button></div>`).join('')||'<div style="color:var(--sub);text-align:center;">Нет разделов</div>';
 document.getElementById('palette').innerHTML = PALETTE.map(c=>`<div class="swatch${c===selColor?' sel':''}" style="background:${c};" onclick="selColor='${c}';openCats();"></div>`).join('');
 document.getElementById('emojiGrid').innerHTML = EMOJIS.map(e=>`<button onclick="selEmoji='${e}';document.getElementById('emojiBtn').textContent='${e}';document.getElementById('emojiGrid').style.display='none';">${e}</button>`).join('');
 document.getElementById('catMod').classList.add('show');
 }
-function toggleEmoji() { document.getElementById('emojiGrid').style.display = document.getElementById('emojiGrid').style.display==='none'?'grid':'none'; }
-function addCat() {
-const n = document.getElementById('newCatName')?.value.trim();
-if(!n) return;
-localData.categories.push({id:'c'+Date.now(), name:n, emoji:selEmoji, color:selColor});
-saveLocal();
-document.getElementById('newCatName').value='';
-selEmoji='📁'; selColor=PALETTE[0];
-renderCatSelect(); openCats(); drawCal();
-}
-function delCat(id) {
-localData.categories = localData.categories.filter(c=>c.id!==id);
-localData.tasks = localData.tasks.filter(t=>t.catId!==id);
-saveLocal();
-renderCatSelect(); openCats(); drawCal();
-}
+function toggleEmoji(){ document.getElementById('emojiGrid').style.display = document.getElementById('emojiGrid').style.display==='none'?'grid':'none'; }
+function addCat(){ const n=document.getElementById('newCatName')?.value.trim(); if(!n)return; localData.categories.push({id:'c'+Date.now(),name:n,emoji:selEmoji,color:selColor}); saveLocal(); document.getElementById('newCatName').value=''; selEmoji='📁';selColor=PALETTE[0]; renderCatSelect(); openCats(); drawCal(); }
+function delCat(id){ localData.categories=localData.categories.filter(c=>c.id!==id); localData.tasks=localData.tasks.filter(t=>t.catId!==id); saveLocal(); renderCatSelect(); openCats(); drawCal(); }
 
 // Задачи
-function addTask() {
-const tn = document.getElementById('tn'); if(!tn) return;
-const n = tn.value.trim(), cid = document.getElementById('tc')?.value;
-const ti = document.getElementById('tt')?.value, d = parseInt(document.getElementById('td')?.value)||30;
-const u = document.getElementById('tu')?.value, f = document.getElementById('tf')?.checked;
-if(!n) return;
-let m = u==='h'?d*60:d; if(m<5) m=5;
-const ds = curDate.toISOString().split('T')[0], s = new Date(ds+'T'+ti+':00'), e = new Date(s.getTime()+m*60000);
-const c = catById(cid);
+function addTask(){
+const tn=document.getElementById('tn'); if(!tn) return;
+const n=tn.value.trim(), cid=document.getElementById('tc')?.value;
+const ti=document.getElementById('tt')?.value, d=parseInt(document.getElementById('td')?.value)||30;
+const u=document.getElementById('tu')?.value, f=document.getElementById('tf')?.checked;
+if(!n) return; let m=u==='h'?d*60:d; if(m<5)m=5;
+const ds=curDate.toISOString().split('T')[0], s=new Date(ds+'T'+ti+':00'), e=new Date(s.getTime()+m*60000);
+const c=catById(cid);
 localData.tasks.push({id:'t'+Date.now(), title:n, start:s.toISOString(), end:e.toISOString(), duration:m, catId:cid, color:c?.color||PALETTE[0], emoji:c?.emoji||'📌', fixed:f});
 saveLocal(); tn.value=''; drawCal();
 }
-function delTask(id) { localData.tasks = localData.tasks.filter(t=>t.id!==id); saveLocal(); drawCal(); }
-function updateTask(id, ns, ne) {
-const t = localData.tasks.find(t=>t.id===id);
-if(t && !t.fixed) { t.start = ns.toISOString(); t.end = ne.toISOString(); saveLocal(); }
+function delTask(id){ localData.tasks=localData.tasks.filter(t=>t.id!==id); saveLocal(); drawCal(); }
+function duplicateTask(id){
+const original = localData.tasks.find(t=>t.id===id);
+if(!original) return;
+const newStart = new Date(new Date(original.start).getTime() + 30*60000); // +30 минут
+const newEnd = new Date(newStart.getTime() + (new Date(original.end)-new Date(original.start)));
+const copy = {
+...original,
+id:'t'+Date.now(),
+start:newStart.toISOString(),
+end:newEnd.toISOString()
+};
+localData.tasks.push(copy);
+saveLocal();
+drawCal();
 }
-function setView(m) { viewMode=m; document.getElementById('btnDay')?.classList.toggle('active',m==='day'); document.getElementById('btnWeek')?.classList.toggle('active',m==='week'); document.getElementById('btnMonth')?.classList.toggle('active',m==='month'); drawCal(); }
-function chView(d) { if(viewMode==='day') curDate.setDate(curDate.getDate()+d); else if(viewMode==='week') curDate.setDate(curDate.getDate()+d*7); else curDate.setMonth(curDate.getMonth()+d); drawCal(); }
-function goToday() { curDate=new Date(); drawCal(); }
-function dayTasks(dt) { return localData.tasks.filter(t=>t.start.startsWith(dt.toISOString().split('T')[0])); }
-function isLight(h) { const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16); return(0.299*r+0.587*g+0.114*b)/255>0.65; }
-function fmtTime(iso) { const d=new Date(iso); return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); }
-function fmtDuration(mins) { return mins>=60?(mins/60)+' ч':mins+' мин'; }
+function updateTask(id,ns,ne){ const t=localData.tasks.find(t=>t.id===id); if(t&&!t.fixed){ t.start=ns.toISOString(); t.end=ne.toISOString(); saveLocal(); } }
+function setView(m){ viewMode=m; document.getElementById('btnDay')?.classList.toggle('active',m==='day'); document.getElementById('btnWeek')?.classList.toggle('active',m==='week'); document.getElementById('btnMonth')?.classList.toggle('active',m==='month'); drawCal(); }
+function chView(d){ if(viewMode==='day')curDate.setDate(curDate.getDate()+d); else if(viewMode==='week')curDate.setDate(curDate.getDate()+d*7); else curDate.setMonth(curDate.getMonth()+d); drawCal(); }
+function goToday(){ curDate=new Date(); drawCal(); }
+function scrollToNow(){
+const now = new Date();
+const slot = document.querySelector(`.day-slot[data-h="${now.getHours()}"][data-m="${Math.floor(now.getMinutes()/5)*5}"]`);
+if(slot) slot.scrollIntoView({behavior:'smooth', block:'center'});
+}
+function dayTasks(dt){ return localData.tasks.filter(t=>t.start.startsWith(dt.toISOString().split('T')[0])); }
+function isLight(h){ const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16); return(0.299*r+0.587*g+0.114*b)/255>0.65; }
+function fmtTime(iso){ const d=new Date(iso); return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); }
+function fmtDuration(mins){ return mins>=60?(mins/60)+' ч':mins+' мин'; }
 
 // ========== КАЛЕНДАРЬ ==========
-function drawCal() {
+function drawCal(){
 if(currentScreen!=='calendar') return;
 const ms=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
-if(viewMode==='day') { document.getElementById('dateLabel').textContent = `${['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][curDate.getDay()]}, ${curDate.getDate()} ${ms[curDate.getMonth()]}`; drawDay(); }
-else if(viewMode==='week') { const w=getWeek(curDate); document.getElementById('dateLabel').textContent = `${w[0].getDate()} ${ms[w[0].getMonth()]} — ${w[6].getDate()} ${ms[w[6].getMonth()]}`; drawWeek(w); }
-else { document.getElementById('dateLabel').textContent = `${ms[curDate.getMonth()]} ${curDate.getFullYear()}`; drawMonth(); }
+if(viewMode==='day'){ document.getElementById('dateLabel').textContent=`${['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][curDate.getDay()]}, ${curDate.getDate()} ${ms[curDate.getMonth()]}`; drawDay(); }
+else if(viewMode==='week'){ const w=getWeek(curDate); document.getElementById('dateLabel').textContent=`${w[0].getDate()} ${ms[w[0].getMonth()]} — ${w[6].getDate()} ${ms[w[6].getMonth()]}`; drawWeek(w); }
+else { document.getElementById('dateLabel').textContent=`${ms[curDate.getMonth()]} ${curDate.getFullYear()}`; drawMonth(); }
 }
 
-function drawDay() {
+function drawDay(){
 const sh=parseInt(sett('dayStart','06:00')), eh=parseInt(sett('dayEnd','23:00'));
 const all=dayTasks(curDate), now=new Date(), isToday=curDate.toDateString()===now.toDateString(), SLOT=20, showNow=document.getElementById('showNow')?.checked??true;
 let h='<div class="day-grid" style="position:relative;">';
@@ -355,29 +346,35 @@ const s=new Date(t.start), e=new Date(t.end), sm=s.getHours()*60+s.getMinutes(),
 if(em<=gs||sm>=ge) return;
 const top=(Math.max(sm,gs)-gs)/5*SLOT, hgt=Math.max((Math.min(em,ge)-Math.max(sm,gs))/5*SLOT,22), tc=isLight(t.color)?'#2d2a24':'#fff';
 const dur=t.duration||Math.round((em-sm));
-h+=`<div class="task-block${t.fixed?' fixed':''}" data-id="${t.id}" style="top:${top}px;height:${hgt}px;background:${t.color};color:${tc};" onclick="event.stopPropagation();">${t.emoji||''} ${t.title}<span class="task-time">${fmtTime(t.start)}–${fmtTime(t.end)} (${fmtDuration(dur)})</span><span class="task-del" onclick="event.stopPropagation();delTask('${t.id}')" title="Удалить">✕</span>${t.fixed?'':'<div class="resize-handle"></div>'}</div>`;
+h+=`<div class="task-block${t.fixed?' fixed':''}" data-id="${t.id}" style="top:${top}px;height:${hgt}px;background:${t.color};color:${tc};" onclick="event.stopPropagation();">
+${t.emoji||''} ${t.title}
+<span class="task-time">${fmtTime(t.start)}–${fmtTime(t.end)} (${fmtDuration(dur)})</span>
+<span class="task-dup" onclick="event.stopPropagation();duplicateTask('${t.id}')" title="Дублировать">⧉</span>
+<span class="task-del" onclick="event.stopPropagation();delTask('${t.id}')" title="Удалить">✕</span>
+${t.fixed?'':'<div class="resize-handle"></div>'}
+</div>`;
 });
-if(isToday&&showNow) { const nm=now.getHours()*60+now.getMinutes(); if(nm>=sh*60&&nm<=(eh+1)*60) h+=`<div class="now-line" style="top:${(nm-sh*60)/5*SLOT}px;"></div>`; }
+if(isToday&&showNow){ const nm=now.getHours()*60+now.getMinutes(); if(nm>=sh*60&&nm<=(eh+1)*60) h+=`<div class="now-line" style="top:${(nm-sh*60)/5*SLOT}px;"></div>`; }
 h+='</div>'; document.getElementById('grid').innerHTML=h; setupDayDrag(SLOT,sh);
 document.querySelectorAll('.day-slot').forEach(s=>s.addEventListener('click',function(e){ if(e.target.closest('.task-block')) return; document.getElementById('tt').value=String(parseInt(this.dataset.h)).padStart(2,'0')+':'+String(parseInt(this.dataset.m)).padStart(2,'0'); document.getElementById('tn')?.focus(); }));
-if(isToday) { const nowH=now.getHours(), nowM=Math.floor(now.getMinutes()/5)*5; const ts=document.querySelector(`.day-slot[data-h="${nowH}"][data-m="${nowM}"]`); if(ts) setTimeout(()=>ts.scrollIntoView({behavior:'smooth',block:'center'}),50); }
+// Никакой автопрокрутки!
 }
 
-function setupDayDrag(SLOT,sh) {
+function setupDayDrag(SLOT,sh){
 const g=document.querySelector('.day-grid'); if(!g) return;
 const isTouch='ontouchstart' in window;
 let el=null,startY=0,startTop=0,startHeight=0,tid=null,resizing=false;
-function onStart(e) {
+function onStart(e){
 const point=isTouch?e.touches[0]:e;
-if(isTouch&&e.target.closest('.task-del')) return;
+if(isTouch&&e.target.closest('.task-del, .task-dup')) return;
 const tb=(!isTouch?e.target:document.elementFromPoint(point.clientX,point.clientY))?.closest('.task-block');
 if(!tb||tb.classList.contains('fixed')) return;
 resizing=!!((isTouch?document.elementFromPoint(point.clientX,point.clientY):e.target)?.closest('.resize-handle'));
 el=tb; tid=tb.dataset.id; startY=point.clientY; startTop=tb.offsetTop; startHeight=tb.offsetHeight;
 tb.classList.add('dragging'); if(!isTouch) tb.setPointerCapture(e.pointerId); e.preventDefault();
 }
-function onMove(e) { if(!el) return; const point=isTouch?e.touches[0]:e; const dy=point.clientY-startY; if(resizing) el.style.height=Math.max(22,startHeight+dy)+'px'; else el.style.top=Math.max(0,startTop+Math.round(dy/SLOT)*SLOT)+'px'; if(isTouch) e.preventDefault(); }
-function onEnd() {
+function onMove(e){ if(!el) return; const point=isTouch?e.touches[0]:e; const dy=point.clientY-startY; if(resizing) el.style.height=Math.max(22,startHeight+dy)+'px'; else el.style.top=Math.max(0,startTop+Math.round(dy/SLOT)*SLOT)+'px'; if(isTouch) e.preventDefault(); }
+function onEnd(){
 if(!tid||!el) return; const gs=sh*60;
 const ns=gs+Math.round(parseInt(el.style.top||0)/SLOT)*5;
 const ne=ns+Math.round(parseInt(el.style.height||22)/SLOT)*5;
@@ -385,46 +382,51 @@ const ds=curDate.toISOString().split('T')[0];
 updateTask(tid, new Date(ds+'T'+String(Math.floor(ns/60)).padStart(2,'0')+':'+String(ns%60).padStart(2,'0')+':00'), new Date(ds+'T'+String(Math.floor(ne/60)).padStart(2,'0')+':'+String(ne%60).padStart(2,'0')+':00'));
 el.classList.remove('dragging'); el=null; tid=null; resizing=false; drawCal();
 }
-if(isTouch) { g.addEventListener('touchstart',onStart,{passive:false}); g.addEventListener('touchmove',onMove,{passive:false}); g.addEventListener('touchend',onEnd); }
+if(isTouch){ g.addEventListener('touchstart',onStart,{passive:false}); g.addEventListener('touchmove',onMove,{passive:false}); g.addEventListener('touchend',onEnd); }
 else { g.addEventListener('pointerdown',onStart); g.addEventListener('pointermove',onMove); g.addEventListener('pointerup',onEnd); }
 }
 
-function getWeek(dt) { const fd=parseInt(sett('firstDay','1')), diff=(dt.getDay()-fd+7)%7, mon=new Date(dt); mon.setDate(dt.getDate()-diff); return Array.from({length:7},(_,i)=>{ const d=new Date(mon); d.setDate(mon.getDate()+i); return d; }); }
-function drawWeek(week) {
+function getWeek(dt){ const fd=parseInt(sett('firstDay','1')), diff=(dt.getDay()-fd+7)%7, mon=new Date(dt); mon.setDate(dt.getDate()-diff); return Array.from({length:7},(_,i)=>{ const d=new Date(mon); d.setDate(mon.getDate()+i); return d; }); }
+function drawWeek(week){
 const days=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'], fd=parseInt(sett('firstDay','1')), od=Array.from({length:7},(_,i)=>days[(fd+i)%7]);
 const sh=parseInt(sett('dayStart','06:00')), eh=parseInt(sett('dayEnd','23:00')), ROWH=36;
 let h='<div class="week-scroll"><div class="week-table"><div class="week-header"><div class="whour"></div>';
 od.forEach((d,i)=>{ const dt=week[i]; h+=`<div class="wday" data-day="${i}" style="${dt.toDateString()===new Date().toDateString()?'color:var(--accent);':''}">${d}<br>${dt.getDate()}</div>`; });
 h+='</div>';
-for(let hh=sh;hh<=eh;hh++) { h+='<div class="week-row"><div class="whour">'+String(hh).padStart(2,'0')+':00</div>'; week.forEach((date,di)=>{ h+='<div class="wday" data-day="'+di+'">'; dayTasks(date).forEach(t=>{ const s=new Date(t.start), e=new Date(t.end); if(s.getHours()===hh||(s.getHours()<hh&&e.getHours()>hh)) { const sm=s.getHours()*60+s.getMinutes(), em=e.getHours()*60+e.getMinutes(), top=Math.max(0,(sm-hh*60)/60*ROWH), hgt=Math.max(Math.min(ROWH-top,(em-Math.max(hh*60,sm))/60*ROWH),18), tc=isLight(t.color)?'#2d2a24':'#fff'; h+=`<div class="week-task${t.fixed?' fixed':''}" data-id="${t.id}" data-day="${di}" style="top:${top}px;height:${hgt}px;background:${t.color};color:${tc};" onclick="event.stopPropagation();">${t.emoji||''}${t.title}<span class="task-del" onclick="event.stopPropagation();delTask('${t.id}')" title="Удалить">✕</span>${t.fixed?'':'<div class="resize-handle"></div>'}</div>`; } }); h+='</div>'; }); h+='</div>'; }
+for(let hh=sh;hh<=eh;hh++){ h+='<div class="week-row"><div class="whour">'+String(hh).padStart(2,'0')+':00</div>'; week.forEach((date,di)=>{ h+='<div class="wday" data-day="'+di+'">'; dayTasks(date).forEach(t=>{ const s=new Date(t.start), e=new Date(t.end); if(s.getHours()===hh||(s.getHours()<hh&&e.getHours()>hh)){ const sm=s.getHours()*60+s.getMinutes(), em=e.getHours()*60+e.getMinutes(), top=Math.max(0,(sm-hh*60)/60*ROWH), hgt=Math.max(Math.min(ROWH-top,(em-Math.max(hh*60,sm))/60*ROWH),18), tc=isLight(t.color)?'#2d2a24':'#fff'; h+=`<div class="week-task${t.fixed?' fixed':''}" data-id="${t.id}" data-day="${di}" style="top:${top}px;height:${hgt}px;background:${t.color};color:${tc};" onclick="event.stopPropagation();">
+${t.emoji||''}${t.title}
+<span class="task-dup" onclick="event.stopPropagation();duplicateTask('${t.id}')" title="Дублировать">⧉</span>
+<span class="task-del" onclick="event.stopPropagation();delTask('${t.id}')" title="Удалить">✕</span>
+${t.fixed?'':'<div class="resize-handle"></div>'}
+</div>`; }}); h+='</div>'; }); h+='</div>'; }
 h+='</div></div>'; document.getElementById('grid').innerHTML=h; setupWeekDrag(week,ROWH);
 }
 
-function setupWeekDrag(week,ROWH) {
+function setupWeekDrag(week,ROWH){
 const table=document.querySelector('.week-table'); if(!table) return;
 const isTouch='ontouchstart' in window;
 let el=null,startY=0,startTop=0,startHeight=0,tid=null,resizing=false,currentDay=0;
 function getDayColumns(){ const hd=table.querySelectorAll('.week-header .wday'); const c=[]; hd.forEach(d=>{ const r=d.getBoundingClientRect(); c.push({day:parseInt(d.dataset.day), left:r.left, right:r.right}); }); return c; }
 function getDayFromX(cx){ const c=getDayColumns(); for(let x of c) if(cx>=x.left&&cx<=x.right) return x.day; if(c.length>0&&cx<c[0].left) return c[0].day; if(c.length>0&&cx>c[c.length-1].right) return c[c.length-1].day; return currentDay; }
-function onStart(e){ const point=isTouch?e.touches[0]:e; const tb=(!isTouch?e.target:document.elementFromPoint(point.clientX,point.clientY))?.closest('.week-task'); if(!tb||tb.classList.contains('fixed')) return; resizing=!!((isTouch?document.elementFromPoint(point.clientX,point.clientY):e.target)?.closest('.resize-handle')); el=tb; tid=tb.dataset.id; currentDay=parseInt(tb.dataset.day); startY=point.clientY; startTop=tb.offsetTop; startHeight=tb.offsetHeight; tb.classList.add('dragging'); if(!isTouch) tb.setPointerCapture(e.pointerId); e.preventDefault(); }
+function onStart(e){ const point=isTouch?e.touches[0]:e; if(isTouch&&e.target.closest('.task-del, .task-dup')) return; const tb=(!isTouch?e.target:document.elementFromPoint(point.clientX,point.clientY))?.closest('.week-task'); if(!tb||tb.classList.contains('fixed')) return; resizing=!!((isTouch?document.elementFromPoint(point.clientX,point.clientY):e.target)?.closest('.resize-handle')); el=tb; tid=tb.dataset.id; currentDay=parseInt(tb.dataset.day); startY=point.clientY; startTop=tb.offsetTop; startHeight=tb.offsetHeight; tb.classList.add('dragging'); if(!isTouch) tb.setPointerCapture(e.pointerId); e.preventDefault(); }
 function onMove(e){ if(!el) return; const point=isTouch?e.touches[0]:e; const nd=getDayFromX(point.clientX); if(nd!==currentDay){ currentDay=nd; el.dataset.day=currentDay; const tr=el.closest('.week-row'); if(tr){ const tc=tr.querySelector(`.wday[data-day="${currentDay}"]`); if(tc&&el.parentElement!==tc){ tc.appendChild(el); startY=point.clientY; startTop=0; el.style.top='0px'; } } } const dy=point.clientY-startY; if(resizing) el.style.height=Math.max(18,startHeight+dy)+'px'; else el.style.top=Math.max(0,startTop+Math.round(dy/ROWH)*ROWH)+'px'; if(isTouch) e.preventDefault(); }
 function onEnd(){ if(!tid||!el) return; const dt=new Date(week[currentDay]), hh=parseInt(sett('dayStart','06:00')), ft=parseInt(el.style.top||0), fh=parseInt(el.style.height||18), ns=hh*60+Math.round(ft/ROWH)*60, ne=ns+Math.round(fh/ROWH)*60, ds=dt.toISOString().split('T')[0]; updateTask(tid, new Date(ds+'T'+String(Math.floor(ns/60)).padStart(2,'0')+':'+String(ns%60).padStart(2,'0')+':00'), new Date(ds+'T'+String(Math.floor(ne/60)).padStart(2,'0')+':'+String(ne%60).padStart(2,'0')+':00')); el.classList.remove('dragging'); el=null; tid=null; currentDay=0; resizing=false; drawCal(); }
 if(isTouch){ table.addEventListener('touchstart',onStart,{passive:false}); table.addEventListener('touchmove',onMove,{passive:false}); table.addEventListener('touchend',onEnd); }
 else { table.addEventListener('pointerdown',onStart); table.addEventListener('pointermove',onMove); table.addEventListener('pointerup',onEnd); }
 }
 
-function drawMonth() {
+function drawMonth(){
 const y=curDate.getFullYear(), m=curDate.getMonth(), fd=parseInt(sett('firstDay','1')), first=new Date(y,m,1), last=new Date(y,m+1,0), pad=(first.getDay()-fd+7)%7;
 const od=Array.from({length:7},(_,i)=>['Пн','Вт','Ср','Чт','Пт','Сб','Вс'][(fd+i)%7]);
 let h='<div class="month-grid">'; od.forEach(d=>h+=`<div class="month-day-name">${d}</div>`);
 for(let i=0;i<pad;i++) h+='<div class="month-day"></div>';
-for(let d=1;d<=last.getDate();d++) { const dt=new Date(y,m,d), ds=dt.toISOString().split('T')[0], isToday=dt.toDateString()===new Date().toDateString(); h+=`<div class="month-day" onclick="curDate=new Date('${ds}');setView('day');"><div class="month-day-num" style="${isToday?'color:var(--accent);':''}">${d}</div>`; dayTasks(dt).slice(0,3).forEach(t=>h+=`<div class="month-task" style="background:${t.color};color:${isLight(t.color)?'#2d2a24':'#fff'};">${t.emoji||''}${t.title}</div>`); if(dayTasks(dt).length>3) h+=`<div style="font-size:9px;color:var(--sub);">+${dayTasks(dt).length-3}</div>`; h+='</div>'; }
+for(let d=1;d<=last.getDate();d++){ const dt=new Date(y,m,d), ds=dt.toISOString().split('T')[0], isToday=dt.toDateString()===new Date().toDateString(); h+=`<div class="month-day" onclick="curDate=new Date('${ds}');setView('day');"><div class="month-day-num" style="${isToday?'color:var(--accent);':''}">${d}</div>`; dayTasks(dt).slice(0,3).forEach(t=>h+=`<div class="month-task" style="background:${t.color};color:${isLight(t.color)?'#2d2a24':'#fff'};">${t.emoji||''}${t.title}</div>`); if(dayTasks(dt).length>3) h+=`<div style="font-size:9px;color:var(--sub);">+${dayTasks(dt).length-3}</div>`; h+='</div>'; }
 h+='</div>'; document.getElementById('grid').innerHTML=h;
 }
-function closeMod(id) { document.getElementById(id)?.classList.remove('show'); }
+function closeMod(id){ document.getElementById(id)?.classList.remove('show'); }
 document.addEventListener('click', e=>{ if(e.target.classList.contains('modal-bg')) e.target.classList.remove('show'); });
 
-// Старт приложения
+// ========== СТАРТ ==========
 function init() {
 loadLocal();
 document.getElementById('app').style.display = 'flex';
@@ -433,7 +435,7 @@ setView('day');
 const now = new Date();
 document.getElementById('tt').value = String(now.getHours()).padStart(2,'0')+':'+String(Math.floor(now.getMinutes()/5)*5).padStart(2,'0');
 setInterval(() => { if(viewMode==='day' && curDate.toDateString()===new Date().toDateString()) drawCal(); }, 60000);
-// Пытаемся загрузить Firebase после показа приложения
+// Подключаемся к Firestore после показа интерфейса
 setTimeout(initFirebase, 100);
 }
 
