@@ -145,12 +145,11 @@ let localData = {
 settings: { theme:'dark', accent:'#A9DEF9', accentLight:'#7ab8d4', firstDay:'1', dayStart:'06:00', dayEnd:'23:00' },
 categories: JSON.parse(JSON.stringify(DEF_CATS)),
 tasks: [],
-notes: [],
-updatedAt: Date.now()
+notes: []
 };
 let curDate=new Date(), viewMode='day', selEmoji='📁', selColor=PALETTE[0], currentScreen='calendar';
 let db = null, unsubscribe = null;
-let lastSentJSON = null; // чтобы не реагировать на собственные изменения
+let lastSentJSON = null;
 
 // ========== ИНИЦИАЛИЗАЦИЯ FIREBASE ==========
 function initFirebase() {
@@ -178,14 +177,11 @@ const saved = localStorage.getItem('flexiday_data_v2');
 if (saved) {
 try { localData = JSON.parse(saved); } catch(e) {}
 }
-// обновляем updatedAt, если его нет
-if (!localData.updatedAt) localData.updatedAt = Date.now();
-saveLocalSilent();
+lastSentJSON = JSON.stringify(localData);
 applySettings();
 }
 
 function saveLocal() {
-localData.updatedAt = Date.now();
 localStorage.setItem('flexiday_data_v2', JSON.stringify(localData));
 if (db) syncToCloud();
 }
@@ -198,7 +194,7 @@ localStorage.setItem('flexiday_data_v2', JSON.stringify(localData));
 function syncToCloud() {
 if (!db) return;
 const json = JSON.stringify(localData);
-if (json === lastSentJSON) return; // не отправляем то же самое
+if (json === lastSentJSON) return;
 lastSentJSON = json;
 try {
 db.collection('users').doc(USER_DOC_ID).set(localData, {merge:true});
@@ -211,15 +207,11 @@ unsubscribe = db.collection('users').doc(USER_DOC_ID).onSnapshot((doc) => {
 if (doc.exists) {
 const cloud = doc.data();
 const cloudJSON = JSON.stringify(cloud);
-// игнорируем собственные изменения (чтобы не было петель)
 if (cloudJSON === lastSentJSON) return;
-// обновляем локальные данные только если облако новее
-if (!localData.updatedAt || (cloud.updatedAt && cloud.updatedAt > localData.updatedAt)) {
 localData = cloud;
 saveLocalSilent();
 applySettings();
 refreshUI();
-}
 }
 }, (err) => { console.warn('Sync offline'); });
 }
@@ -259,7 +251,6 @@ function selectAccent(c,l){ applyAccent(c,l); sets('accent',c); sets('accentLigh
 function applyTheme(){ const t=document.getElementById('sTheme').value; document.body.className=t==='light'?'light-theme':''; sets('theme',t); applyAccent(sett('accent','#A9DEF9'),sett('accentLight','#7ab8d4')); }
 function saveBounds(){ sets('dayStart',document.getElementById('sStart').value); sets('dayEnd',document.getElementById('sEnd').value); }
 
-// Заметки
 function openNotes(){ currentScreen='notes'; document.getElementById('calendarView').style.display='none'; document.getElementById('notesView').style.display='flex'; renderNotes(); }
 function renderNotes(){
 const notes=localData.notes||[];
@@ -271,7 +262,6 @@ function updateNote(id,text){ const n=localData.notes.find(n=>n.id===id); if(n){
 function deleteNote(id){ if(confirm('Удалить заметку?')){ localData.notes=localData.notes.filter(n=>n.id!==id); saveLocal(); renderNotes(); } }
 function openCalendar(){ currentScreen='calendar'; document.getElementById('notesView').style.display='none'; document.getElementById('calendarView').style.display='flex'; drawCal(); }
 
-// Разделы
 function cats(){ if(!localData.categories||localData.categories.length===0){ localData.categories=JSON.parse(JSON.stringify(DEF_CATS)); saveLocal(); } return localData.categories; }
 function catById(id){ return cats().find(c=>c.id===id); }
 function renderCatSelect(){ const sel=document.getElementById('tc'); if(sel) sel.innerHTML = cats().map(c=>`<option value="${c.id}">${c.emoji} ${c.name}</option>`).join(''); }
@@ -285,7 +275,6 @@ function toggleEmoji(){ document.getElementById('emojiGrid').style.display = doc
 function addCat(){ const n=document.getElementById('newCatName')?.value.trim(); if(!n)return; localData.categories.push({id:'c'+Date.now(),name:n,emoji:selEmoji,color:selColor}); saveLocal(); document.getElementById('newCatName').value=''; selEmoji='📁';selColor=PALETTE[0]; renderCatSelect(); openCats(); drawCal(); }
 function delCat(id){ localData.categories=localData.categories.filter(c=>c.id!==id); localData.tasks=localData.tasks.filter(t=>t.catId!==id); saveLocal(); renderCatSelect(); openCats(); drawCal(); }
 
-// Задачи
 function addTask(){
 const tn=document.getElementById('tn'); if(!tn) return;
 const n=tn.value.trim(), cid=document.getElementById('tc')?.value;
@@ -301,14 +290,9 @@ function delTask(id){ localData.tasks=localData.tasks.filter(t=>t.id!==id); save
 function duplicateTask(id){
 const original = localData.tasks.find(t=>t.id===id);
 if(!original) return;
-const newStart = new Date(new Date(original.start).getTime() + 30*60000); // +30 минут
+const newStart = new Date(new Date(original.start).getTime() + 30*60000);
 const newEnd = new Date(newStart.getTime() + (new Date(original.end)-new Date(original.start)));
-const copy = {
-...original,
-id:'t'+Date.now(),
-start:newStart.toISOString(),
-end:newEnd.toISOString()
-};
+const copy = { ...original, id:'t'+Date.now(), start:newStart.toISOString(), end:newEnd.toISOString() };
 localData.tasks.push(copy);
 saveLocal();
 drawCal();
@@ -327,7 +311,6 @@ function isLight(h){ const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),1
 function fmtTime(iso){ const d=new Date(iso); return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); }
 function fmtDuration(mins){ return mins>=60?(mins/60)+' ч':mins+' мин'; }
 
-// ========== КАЛЕНДАРЬ ==========
 function drawCal(){
 if(currentScreen!=='calendar') return;
 const ms=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
@@ -357,7 +340,6 @@ ${t.fixed?'':'<div class="resize-handle"></div>'}
 if(isToday&&showNow){ const nm=now.getHours()*60+now.getMinutes(); if(nm>=sh*60&&nm<=(eh+1)*60) h+=`<div class="now-line" style="top:${(nm-sh*60)/5*SLOT}px;"></div>`; }
 h+='</div>'; document.getElementById('grid').innerHTML=h; setupDayDrag(SLOT,sh);
 document.querySelectorAll('.day-slot').forEach(s=>s.addEventListener('click',function(e){ if(e.target.closest('.task-block')) return; document.getElementById('tt').value=String(parseInt(this.dataset.h)).padStart(2,'0')+':'+String(parseInt(this.dataset.m)).padStart(2,'0'); document.getElementById('tn')?.focus(); }));
-// Никакой автопрокрутки!
 }
 
 function setupDayDrag(SLOT,sh){
@@ -426,7 +408,6 @@ h+='</div>'; document.getElementById('grid').innerHTML=h;
 function closeMod(id){ document.getElementById(id)?.classList.remove('show'); }
 document.addEventListener('click', e=>{ if(e.target.classList.contains('modal-bg')) e.target.classList.remove('show'); });
 
-// ========== СТАРТ ==========
 function init() {
 loadLocal();
 document.getElementById('app').style.display = 'flex';
@@ -435,7 +416,6 @@ setView('day');
 const now = new Date();
 document.getElementById('tt').value = String(now.getHours()).padStart(2,'0')+':'+String(Math.floor(now.getMinutes()/5)*5).padStart(2,'0');
 setInterval(() => { if(viewMode==='day' && curDate.toDateString()===new Date().toDateString()) drawCal(); }, 60000);
-// Подключаемся к Firestore после показа интерфейса
 setTimeout(initFirebase, 100);
 }
 
