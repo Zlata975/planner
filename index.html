@@ -121,7 +121,7 @@ input[type="number"] { width:55px; text-align:center; flex:0 0 55px!important; }
 <div id="mainContent" style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
 <div id="calendarView" style="display:flex;flex-direction:column;height:100%;">
 <div class="panel"><div class="row"><input type="text" id="tn" placeholder="Название задачи"><select id="tc"></select></div><div class="row"><input type="time" id="tt" value="12:00" step="300"><input type="number" id="td" value="30" min="5" max="480" step="5"><select id="tu" style="width:55px;flex:0 0 55px!important;"><option value="m">мин</option><option value="h">ч</option></select><label class="pin"><input type="checkbox" id="tf" checked>📌</label></div><button class="btn accent" onclick="addTask()" style="width:100%;padding:10px;">✨ Добавить</button></div>
-<div class="cal" id="calContainer"><div class="nav"><button onclick="chView(-1)">◀</button><span id="dateLabel"></span><button onclick="chView(1)">▶</button><button onclick="goToday()" style="font-size:10px;">Сегодня</button><button id="btnDay" class="active" onclick="setView('day')">День</button><button id="btnWeek" onclick="setView('week')">Неделя</button><button id="btnMonth" onclick="setView('month')">Месяц</button><label class="now-toggle"><input type="checkbox" id="showNow" checked onchange="drawCal()"> линия времени</label><button class="btn" onclick="scrollToNow()" style="font-size:10px;">Сейчас</button></div><div class="grid" id="grid"></div></div>
+<div class="cal" id="calContainer"><div class="nav"><button onclick="chView(-1)">◀</button><span id="dateLabel"></span><button onclick="chView(1)">▶</button><button onclick="goToday()" style="font-size:10px;">Сегодня</button><button id="btnDay" class="active" onclick="setView('day')">День</button><button id="btnWeek" onclick="setView('week')">Неделя</button><button id="btnMonth" onclick="setView('month')">Месяц</button><label class="now-toggle"><input type="checkbox" id="showNow" checked onchange="drawCal()"> линия времени</label><button class="btn" onclick="scrollToNow()" style="font-size:10px;">Сейчас</button><button class="btn" onclick="manualSync()" style="font-size:10px;" title="Синхронизировать сейчас">🔄</button></div><div class="grid" id="grid"></div></div>
 </div>
 <div id="notesView" style="display:none;flex-direction:column;height:100%;"><div style="padding:12px 16px;display:flex;gap:6px;"><button class="btn accent" onclick="addNote()" style="flex:1;">➕ Новая заметка</button></div><div class="notes-container" id="notesContainer" style="flex:1;overflow-y:auto;"></div></div>
 </div>
@@ -149,7 +149,7 @@ notes: []
 };
 let curDate=new Date(), viewMode='day', selEmoji='📁', selColor=PALETTE[0], currentScreen='calendar';
 let db = null, unsubscribe = null;
-let lastSentJSON = null;
+let lastSentJSON = null; // JSON последних отправленных или полученных данных
 
 // ========== ИНИЦИАЛИЗАЦИЯ FIREBASE ==========
 function initFirebase() {
@@ -166,7 +166,6 @@ appId: "1:889265422:web:1368ae19258fefa6bd8b5f"
 });
 }
 db = firebase.firestore();
-db.enablePersistence().catch(() => {});
 startSync();
 } catch(e) { console.warn('Firebase not available'); }
 }
@@ -197,7 +196,8 @@ const json = JSON.stringify(localData);
 if (json === lastSentJSON) return;
 lastSentJSON = json;
 try {
-db.collection('users').doc(USER_DOC_ID).set(localData, {merge:true});
+db.collection('users').doc(USER_DOC_ID).set(localData, {merge:true})
+.catch(e => console.warn('Sync error:', e));
 } catch(e) {}
 }
 
@@ -207,13 +207,33 @@ unsubscribe = db.collection('users').doc(USER_DOC_ID).onSnapshot((doc) => {
 if (doc.exists) {
 const cloud = doc.data();
 const cloudJSON = JSON.stringify(cloud);
+// Игнорируем, если это наше собственное изменение
 if (cloudJSON === lastSentJSON) return;
+// Принимаем облачные данные
 localData = cloud;
+lastSentJSON = cloudJSON; // важно: обновляем, чтобы не отправлять обратно
 saveLocalSilent();
 applySettings();
 refreshUI();
 }
 }, (err) => { console.warn('Sync offline'); });
+}
+
+// Ручная синхронизация (для проверки)
+async function manualSync() {
+if (!db) { alert('Синхронизация недоступна, Firebase не загружен'); return; }
+// Сначала отправляем локальные данные
+await db.collection('users').doc(USER_DOC_ID).set(localData, {merge:true});
+// Затем получаем облачные
+const doc = await db.collection('users').doc(USER_DOC_ID).get();
+if (doc.exists) {
+localData = doc.data();
+lastSentJSON = JSON.stringify(localData);
+saveLocalSilent();
+applySettings();
+refreshUI();
+alert('Синхронизация выполнена!');
+}
 }
 
 function applySettings() {
