@@ -4,42 +4,45 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>FlexiDay Planner</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23ECE4E5'/%3E%3Ctext x='50' y='72' font-size='65' font-family='Arial' fill='%23192B51' text-anchor='middle' font-weight='bold'%3EF%3C/text%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23ECE4E5'/%3E%3Ctext x='50' y='72' font-size='65' font-family='Arial' fill='%23192B51' text-anchor='middle' font-weight='bold'%3EF%3C/text%3E%3C/svg%3E">
-<meta name="theme-color" content="#ECE4E5">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23ECE4E5'/%3E%3Ctext x='50' y='72' font-size='65' font-family='Arial' fill='%2372251F' text-anchor='middle' font-weight='bold'%3EF%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23ECE4E5'/%3E%3Ctext x='50' y='72' font-size='65' font-family='Arial' fill='%2372251F' text-anchor='middle' font-weight='bold'%3EF%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2B2B30">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="FlexiDay">
-<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22FlexiDay%20Planner%22%2C%22short_name%22%3A%22FlexiDay%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23ECE4E5%22%2C%22theme_color%22%3A%22%23ECE4E5%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20192%20192'%3E%253Crect%20width%3D'192'%20height%3D'192'%20rx%3D'42'%20fill%3D'%2523ECE4E5'%2F%3E%253Ctext%20x%3D'96'%20y%3D'138'%20font-size%3D'125'%20font-family%3D'Arial'%20fill%3D'%2523192B51'%20text-anchor%3D'middle'%20font-weight%3D'bold'%3EF%3C%2Ftext%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20512%20512'%3E%253Crect%20width%3D'512'%20height%3D'512'%20rx%3D'112'%20fill%3D'%2523ECE4E5'%2F%3E%253Ctext%20x%3D'256'%20y%3D'368'%20font-size%3D'333'%20font-family%3D'Arial'%20fill%3D'%2523192B51'%20text-anchor%3D'middle'%20font-weight%3D'bold'%3EF%3C%2Ftext%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22FlexiDay%20Planner%22%2C%22short_name%22%3A%22FlexiDay%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%232B2B30%22%2C%22theme_color%22%3A%22%232B2B30%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20192%20192'%3E%253Crect%20width%3D'192'%20height%3D'192'%20rx%3D'42'%20fill%3D'%2523ECE4E5'%2F%3E%253Ctext%20x%3D'96'%20y%3D'138'%20font-size%3D'125'%20font-family%3D'Arial'%20fill%3D'%252372251F'%20text-anchor%3D'middle'%20font-weight%3D'bold'%3EF%3C%2Ftext%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20512%20512'%3E%253Crect%20width%3D'512'%20height%3D'512'%20rx%3D'112'%20fill%3D'%2523ECE4E5'%2F%3E%253Ctext%20x%3D'256'%20y%3D'368'%20font-size%3D'333'%20font-family%3D'Arial'%20fill%3D'%252372251F'%20text-anchor%3D'middle'%20font-weight%3D'bold'%3EF%3C%2Ftext%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
 <style>
-/* ===== БАЗОВЫЙ ЦВЕТ: тёмная тема = #192B51, светлая (молочная) = #ECE4E5 ===== */
+/* ===== ТЁМНАЯ ТЕМА: ТЁМНО-СЕРАЯ ===== */
 :root {
---bg: #192B51;
---bg-soft: #1f3560;
---card: rgba(31, 53, 96, 0.78);
---glass: rgba(31, 53, 96, 0.55);
---border: rgba(198, 208, 221, 0.16);
+--bg: #2B2B30;
+--bg-soft: #35353B;
+--card: rgba(53, 53, 59, 0.78);
+--glass: rgba(53, 53, 59, 0.55);
+--border: rgba(200, 200, 205, 0.16);
 --text: #ECE4E5;
---sub: #9FAEC4;
---accent: #C6D0DD;
---accent-light: #8090A8;
---accent-rgb: 198, 208, 221;
---input: rgba(18, 31, 60, 0.85);
+--sub: #A0A0A8;
+--accent: #72251F;
+--accent-light: #A5AF5D;
+--accent-rgb: 114, 37, 31;
+--accent-text: #ECE4E5;
+--input: rgba(35, 35, 40, 0.85);
 --danger: #D98A85;
 --success: #9CC4AE;
 --time-scheme: dark;
 }
+/* ===== СВЕТЛАЯ ТЕМА: МОЛОЧНАЯ ===== */
 .light-theme {
 --bg: #ECE4E5;
 --bg-soft: #F5F0F0;
 --card: rgba(255, 253, 253, 0.75);
 --glass: rgba(255, 253, 253, 0.55);
---border: rgba(25, 43, 81, 0.12);
---text: #192B51;
---sub: #6F7E96;
---accent: #192B51;
---accent-light: #8090A8;
---accent-rgb: 25, 43, 81;
+--border: rgba(43, 43, 48, 0.12);
+--text: #2B2B30;
+--sub: #6F6F78;
+--accent: #72251F;
+--accent-light: #A5AF5D;
+--accent-rgb: 114, 37, 31;
+--accent-text: #ECE4E5;
 --input: rgba(255, 255, 255, 0.85);
 --danger: #72251F;
 --success: #4a7a62;
@@ -55,10 +58,10 @@ transition:background 0.25s,color 0.25s; overscroll-behavior:none;
 /* ШАПКА */
 .header { background:var(--card); backdrop-filter:blur(18px); padding:9px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); z-index:10; }
 .header h1 { font-size:17px; display:flex; align-items:center; gap:7px; letter-spacing:0.2px; }
-.logo { background:var(--accent); color:var(--bg); width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:14px; }
+.logo { background:var(--accent); color:var(--accent-text); width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:14px; transition:background 0.2s,color 0.2s; }
 .btn { padding:6px 10px; border-radius:8px; border:1px solid var(--border); background:var(--glass); color:var(--text); font-size:12px; cursor:pointer; font-weight:600; transition:background 0.15s; }
 .btn:hover { background:var(--card); }
-.btn.accent { background:var(--accent); border-color:var(--accent); color:var(--bg); }
+.btn.accent { background:var(--accent); border-color:var(--accent); color:var(--accent-text); transition:background 0.2s,color 0.2s; }
 /* ПАНЕЛЬ ДОБАВЛЕНИЯ */
 .panel { background:var(--card); backdrop-filter:blur(18px); border-bottom:1px solid var(--border); padding:8px 14px; z-index:9; }
 .row { display:flex; gap:6px; align-items:center; margin-bottom:5px; }
@@ -77,7 +80,7 @@ input[type="number"] { width:52px; text-align:center; flex:0 0 52px!important; }
 .cal { flex:1; overflow-y:auto; padding:8px 12px; -webkit-overflow-scrolling:touch; }
 .nav { display:flex; align-items:center; justify-content:center; gap:6px; padding:6px 0; font-weight:700; font-size:13px; position:sticky; top:0; background:var(--bg); z-index:5; flex-wrap:wrap; }
 .nav button { background:var(--glass); border:1px solid var(--border); color:var(--text); padding:4px 9px; border-radius:6px; cursor:pointer; font-size:12px; }
-.nav button.active { background:var(--accent); border-color:var(--accent); color:var(--bg); }
+.nav button.active { background:var(--accent); border-color:var(--accent); color:var(--accent-text); transition:background 0.2s,color 0.2s; }
 .now-toggle { font-size:10px; cursor:pointer; color:var(--sub); display:flex; align-items:center; gap:3px; }
 .now-toggle input { width:13px; height:13px; accent-color:var(--accent-light); }
 .grid { border:1px solid var(--border); border-radius:12px; overflow:hidden; position:relative; background:var(--card); }
@@ -87,10 +90,10 @@ input[type="number"] { width:52px; text-align:center; flex:0 0 52px!important; }
 .day-slot:hover { background:rgba(var(--accent-rgb),0.05); }
 .day-hour { width:42px; padding:0 4px; font-size:9px; line-height:13px; color:var(--sub); border-right:1px solid var(--border); flex-shrink:0; overflow:hidden; }
 .day-content { flex:1; position:relative; }
-.task-block { position:absolute; left:44px; right:2px; border-radius:4px; padding:1px 5px; font-size:9px; font-weight:600; cursor:grab; z-index:2; display:flex; align-items:center; gap:4px; overflow:hidden; white-space:nowrap; border:1px solid rgba(25,43,81,0.12); box-shadow:0 1px 3px rgba(25,43,81,0.12); }
+.task-block { position:absolute; left:44px; right:2px; border-radius:4px; padding:1px 5px; font-size:9px; font-weight:600; cursor:grab; z-index:2; display:flex; align-items:center; gap:4px; overflow:hidden; white-space:nowrap; border:1px solid rgba(43,43,48,0.12); box-shadow:0 1px 3px rgba(43,43,48,0.12); }
 .task-block:active { cursor:grabbing; }
-.task-block.dragging { opacity:0.75; box-shadow:0 8px 22px rgba(25,43,81,0.35); z-index:10; }
-.task-block.fixed { cursor:default!important; border-left:3px solid rgba(25,43,81,0.35); }
+.task-block.dragging { opacity:0.75; box-shadow:0 8px 22px rgba(43,43,48,0.35); z-index:10; }
+.task-block.fixed { cursor:default!important; border-left:3px solid rgba(43,43,48,0.35); }
 .task-block .resize-handle { position:absolute; bottom:0; left:0; right:0; height:5px; cursor:ns-resize; z-index:5; }
 .task-block.fixed .resize-handle { display:none; }
 .task-time { margin-left:auto; font-size:9px; opacity:0.8; flex-shrink:0; white-space:nowrap; }
@@ -107,8 +110,8 @@ input[type="number"] { width:52px; text-align:center; flex:0 0 52px!important; }
 .week-row { display:flex; border-bottom:1px solid var(--border); height:26px; position:relative; }
 .week-row .whour { width:42px; font-size:9px; color:var(--sub); padding:1px 4px; flex-shrink:0; overflow:hidden; }
 .week-row .wday { flex:1; position:relative; border-left:1px solid var(--border); height:26px; padding:1px; min-width:68px; }
-.week-task { position:absolute; left:1px; right:1px; font-size:9px; padding:1px 4px; border-radius:4px; cursor:grab; overflow:hidden; white-space:nowrap; z-index:2; display:flex; align-items:center; gap:2px; border:1px solid rgba(25,43,81,0.12); }
-.week-task.fixed { cursor:default!important; border-left:2px solid rgba(25,43,81,0.35); }
+.week-task { position:absolute; left:1px; right:1px; font-size:9px; padding:1px 4px; border-radius:4px; cursor:grab; overflow:hidden; white-space:nowrap; z-index:2; display:flex; align-items:center; gap:2px; border:1px solid rgba(43,43,48,0.12); }
+.week-task.fixed { cursor:default!important; border-left:2px solid rgba(43,43,48,0.35); }
 .week-task .resize-handle { position:absolute; bottom:0; left:0; right:0; height:4px; cursor:ns-resize; z-index:5; }
 .week-task.fixed .resize-handle { display:none; }
 .week-task .task-del, .week-task .task-dup { margin-left:2px; font-size:9px; }
@@ -126,9 +129,9 @@ input[type="number"] { width:52px; text-align:center; flex:0 0 52px!important; }
 .note-card .note-actions { display:flex; gap:6px; margin-top:8px; justify-content:flex-end; }
 .note-date { font-size:10px; color:var(--sub); margin-bottom:6px; }
 /* МОДАЛКИ */
-.modal-bg { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(25,43,81,0.45); backdrop-filter:blur(4px); z-index:100; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.2s; }
+.modal-bg { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(20,20,24,0.5); backdrop-filter:blur(4px); z-index:100; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.2s; }
 .modal-bg.show { opacity:1; pointer-events:all; }
-.modal { background:var(--bg-soft); border-radius:18px; padding:20px; width:90%; max-width:400px; max-height:80vh; overflow-y:auto; border:1px solid var(--border); display:flex; flex-direction:column; gap:10px; box-shadow:0 20px 50px rgba(25,43,81,0.3); }
+.modal { background:var(--bg-soft); border-radius:18px; padding:20px; width:90%; max-width:400px; max-height:80vh; overflow-y:auto; border:1px solid var(--border); display:flex; flex-direction:column; gap:10px; box-shadow:0 20px 50px rgba(0,0,0,0.3); }
 .modal h3 { font-size:16px; }
 .modal label { font-size:11px; color:var(--sub); font-weight:600; }
 .modal input, .modal select, .modal textarea { padding:10px; border-radius:8px; border:1px solid var(--border); background:var(--input); color:var(--text); font-size:13px; outline:none; width:100%; }
@@ -145,7 +148,8 @@ input[type="number"] { width:52px; text-align:center; flex:0 0 52px!important; }
 .cat-dot { width:12px; height:12px; border-radius:3px; flex-shrink:0; }
 .cat-del { margin-left:auto; background:transparent; border:1px solid var(--border); color:var(--danger); cursor:pointer; padding:3px 7px; border-radius:5px; font-size:11px; font-weight:700; }
 .accent-colors { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
-.accent-swatch { padding:8px 4px; border-radius:10px; cursor:pointer; border:2px solid transparent; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; text-align:center; }
+.accent-swatch { padding:12px 6px; border-radius:10px; cursor:pointer; border:2px solid transparent; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; text-align:center; transition:transform 0.15s; }
+.accent-swatch:hover { transform:scale(1.03); }
 .accent-swatch.selected { border-color:var(--accent); box-shadow:0 0 0 3px rgba(var(--accent-rgb),0.3); }
 ::-webkit-scrollbar { width:6px; height:6px; }
 ::-webkit-scrollbar-thumb { background:rgba(var(--accent-rgb),0.35); border-radius:6px; }
@@ -229,7 +233,7 @@ input[type="number"] { width:52px; text-align:center; flex:0 0 52px!important; }
 <label>Тема</label>
 <select id="sTheme" onchange="applyTheme()">
 <option value="light">Светлая (молочная)</option>
-<option value="dark">Тёмная</option>
+<option value="dark">Тёмная (тёмно-серая)</option>
 </select>
 <label>Акцентный цвет интерфейса</label>
 <div class="accent-colors" id="accentPalette"></div>
@@ -251,16 +255,12 @@ input[type="number"] { width:52px; text-align:center; flex:0 0 52px!important; }
 // ================= ПАЛИТРА ЗАДАЧ =================
 const PALETTE = ['#eecfff','#bde8ff','#b0c7f2','#ff93b0','#ffc6dc','#ffd4d4','#ffdaf5','#ff9f9f'];
 
-// Акцентные цвета интерфейса (кнопки, выделения)
+// ================= АКЦЕНТНЫЕ ЦВЕТА (только 2) =================
 const ACCENT_COLORS = [
-{name:'Молочно-белый', color:'#ECE4E5', light:'#ECE4E5'},
-{name:'Тёмно-синий', color:'#192B51', light:'#192B51'},
-{name:'Серо-синий', color:'#8090A8', light:'#5c6b82'},
-{name:'Светло-серый', color:'#C6D0DD', light:'#8a99ad'},
-{name:'Бежевый', color:'#E0D1CA', light:'#a89286'},
 {name:'Тёмно-красный', color:'#72251F', light:'#72251F'},
-{name:'Тёмно-коричневый', color:'#2E1819', light:'#2E1819'}
+{name:'Оливковый', color:'#A5AF5D', light:'#A5AF5D'}
 ];
+const ALLOWED_ACCENTS = ACCENT_COLORS.map(c => c.color);
 
 const EMOJIS = ['🏋️','💼','🌱','📚','🎨','🎵','💻','🏃','🧘','🍳','🧹','🛒','✈️','🚗','🏠','💤','⏰','📝','💡','🎯','💰','❤️','🌟','🔥','🎉','📞','✉️','🗓️','☕','🍽️','🐱','🐶','🎮','📷','🎬','🧠','💪','🤝','🛠️','📊','🔬','🌍','🎪','🏆','💎','🌈','🍀','🎁','📌','🔔','⚡','🎈','🌙','☀️','🌸','🍕','🎧','📱','💊','🧩'];
 
@@ -276,9 +276,9 @@ const ROWH = 26; // высота часа в неделе
 // ================= СОСТОЯНИЕ =================
 let localData = {
 settings: {
-theme: 'light', // по умолчанию молочная тема
-accent: '#192B51',
-accentLight: '#192B51',
+theme: 'light',
+accent: '#72251F',
+accentLight: '#72251F',
 firstDay: '1',
 dayStart: '06:00',
 dayEnd: '23:00'
@@ -309,6 +309,14 @@ return (0.299*r+0.587*g+0.114*b)/255 > 0.65;
 function loadLocal(){
 const saved = localStorage.getItem('flexiday_data_v2');
 if(saved){ try{ localData = JSON.parse(saved); }catch(e){} }
+
+// Миграция: если сохранён акцент не из списка разрешённых — ставим тёмно-красный
+if(!localData.settings) localData.settings = {};
+if(!ALLOWED_ACCENTS.includes(localData.settings.accent)){
+localData.settings.accent = '#72251F';
+localData.settings.accentLight = '#72251F';
+saveLocal();
+}
 applySettings();
 }
 function saveLocal(){ localStorage.setItem('flexiday_data_v2', JSON.stringify(localData)); }
@@ -317,19 +325,24 @@ function sets(k,v){ localData.settings[k]=v; saveLocal(); }
 
 function applySettings(){
 document.body.className = localData.settings.theme === 'light' ? 'light-theme' : '';
-applyAccent(localData.settings.accent || '#192B51', localData.settings.accentLight || '#192B51');
+applyAccent(localData.settings.accent || '#72251F', localData.settings.accentLight || '#72251F');
 }
+
+// ВАЖНО: переменные ставим на body (а не на html), чтобы они перебивали .light-theme
 function applyAccent(c,l){
-const root = document.documentElement;
-const isLightTheme = document.body.classList.contains('light-theme');
+const el = document.body;
+if(!el) return;
+const isLightTheme = el.classList.contains('light-theme');
 const a = isLightTheme ? (l||c) : c;
-root.style.setProperty('--accent', a);
-root.style.setProperty('--accent-light', l||c);
+el.style.setProperty('--accent', a);
+el.style.setProperty('--accent-light', l||c);
 const h = a.replace('#','');
-root.style.setProperty('--accent-rgb',
+el.style.setProperty('--accent-rgb',
 parseInt(h.substring(0,2),16)+','+
 parseInt(h.substring(2,4),16)+','+
 parseInt(h.substring(4,6),16));
+// цвет текста на акцентных кнопках
+el.style.setProperty('--accent-text', isLight(a) ? '#2B2B30' : '#ECE4E5');
 }
 
 // ================= НАСТРОЙКИ =================
@@ -338,19 +351,28 @@ document.getElementById('sTheme').value = sett('theme','light');
 document.getElementById('sFirstDay').value = sett('firstDay','1');
 document.getElementById('sStart').value = sett('dayStart','06:00');
 document.getElementById('sEnd').value = sett('dayEnd','23:00');
+
+const current = sett('accent','#72251F');
 document.getElementById('accentPalette').innerHTML = ACCENT_COLORS.map(c=>{
-const sel = (c.color === sett('accent','#192B51')) ? ' selected' : '';
-const darkText = isLight(c.color);
-return `<div class="accent-swatch${sel}" style="background:${c.color};color:${darkText?'#192B51':'#ECE4E5'};border:1px solid var(--border);" onclick="selectAccent('${c.color}','${c.light}')">${c.name}</div>`;
+const sel = (c.color === current) ? ' selected' : '';
+const txt = isLight(c.color) ? '#2B2B30' : '#ECE4E5';
+return `<div class="accent-swatch${sel}"
+style="background:${c.color};color:${txt};"
+onclick="selectAccent('${c.color}','${c.light}')">${c.name}</div>`;
 }).join('');
 document.getElementById('setMod').classList.add('show');
 }
-function selectAccent(c,l){ applyAccent(c,l); sets('accent',c); sets('accentLight',l); openSets(); }
+function selectAccent(c,l){
+applyAccent(c,l);
+sets('accent',c);
+sets('accentLight',l);
+openSets();
+}
 function applyTheme(){
 const t = document.getElementById('sTheme').value;
 document.body.className = t === 'light' ? 'light-theme' : '';
 sets('theme', t);
-applyAccent(sett('accent','#192B51'), sett('accentLight','#192B51'));
+applyAccent(sett('accent','#72251F'), sett('accentLight','#72251F'));
 }
 function saveBounds(){
 sets('dayStart', document.getElementById('sStart').value);
@@ -475,7 +497,7 @@ fixed: !!fixed
 saveLocal();
 
 tn.value = '';
-document.getElementById('th').value = '0'; // часы сбрасываются
+document.getElementById('th').value = '0';
 drawCal();
 }
 
@@ -586,7 +608,7 @@ if(em <= gs || sm >= ge) return;
 
 const top = (Math.max(sm, gs) - gs) / 5 * SLOT;
 const hgt = Math.max((Math.min(em, ge) - Math.max(sm, gs)) / 5 * SLOT, SLOT);
-const tc = isLight(t.color) ? '#192B51' : '#ECE4E5';
+const tc = isLight(t.color) ? '#2B2B30' : '#ECE4E5';
 const dur = t.duration || Math.round(em - sm);
 
 html += `<div class="task-block${t.fixed?' fixed':''}" data-id="${t.id}"
@@ -732,7 +754,7 @@ const sm = s.getHours()*60 + s.getMinutes();
 const em = e.getHours()*60 + e.getMinutes();
 const top = Math.max(0, (sm - h*60)/60*ROWH);
 const hgt = Math.max(Math.min(ROWH - top, (em - Math.max(h*60, sm))/60*ROWH), 12);
-const tc = isLight(t.color) ? '#192B51' : '#ECE4E5';
+const tc = isLight(t.color) ? '#2B2B30' : '#ECE4E5';
 html += `<div class="week-task${t.fixed?' fixed':''}" data-id="${t.id}" data-day="${di}"
 style="top:${top}px;height:${hgt}px;background:${t.color};color:${tc};"
 onclick="event.stopPropagation();">
@@ -874,7 +896,7 @@ html += `<div class="month-day" onclick="curDate=new Date('${ds}T12:00:00');setV
 <div class="month-day-num" style="${isToday?'color:var(--accent);font-weight:800;':''}">${d}</div>`;
 const list = dayTasks(dt);
 list.slice(0,3).forEach(t=>{
-const tc = isLight(t.color) ? '#192B51' : '#ECE4E5';
+const tc = isLight(t.color) ? '#2B2B30' : '#ECE4E5';
 html += `<div class="month-task" style="background:${t.color};color:${tc};">${t.emoji||''}${t.title}</div>`;
 });
 if(list.length > 3) html += `<div style="font-size:9px;color:var(--sub);">+${list.length-3}</div>`;
