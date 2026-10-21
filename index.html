@@ -4,462 +4,915 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>FlexiDay Planner</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23A9DEF9'/%3E%3Ctext x='50' y='72' font-size='65' font-family='Arial' fill='white' text-anchor='middle' font-weight='bold'%3EF%3C/text%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23A9DEF9'/%3E%3Ctext x='50' y='72' font-size='65' font-family='Arial' fill='white' text-anchor='middle' font-weight='bold'%3EF%3C/text%3E%3C/svg%3E">
-<meta name="theme-color" content="#1a1d2e">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23ECE4E5'/%3E%3Ctext x='50' y='72' font-size='65' font-family='Arial' fill='%23192B51' text-anchor='middle' font-weight='bold'%3EF%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23ECE4E5'/%3E%3Ctext x='50' y='72' font-size='65' font-family='Arial' fill='%23192B51' text-anchor='middle' font-weight='bold'%3EF%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#ECE4E5">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="FlexiDay">
-<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22FlexiDay%20Planner%22%2C%22short_name%22%3A%22FlexiDay%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%231a1d2e%22%2C%22theme_color%22%3A%22%231a1d2e%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20192%20192'%3E%253Crect%20width%3D'192'%20height%3D'192'%20rx%3D'42'%20fill%3D'%2523A9DEF9'%2F%3E%253Ctext%20x%3D'96'%20y%3D'138'%20font-size%3D'125'%20font-family%3D'Arial'%20fill%3D'white'%20text-anchor%3D'middle'%20font-weight%3D'bold'%3EF%3C%2Ftext%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20512%20512'%3E%253Crect%20width%3D'512'%20height%3D'512'%20rx%3D'112'%20fill%3D'%2523A9DEF9'%2F%3E%253Ctext%20x%3D'256'%20y%3D'368'%20font-size%3D'333'%20font-family%3D'Arial'%20fill%3D'white'%20text-anchor%3D'middle'%20font-weight%3D'bold'%3EF%3C%2Ftext%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22FlexiDay%20Planner%22%2C%22short_name%22%3A%22FlexiDay%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23ECE4E5%22%2C%22theme_color%22%3A%22%23ECE4E5%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20192%20192'%3E%253Crect%20width%3D'192'%20height%3D'192'%20rx%3D'42'%20fill%3D'%2523ECE4E5'%2F%3E%253Ctext%20x%3D'96'%20y%3D'138'%20font-size%3D'125'%20font-family%3D'Arial'%20fill%3D'%2523192B51'%20text-anchor%3D'middle'%20font-weight%3D'bold'%3EF%3C%2Ftext%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20512%20512'%3E%253Crect%20width%3D'512'%20height%3D'512'%20rx%3D'112'%20fill%3D'%2523ECE4E5'%2F%3E%253Ctext%20x%3D'256'%20y%3D'368'%20font-size%3D'333'%20font-family%3D'Arial'%20fill%3D'%2523192B51'%20text-anchor%3D'middle'%20font-weight%3D'bold'%3EF%3C%2Ftext%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
 <style>
+/* ===== БАЗОВЫЙ ЦВЕТ: тёмная тема = #192B51, светлая (молочная) = #ECE4E5 ===== */
 :root {
---bg: #1a1d2e; --card: rgba(40,44,75,0.6); --border: rgba(255,255,255,0.08); --text: #e8eaf0;
---sub: #9498b8; --accent: #A9DEF9; --accent-light: #7ab8d4; --accent-rgb: 169,222,249;
---input: rgba(20,22,40,0.6); --danger: #ff8a8a; --success: #7bc8a4; --time-scheme: dark;
+--bg: #192B51;
+--bg-soft: #1f3560;
+--card: rgba(31, 53, 96, 0.78);
+--glass: rgba(31, 53, 96, 0.55);
+--border: rgba(198, 208, 221, 0.16);
+--text: #ECE4E5;
+--sub: #9FAEC4;
+--accent: #C6D0DD;
+--accent-light: #8090A8;
+--accent-rgb: 198, 208, 221;
+--input: rgba(18, 31, 60, 0.85);
+--danger: #D98A85;
+--success: #9CC4AE;
+--time-scheme: dark;
 }
 .light-theme {
---bg: #f5f0e8; --card: rgba(255,250,240,0.7); --border: rgba(0,0,0,0.06); --text: #2d2a24;
---sub: #7a7568; --input: rgba(255,255,255,0.7); --danger: #e07070; --success: #5da882; --time-scheme: light;
+--bg: #ECE4E5;
+--bg-soft: #F5F0F0;
+--card: rgba(255, 253, 253, 0.75);
+--glass: rgba(255, 253, 253, 0.55);
+--border: rgba(25, 43, 81, 0.12);
+--text: #192B51;
+--sub: #6F7E96;
+--accent: #192B51;
+--accent-light: #8090A8;
+--accent-rgb: 25, 43, 81;
+--input: rgba(255, 255, 255, 0.85);
+--danger: #72251F;
+--success: #4a7a62;
+--time-scheme: light;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
-font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:var(--bg);
-color:var(--text); height:100vh; display:flex; flex-direction:column;
-transition:background 0.3s,color 0.3s; overscroll-behavior:none; -webkit-user-select:none; user-select:none;
+font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+background:var(--bg); color:var(--text); height:100vh; display:flex; flex-direction:column;
+transition:background 0.25s,color 0.25s; overscroll-behavior:none;
+-webkit-user-select:none; user-select:none;
 }
-input[type="time"] { color-scheme:var(--time-scheme); }
-input[type="time"]::-webkit-calendar-picker-indicator { cursor:pointer; opacity:1!important; }
-.header { background:var(--card); backdrop-filter:blur(20px); padding:10px 16px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); z-index:10; }
-.header h1 { font-size:18px; display:flex; align-items:center; gap:6px; }
-.logo { background:var(--accent); width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:15px; }
-.btn { padding:7px 10px; border-radius:8px; border:1px solid var(--border); background:var(--card); color:var(--text); font-size:12px; cursor:pointer; font-weight:600; }
-.btn.accent { background:var(--accent); border-color:var(--accent); color:#fff; }
-.panel { background:var(--card); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); padding:10px 16px; z-index:9; }
-.row { display:flex; gap:6px; align-items:center; margin-bottom:6px; }
-.row input, .row select { padding:10px; border-radius:8px; border:1px solid var(--border); background:var(--input); color:var(--text); font-size:13px; outline:none; }
+/* ШАПКА */
+.header { background:var(--card); backdrop-filter:blur(18px); padding:9px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); z-index:10; }
+.header h1 { font-size:17px; display:flex; align-items:center; gap:7px; letter-spacing:0.2px; }
+.logo { background:var(--accent); color:var(--bg); width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:14px; }
+.btn { padding:6px 10px; border-radius:8px; border:1px solid var(--border); background:var(--glass); color:var(--text); font-size:12px; cursor:pointer; font-weight:600; transition:background 0.15s; }
+.btn:hover { background:var(--card); }
+.btn.accent { background:var(--accent); border-color:var(--accent); color:var(--bg); }
+/* ПАНЕЛЬ ДОБАВЛЕНИЯ */
+.panel { background:var(--card); backdrop-filter:blur(18px); border-bottom:1px solid var(--border); padding:8px 14px; z-index:9; }
+.row { display:flex; gap:6px; align-items:center; margin-bottom:5px; }
+.row input, .row select { padding:8px; border-radius:8px; border:1px solid var(--border); background:var(--input); color:var(--text); font-size:13px; outline:none; }
+.row input:focus, .row select:focus { border-color:var(--accent-light); }
 .row input { flex:2; min-width:0; }
 .row select { flex:1; min-width:0; }
 input::placeholder { color:var(--sub); }
-input[type="time"] { flex:1; min-width:0; }
-input[type="number"] { width:55px; text-align:center; flex:0 0 55px!important; }
-.pin { display:flex; align-items:center; gap:4px; font-size:12px; color:var(--sub); padding:8px 10px; border-radius:8px; background:var(--input); border:1px solid var(--border); white-space:nowrap; cursor:pointer; font-weight:600; }
-.pin input { width:14px; height:14px; flex:0 0 14px!important; accent-color:var(--accent); }
+.time-pick { display:flex; gap:3px; align-items:center; flex:0 0 auto; }
+.time-pick select { width:54px; padding:8px 2px; text-align:center; }
+.time-pick span { color:var(--sub); font-weight:700; font-size:13px; }
+input[type="number"] { width:52px; text-align:center; flex:0 0 52px!important; }
+.pin { display:flex; align-items:center; gap:4px; font-size:12px; color:var(--sub); padding:7px 9px; border-radius:8px; background:var(--input); border:1px solid var(--border); white-space:nowrap; cursor:pointer; font-weight:600; }
+.pin input { width:14px; height:14px; flex:0 0 14px!important; accent-color:var(--accent-light); }
+/* КАЛЕНДАРЬ */
 .cal { flex:1; overflow-y:auto; padding:8px 12px; -webkit-overflow-scrolling:touch; }
-.nav { display:flex; align-items:center; justify-content:center; gap:8px; padding:8px 0; font-weight:700; font-size:14px; position:sticky; top:0; background:var(--bg); z-index:5; flex-wrap:wrap; }
-.nav button { background:var(--card); border:1px solid var(--border); color:var(--text); padding:5px 8px; border-radius:6px; cursor:pointer; font-size:12px; }
-.nav button.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+.nav { display:flex; align-items:center; justify-content:center; gap:6px; padding:6px 0; font-weight:700; font-size:13px; position:sticky; top:0; background:var(--bg); z-index:5; flex-wrap:wrap; }
+.nav button { background:var(--glass); border:1px solid var(--border); color:var(--text); padding:4px 9px; border-radius:6px; cursor:pointer; font-size:12px; }
+.nav button.active { background:var(--accent); border-color:var(--accent); color:var(--bg); }
 .now-toggle { font-size:10px; cursor:pointer; color:var(--sub); display:flex; align-items:center; gap:3px; }
-.now-toggle input { width:13px; height:13px; accent-color:var(--accent); }
-.grid { border:1px solid var(--border); border-radius:12px; overflow:hidden; position:relative; }
+.now-toggle input { width:13px; height:13px; accent-color:var(--accent-light); }
+.grid { border:1px solid var(--border); border-radius:12px; overflow:hidden; position:relative; background:var(--card); }
+/* ДЕНЬ */
 .day-grid { position:relative; }
-.day-slot { display:flex; border-bottom:1px solid rgba(128,128,128,0.04); min-height:20px; cursor:pointer; position:relative; }
-.day-slot:hover { background:rgba(var(--accent-rgb),0.03); }
-.day-hour { width:44px; padding:0 4px; font-size:10px; color:var(--sub); border-right:1px solid var(--border); flex-shrink:0; }
-.day-content { flex:1; position:relative; min-height:20px; }
-.task-block { position:absolute; left:46px; right:2px; border-radius:5px; padding:3px 6px; font-size:10px; font-weight:600; cursor:grab; z-index:2; display:flex; align-items:center; gap:4px; overflow:hidden; white-space:nowrap; border:1px solid rgba(255,255,255,0.15); box-shadow:0 1px 3px rgba(0,0,0,0.2); }
+.day-slot { display:flex; border-bottom:1px solid var(--border); height:14px; cursor:pointer; position:relative; }
+.day-slot:hover { background:rgba(var(--accent-rgb),0.05); }
+.day-hour { width:42px; padding:0 4px; font-size:9px; line-height:13px; color:var(--sub); border-right:1px solid var(--border); flex-shrink:0; overflow:hidden; }
+.day-content { flex:1; position:relative; }
+.task-block { position:absolute; left:44px; right:2px; border-radius:4px; padding:1px 5px; font-size:9px; font-weight:600; cursor:grab; z-index:2; display:flex; align-items:center; gap:4px; overflow:hidden; white-space:nowrap; border:1px solid rgba(25,43,81,0.12); box-shadow:0 1px 3px rgba(25,43,81,0.12); }
 .task-block:active { cursor:grabbing; }
-.task-block.dragging { opacity:0.7; box-shadow:0 8px 25px rgba(0,0,0,0.4); z-index:10; }
-.task-block.fixed { cursor:default!important; border-left:3px solid rgba(255,255,255,0.5); }
-.task-block .resize-handle { position:absolute; bottom:0; left:0; right:0; height:6px; cursor:ns-resize; z-index:5; }
+.task-block.dragging { opacity:0.75; box-shadow:0 8px 22px rgba(25,43,81,0.35); z-index:10; }
+.task-block.fixed { cursor:default!important; border-left:3px solid rgba(25,43,81,0.35); }
+.task-block .resize-handle { position:absolute; bottom:0; left:0; right:0; height:5px; cursor:ns-resize; z-index:5; }
 .task-block.fixed .resize-handle { display:none; }
 .task-time { margin-left:auto; font-size:9px; opacity:0.8; flex-shrink:0; white-space:nowrap; }
-.task-del, .task-dup { margin-left:4px; cursor:pointer; opacity:0.6; font-size:12px; flex-shrink:0; z-index:10; }
+.task-del, .task-dup { margin-left:4px; cursor:pointer; opacity:0.55; font-size:11px; flex-shrink:0; z-index:10; }
 .task-del:hover, .task-dup:hover { opacity:1; }
-.now-line { position:absolute; left:46px; right:0; height:2px; background:var(--danger); z-index:3; pointer-events:none; }
+.now-line { position:absolute; left:44px; right:0; height:2px; background:var(--danger); z-index:3; pointer-events:none; }
 .now-line::before { content:''; position:absolute; left:-4px; top:-3px; width:8px; height:8px; background:var(--danger); border-radius:50%; }
+/* НЕДЕЛЯ */
 .week-scroll { overflow-x:auto; -webkit-overflow-scrolling:touch; }
-.week-table { min-width:600px; }
-.week-header { display:flex; border-bottom:1px solid var(--border); background:var(--card); }
-.week-header .whour { width:44px; flex-shrink:0; }
-.week-header .wday { flex:1; text-align:center; padding:8px 2px; font-size:11px; font-weight:700; border-left:1px solid rgba(128,128,128,0.05); min-width:70px; }
-.week-row { display:flex; border-bottom:1px solid rgba(128,128,128,0.04); min-height:36px; position:relative; }
-.week-row .whour { width:44px; font-size:10px; color:var(--sub); padding:2px 4px; flex-shrink:0; }
-.week-row .wday { flex:1; position:relative; border-left:1px solid rgba(128,128,128,0.04); min-height:36px; padding:2px; min-width:70px; }
-.week-task { position:absolute; left:1px; right:1px; font-size:9px; padding:2px 4px; border-radius:4px; cursor:grab; overflow:hidden; white-space:nowrap; z-index:2; display:flex; align-items:center; gap:2px; border:1px solid rgba(255,255,255,0.1); }
-.week-task.fixed { cursor:default!important; border-left:2px solid rgba(255,255,255,0.5); }
+.week-table { min-width:580px; }
+.week-header { display:flex; border-bottom:1px solid var(--border); background:var(--glass); }
+.week-header .whour { width:42px; flex-shrink:0; }
+.week-header .wday { flex:1; text-align:center; padding:6px 2px; font-size:11px; font-weight:700; border-left:1px solid var(--border); min-width:68px; color:var(--sub); }
+.week-row { display:flex; border-bottom:1px solid var(--border); height:26px; position:relative; }
+.week-row .whour { width:42px; font-size:9px; color:var(--sub); padding:1px 4px; flex-shrink:0; overflow:hidden; }
+.week-row .wday { flex:1; position:relative; border-left:1px solid var(--border); height:26px; padding:1px; min-width:68px; }
+.week-task { position:absolute; left:1px; right:1px; font-size:9px; padding:1px 4px; border-radius:4px; cursor:grab; overflow:hidden; white-space:nowrap; z-index:2; display:flex; align-items:center; gap:2px; border:1px solid rgba(25,43,81,0.12); }
+.week-task.fixed { cursor:default!important; border-left:2px solid rgba(25,43,81,0.35); }
 .week-task .resize-handle { position:absolute; bottom:0; left:0; right:0; height:4px; cursor:ns-resize; z-index:5; }
 .week-task.fixed .resize-handle { display:none; }
-.week-task .task-del, .week-task .task-dup { margin-left:2px; font-size:10px; }
+.week-task .task-del, .week-task .task-dup { margin-left:2px; font-size:9px; }
+/* МЕСЯЦ */
 .month-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:1px; background:var(--border); border-radius:12px; overflow:hidden; }
-.month-day-name { background:var(--card); text-align:center; padding:6px; font-size:11px; font-weight:700; color:var(--sub); }
-.month-day { background:var(--card); min-height:70px; padding:4px; cursor:pointer; }
-.month-day:hover { background:var(--input); }
+.month-day-name { background:var(--glass); text-align:center; padding:5px; font-size:11px; font-weight:700; color:var(--sub); }
+.month-day { background:var(--card); min-height:58px; padding:3px; cursor:pointer; }
+.month-day:hover { background:rgba(var(--accent-rgb),0.07); }
 .month-day-num { font-size:11px; font-weight:700; margin-bottom:2px; }
 .month-task { font-size:9px; padding:1px 3px; border-radius:3px; margin-bottom:1px; overflow:hidden; white-space:nowrap; }
+/* ЗАМЕТКИ */
 .notes-container { padding:16px; display:flex; flex-direction:column; gap:10px; }
 .note-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px; }
 .note-card textarea { width:100%; min-height:80px; background:var(--input); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:10px; font-size:13px; resize:vertical; font-family:inherit; outline:none; }
 .note-card .note-actions { display:flex; gap:6px; margin-top:8px; justify-content:flex-end; }
 .note-date { font-size:10px; color:var(--sub); margin-bottom:6px; }
-.modal-bg { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(10,11,20,0.7); backdrop-filter:blur(4px); z-index:100; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.2s; }
+/* МОДАЛКИ */
+.modal-bg { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(25,43,81,0.45); backdrop-filter:blur(4px); z-index:100; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.2s; }
 .modal-bg.show { opacity:1; pointer-events:all; }
-.modal { background:var(--card); backdrop-filter:blur(30px); border-radius:18px; padding:20px; width:90%; max-width:400px; max-height:80vh; overflow-y:auto; border:1px solid var(--border); display:flex; flex-direction:column; gap:10px; }
+.modal { background:var(--bg-soft); border-radius:18px; padding:20px; width:90%; max-width:400px; max-height:80vh; overflow-y:auto; border:1px solid var(--border); display:flex; flex-direction:column; gap:10px; box-shadow:0 20px 50px rgba(25,43,81,0.3); }
 .modal h3 { font-size:16px; }
 .modal label { font-size:11px; color:var(--sub); font-weight:600; }
 .modal input, .modal select, .modal textarea { padding:10px; border-radius:8px; border:1px solid var(--border); background:var(--input); color:var(--text); font-size:13px; outline:none; width:100%; }
 .modal textarea { min-height:100px; resize:vertical; font-family:inherit; }
-.modal input[type="time"] { color-scheme:var(--time-scheme); }
 .cat-row { display:flex; gap:6px; }
 .cat-row input { flex:1; }
 .emoji-btn { width:42px; height:42px; border-radius:8px; border:1px solid var(--border); background:var(--input); font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.colors { display:grid; grid-template-columns:repeat(6,1fr); gap:6px; }
+.colors { display:grid; grid-template-columns:repeat(8,1fr); gap:5px; }
 .swatch { aspect-ratio:1; border-radius:8px; cursor:pointer; border:2px solid transparent; }
-.swatch.sel { border-color:#fff; }
+.swatch.sel { border-color:var(--accent); box-shadow:0 0 0 2px rgba(var(--accent-rgb),0.35); }
 .emoji-grid { display:grid; grid-template-columns:repeat(8,1fr); gap:4px; max-height:140px; overflow-y:auto; padding:4px; background:var(--input); border-radius:10px; }
 .emoji-grid button { aspect-ratio:1; border:none; background:transparent; font-size:18px; cursor:pointer; border-radius:6px; }
 .cat-item { display:flex; align-items:center; gap:8px; padding:8px 10px; background:var(--input); border-radius:8px; font-size:12px; font-weight:600; border:1px solid var(--border); }
 .cat-dot { width:12px; height:12px; border-radius:3px; flex-shrink:0; }
-.cat-del { margin-left:auto; background:rgba(255,138,138,0.15); border:1px solid rgba(255,138,138,0.3); color:var(--danger); cursor:pointer; padding:3px 7px; border-radius:5px; font-size:11px; }
-.accent-colors { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
-.accent-swatch { aspect-ratio:2; border-radius:10px; cursor:pointer; border:2px solid transparent; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#fff; }
-.accent-swatch.selected { border-color:#fff; box-shadow:0 0 0 3px rgba(255,255,255,0.2); }
+.cat-del { margin-left:auto; background:transparent; border:1px solid var(--border); color:var(--danger); cursor:pointer; padding:3px 7px; border-radius:5px; font-size:11px; font-weight:700; }
+.accent-colors { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+.accent-swatch { padding:8px 4px; border-radius:10px; cursor:pointer; border:2px solid transparent; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; text-align:center; }
+.accent-swatch.selected { border-color:var(--accent); box-shadow:0 0 0 3px rgba(var(--accent-rgb),0.3); }
+::-webkit-scrollbar { width:6px; height:6px; }
+::-webkit-scrollbar-thumb { background:rgba(var(--accent-rgb),0.35); border-radius:6px; }
+::-webkit-scrollbar-track { background:transparent; }
 </style>
 </head>
 <body>
 <div id="app" style="display:none;flex-direction:column;height:100vh;">
-<div class="header"><h1><span class="logo">📅</span>FlexiDay</h1><div style="display:flex;gap:4px;"><button class="btn" onclick="openNotes()">📝</button><button class="btn" onclick="openCats()">🎨</button><button class="btn" onclick="openSets()">⚙️</button></div></div>
+<div class="header">
+<h1><span class="logo">📅</span>FlexiDay</h1>
+<div style="display:flex;gap:4px;">
+<button class="btn" onclick="openNotes()">📝</button>
+<button class="btn" onclick="openCats()">🎨</button>
+<button class="btn" onclick="openSets()">⚙️</button>
+</div>
+</div>
 <div id="mainContent" style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
 <div id="calendarView" style="display:flex;flex-direction:column;height:100%;">
-<div class="panel"><div class="row"><input type="text" id="tn" placeholder="Название задачи"><select id="tc"></select></div><div class="row"><input type="time" id="tt" value="12:00" step="300"><input type="number" id="td" value="30" min="5" max="480" step="5"><select id="tu" style="width:55px;flex:0 0 55px!important;"><option value="m">мин</option><option value="h">ч</option></select><label class="pin"><input type="checkbox" id="tf" checked>📌</label></div><button class="btn accent" onclick="addTask()" style="width:100%;padding:10px;">✨ Добавить</button></div>
-<div class="cal" id="calContainer"><div class="nav"><button onclick="chView(-1)">◀</button><span id="dateLabel"></span><button onclick="chView(1)">▶</button><button onclick="goToday()" style="font-size:10px;">Сегодня</button><button id="btnDay" class="active" onclick="setView('day')">День</button><button id="btnWeek" onclick="setView('week')">Неделя</button><button id="btnMonth" onclick="setView('month')">Месяц</button><label class="now-toggle"><input type="checkbox" id="showNow" checked onchange="drawCal()"> линия времени</label><button class="btn" onclick="scrollToNow()" style="font-size:10px;">Сейчас</button><button class="btn" onclick="manualSync()" style="font-size:10px;" title="Синхронизировать сейчас">🔄</button></div><div class="grid" id="grid"></div></div>
+<div class="panel">
+<div class="row">
+<input type="text" id="tn" placeholder="Название задачи">
+<select id="tc"></select>
 </div>
-<div id="notesView" style="display:none;flex-direction:column;height:100%;"><div style="padding:12px 16px;display:flex;gap:6px;"><button class="btn accent" onclick="addNote()" style="flex:1;">➕ Новая заметка</button></div><div class="notes-container" id="notesContainer" style="flex:1;overflow-y:auto;"></div></div>
+<div class="row">
+<div class="time-pick">
+<select id="th"></select>
+<span>:</span>
+<select id="tm"></select>
+</div>
+<input type="number" id="td" value="30" min="5" max="480" step="5">
+<select id="tu" style="width:52px;flex:0 0 52px!important;">
+<option value="m">мин</option>
+<option value="h">ч</option>
+</select>
+<label class="pin"><input type="checkbox" id="tf" checked>📌</label>
+</div>
+<button class="btn accent" onclick="addTask()" style="width:100%;padding:9px;">✨ Добавить</button>
+</div>
+<div class="cal" id="calContainer">
+<div class="nav">
+<button onclick="chView(-1)">◀</button>
+<span id="dateLabel"></span>
+<button onclick="chView(1)">▶</button>
+<button onclick="goToday()" style="font-size:10px;">Сегодня</button>
+<button id="btnDay" class="active" onclick="setView('day')">День</button>
+<button id="btnWeek" onclick="setView('week')">Неделя</button>
+<button id="btnMonth" onclick="setView('month')">Месяц</button>
+<label class="now-toggle"><input type="checkbox" id="showNow" checked onchange="drawCal()"> линия времени</label>
+<button class="btn" onclick="scrollToNow()" style="font-size:10px;">Сейчас</button>
+</div>
+<div class="grid" id="grid"></div>
 </div>
 </div>
-<div class="modal-bg" id="catMod"><div class="modal"><h3>🎨 Разделы</h3><div id="catList"></div><div class="cat-row"><button class="emoji-btn" id="emojiBtn" onclick="toggleEmoji()">📁</button><input type="text" id="newCatName" placeholder="Название"></div><div class="emoji-grid" id="emojiGrid" style="display:none;"></div><div class="colors" id="palette"></div><button class="btn accent" onclick="addCat()" style="width:100%;">➕ Добавить</button><button class="btn" onclick="closeMod('catMod')">Закрыть</button></div></div>
-<div class="modal-bg" id="setMod"><div class="modal"><h3>⚙️ Настройки</h3><label>Тема</label><select id="sTheme" onchange="applyTheme()"><option value="dark">Тёмная</option><option value="light">Светлая</option></select><label>Акцентный цвет</label><div class="accent-colors" id="accentPalette"></div><label>Первый день недели</label><select id="sFirstDay" onchange="sets('firstDay',this.value);drawCal();"><option value="1">Понедельник</option><option value="0">Воскресенье</option><option value="6">Суббота</option></select><label>Начало дня</label><input type="time" id="sStart" value="06:00" onchange="saveBounds()"><label>Конец дня</label><input type="time" id="sEnd" value="23:00" onchange="saveBounds()"><button class="btn accent" onclick="closeMod('setMod');drawCal();">Готово</button></div></div>
+<div id="notesView" style="display:none;flex-direction:column;height:100%;">
+<div style="padding:12px 16px;display:flex;gap:6px;">
+<button class="btn accent" onclick="addNote()" style="flex:1;">➕ Новая заметка</button>
+</div>
+<div class="notes-container" id="notesContainer" style="flex:1;overflow-y:auto;"></div>
+</div>
+</div>
+</div>
 
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<div class="modal-bg" id="catMod">
+<div class="modal">
+<h3>🎨 Разделы</h3>
+<div id="catList"></div>
+<div class="cat-row">
+<button class="emoji-btn" id="emojiBtn" onclick="toggleEmoji()">📁</button>
+<input type="text" id="newCatName" placeholder="Название">
+</div>
+<div class="emoji-grid" id="emojiGrid" style="display:none;"></div>
+<div class="colors" id="palette"></div>
+<button class="btn accent" onclick="addCat()" style="width:100%;">➕ Добавить</button>
+<button class="btn" onclick="closeMod('catMod')">Закрыть</button>
+</div>
+</div>
+
+<div class="modal-bg" id="setMod">
+<div class="modal">
+<h3>⚙️ Настройки</h3>
+<label>Тема</label>
+<select id="sTheme" onchange="applyTheme()">
+<option value="light">Светлая (молочная)</option>
+<option value="dark">Тёмная</option>
+</select>
+<label>Акцентный цвет интерфейса</label>
+<div class="accent-colors" id="accentPalette"></div>
+<label>Первый день недели</label>
+<select id="sFirstDay" onchange="sets('firstDay',this.value);drawCal();">
+<option value="1">Понедельник</option>
+<option value="0">Воскресенье</option>
+<option value="6">Суббота</option>
+</select>
+<label>Начало дня</label>
+<input type="time" id="sStart" value="06:00" onchange="saveBounds()">
+<label>Конец дня</label>
+<input type="time" id="sEnd" value="23:00" onchange="saveBounds()">
+<button class="btn accent" onclick="closeMod('setMod');drawCal();">Готово</button>
+</div>
+</div>
 
 <script>
-// ========== КОНСТАНТЫ ==========
-const PALETTE=['#FFB3BA','#FFC8A2','#FFE5A0','#D4F0A0','#A8E6CF','#A0D2F0','#B3CDFF','#C4B3FF','#E8B3FF','#FFB3E0','#FFD0B3','#B3F0E0'];
-const EMOJIS=['🏋️','💼','🌱','📚','🎨','🎵','💻','🏃','🧘','🍳','🧹','🛒','✈️','🚗','🏠','💤','⏰','📝','💡','🎯','💰','❤️','🌟','🔥','🎉','📞','✉️','🗓️','☕','🍽️','🐱','🐶','🎮','📷','🎬','🧠','💪','🤝','🛠️','📊','🔬','🌍','🎪','🏆','💎','🌈','🍀','🎁','📌','🔔','⚡','🎈','🌙','☀️','🌸','🍕','🎧','📱','💊','🧩'];
-const DEF_CATS=[{id:'c1',name:'Спорт',emoji:'🏋️',color:'#FFB3BA'},{id:'c2',name:'Работа',emoji:'💼',color:'#A0D2F0'},{id:'c3',name:'Личное',emoji:'🌱',color:'#A8E6CF'}];
-const ACCENT_COLORS=[{name:'Голубой',color:'#A9DEF9',light:'#7ab8d4'},{name:'Коричневый',color:'#A57149',light:'#8b5a35'},{name:'Оливковый',color:'#A5AF5D',light:'#8a9442'},{name:'Жёлтый',color:'#F2D965',light:'#d4bb2e'},{name:'Бордовый',color:'#830626',light:'#6b0019'},{name:'Розовый',color:'#D56989',light:'#c04a6e'}];
-const USER_DOC_ID = 'my_user_data';
+// ================= ПАЛИТРА ЗАДАЧ =================
+const PALETTE = ['#eecfff','#bde8ff','#b0c7f2','#ff93b0','#ffc6dc','#ffd4d4','#ffdaf5','#ff9f9f'];
 
-// ========== СОСТОЯНИЕ ==========
+// Акцентные цвета интерфейса (кнопки, выделения)
+const ACCENT_COLORS = [
+{name:'Молочно-белый', color:'#ECE4E5', light:'#ECE4E5'},
+{name:'Тёмно-синий', color:'#192B51', light:'#192B51'},
+{name:'Серо-синий', color:'#8090A8', light:'#5c6b82'},
+{name:'Светло-серый', color:'#C6D0DD', light:'#8a99ad'},
+{name:'Бежевый', color:'#E0D1CA', light:'#a89286'},
+{name:'Тёмно-красный', color:'#72251F', light:'#72251F'},
+{name:'Тёмно-коричневый', color:'#2E1819', light:'#2E1819'}
+];
+
+const EMOJIS = ['🏋️','💼','🌱','📚','🎨','🎵','💻','🏃','🧘','🍳','🧹','🛒','✈️','🚗','🏠','💤','⏰','📝','💡','🎯','💰','❤️','🌟','🔥','🎉','📞','✉️','🗓️','☕','🍽️','🐱','🐶','🎮','📷','🎬','🧠','💪','🤝','🛠️','📊','🔬','🌍','🎪','🏆','💎','🌈','🍀','🎁','📌','🔔','⚡','🎈','🌙','☀️','🌸','🍕','🎧','📱','💊','🧩'];
+
+const DEF_CATS = [
+{id:'c1', name:'Спорт', emoji:'🏋️', color:'#ff93b0'},
+{id:'c2', name:'Работа', emoji:'💼', color:'#bde8ff'},
+{id:'c3', name:'Личное', emoji:'🌱', color:'#eecfff'}
+];
+
+const SLOT = 14; // высота 5 минут в дне
+const ROWH = 26; // высота часа в неделе
+
+// ================= СОСТОЯНИЕ =================
 let localData = {
-settings: { theme:'dark', accent:'#A9DEF9', accentLight:'#7ab8d4', firstDay:'1', dayStart:'06:00', dayEnd:'23:00' },
+settings: {
+theme: 'light', // по умолчанию молочная тема
+accent: '#192B51',
+accentLight: '#192B51',
+firstDay: '1',
+dayStart: '06:00',
+dayEnd: '23:00'
+},
 categories: JSON.parse(JSON.stringify(DEF_CATS)),
 tasks: [],
-notes: [],
-updatedAt: Date.now()
+notes: []
 };
-let curDate=new Date(), viewMode='day', selEmoji='📁', selColor=PALETTE[0], currentScreen='calendar';
-let db = null, unsubscribe = null;
-let lastSentJSON = null;
+let curDate = new Date();
+let viewMode = 'day';
+let selEmoji = '📁';
+let selColor = PALETTE[0];
+let currentScreen = 'calendar';
 
-// ========== ИНИЦИАЛИЗАЦИЯ FIREBASE ==========
-function initFirebase() {
-try {
-if (typeof firebase === 'undefined') return;
-if (!firebase.apps.length) {
-firebase.initializeApp({
-apiKey: "AIzaSyDRrT4JYwdprJUoS8SybOkaHm2trqYSmSA",
-authDomain: "flexiday-76445.firebaseapp.com",
-projectId: "flexiday-76445",
-storageBucket: "flexiday-76445.firebasestorage.app",
-messagingSenderId: "889265422",
-appId: "1:889265422:web:1368ae19258fefa6bd8b5f"
-});
-}
-db = firebase.firestore();
-startSync();
-initialLoadFromCloud(); // первичная загрузка
-} catch(e) { console.warn('Firebase not available'); }
+// ================= ДАТЫ (ЛОКАЛЬНОЕ ВРЕМЯ) =================
+function pad(n){ return String(n).padStart(2,'0'); }
+function localDateStr(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function localISO(d){ return localDateStr(d)+'T'+pad(d.getHours())+':'+pad(d.getMinutes())+':00'; }
+function sameDay(a,b){ return localDateStr(a)===localDateStr(b); }
+function fmtTime(iso){ const d=new Date(iso); return pad(d.getHours())+':'+pad(d.getMinutes()); }
+function fmtDuration(mins){ return mins>=60 ? (Math.round(mins/60*10)/10)+' ч' : mins+' мин'; }
+function isLight(h){
+const r=parseInt(h.slice(1,3),16), g=parseInt(h.slice(3,5),16), b=parseInt(h.slice(5,7),16);
+return (0.299*r+0.587*g+0.114*b)/255 > 0.65;
 }
 
-// ========== ЛОКАЛЬНОЕ ХРАНИЛИЩЕ ==========
-function loadLocal() {
+// ================= ХРАНИЛИЩЕ =================
+function loadLocal(){
 const saved = localStorage.getItem('flexiday_data_v2');
-if (saved) {
-try { localData = JSON.parse(saved); } catch(e) {}
-}
-if (!localData.updatedAt) localData.updatedAt = Date.now();
-lastSentJSON = JSON.stringify(localData);
+if(saved){ try{ localData = JSON.parse(saved); }catch(e){} }
 applySettings();
 }
+function saveLocal(){ localStorage.setItem('flexiday_data_v2', JSON.stringify(localData)); }
+function sett(k,d){ return localData.settings[k] !== undefined ? localData.settings[k] : d; }
+function sets(k,v){ localData.settings[k]=v; saveLocal(); }
 
-function saveLocal() {
-localData.updatedAt = Date.now();
-localStorage.setItem('flexiday_data_v2', JSON.stringify(localData));
-if (db) syncToCloud();
-}
-
-function saveLocalSilent() {
-localStorage.setItem('flexiday_data_v2', JSON.stringify(localData));
-}
-
-// ========== ОБЛАЧНАЯ СИНХРОНИЗАЦИЯ ==========
-function syncToCloud() {
-if (!db) return;
-const json = JSON.stringify(localData);
-if (json === lastSentJSON) return;
-lastSentJSON = json;
-try {
-db.collection('users').doc(USER_DOC_ID).set(localData, {merge:true})
-.catch(e => console.warn('Sync error:', e));
-} catch(e) {}
-}
-
-function startSync() {
-if (!db) return;
-unsubscribe = db.collection('users').doc(USER_DOC_ID).onSnapshot((doc) => {
-if (doc.exists) {
-const cloud = doc.data();
-const cloudJSON = JSON.stringify(cloud);
-if (cloudJSON === lastSentJSON) return;
-localData = cloud;
-lastSentJSON = cloudJSON;
-saveLocalSilent();
-applySettings();
-refreshUI();
-}
-}, (err) => { console.warn('Sync offline'); });
-}
-
-// Первичная загрузка из облака при старте
-async function initialLoadFromCloud() {
-if (!db) return;
-try {
-const doc = await db.collection('users').doc(USER_DOC_ID).get();
-if (doc.exists) {
-const cloud = doc.data();
-const cloudJSON = JSON.stringify(cloud);
-const localEmpty = !localData.tasks.length && !localData.notes.length && !localData.categories.length;
-// если локальные данные пустые или облачные новее, обновляем
-if (localEmpty || (cloud.updatedAt && cloud.updatedAt > localData.updatedAt)) {
-localData = cloud;
-lastSentJSON = cloudJSON;
-saveLocalSilent();
-applySettings();
-refreshUI();
-}
-}
-} catch(e) { console.warn('Initial load error:', e); }
-}
-
-// Ручная синхронизация
-async function manualSync() {
-if (!db) { alert('Синхронизация недоступна, Firebase не загружен'); return; }
-// Сначала отправляем локальные данные
-await db.collection('users').doc(USER_DOC_ID).set(localData, {merge:true});
-// Затем получаем облачные
-const doc = await db.collection('users').doc(USER_DOC_ID).get();
-if (doc.exists) {
-localData = doc.data();
-lastSentJSON = JSON.stringify(localData);
-saveLocalSilent();
-applySettings();
-refreshUI();
-alert('Синхронизация выполнена!');
-}
-}
-
-function applySettings() {
+function applySettings(){
 document.body.className = localData.settings.theme === 'light' ? 'light-theme' : '';
-applyAccent(localData.settings.accent || '#A9DEF9', localData.settings.accentLight || '#7ab8d4');
+applyAccent(localData.settings.accent || '#192B51', localData.settings.accentLight || '#192B51');
 }
-
-function refreshUI() {
-if (currentScreen === 'calendar') drawCal();
-else if (currentScreen === 'notes') renderNotes();
-if (document.getElementById('tc')) renderCatSelect();
-}
-
-// ========== ВСПОМОГАТЕЛЬНЫЕ ==========
-function sett(k,d) { return localData.settings[k] !== undefined ? localData.settings[k] : d; }
-function sets(k,v) { localData.settings[k]=v; saveLocal(); }
 function applyAccent(c,l){
-const root=document.documentElement;
-const isLight=document.body.classList.contains('light-theme');
-const a=isLight?(l||c):c;
-root.style.setProperty('--accent',a);
-root.style.setProperty('--accent-light',l||c);
-const h=a.replace('#','');
-root.style.setProperty('--accent-rgb',parseInt(h.substring(0,2),16)+','+parseInt(h.substring(2,4),16)+','+parseInt(h.substring(4,6),16));
+const root = document.documentElement;
+const isLightTheme = document.body.classList.contains('light-theme');
+const a = isLightTheme ? (l||c) : c;
+root.style.setProperty('--accent', a);
+root.style.setProperty('--accent-light', l||c);
+const h = a.replace('#','');
+root.style.setProperty('--accent-rgb',
+parseInt(h.substring(0,2),16)+','+
+parseInt(h.substring(2,4),16)+','+
+parseInt(h.substring(4,6),16));
 }
-function openSets() {
-document.getElementById('sTheme').value = sett('theme','dark');
+
+// ================= НАСТРОЙКИ =================
+function openSets(){
+document.getElementById('sTheme').value = sett('theme','light');
 document.getElementById('sFirstDay').value = sett('firstDay','1');
 document.getElementById('sStart').value = sett('dayStart','06:00');
 document.getElementById('sEnd').value = sett('dayEnd','23:00');
-document.getElementById('accentPalette').innerHTML = ACCENT_COLORS.map(c=>`<div class="accent-swatch${c.color===sett('accent','#A9DEF9')?' selected':''}" style="background:${c.color};" onclick="selectAccent('${c.color}','${c.light}')">${c.name}</div>`).join('');
+document.getElementById('accentPalette').innerHTML = ACCENT_COLORS.map(c=>{
+const sel = (c.color === sett('accent','#192B51')) ? ' selected' : '';
+const darkText = isLight(c.color);
+return `<div class="accent-swatch${sel}" style="background:${c.color};color:${darkText?'#192B51':'#ECE4E5'};border:1px solid var(--border);" onclick="selectAccent('${c.color}','${c.light}')">${c.name}</div>`;
+}).join('');
 document.getElementById('setMod').classList.add('show');
 }
 function selectAccent(c,l){ applyAccent(c,l); sets('accent',c); sets('accentLight',l); openSets(); }
-function applyTheme(){ const t=document.getElementById('sTheme').value; document.body.className=t==='light'?'light-theme':''; sets('theme',t); applyAccent(sett('accent','#A9DEF9'),sett('accentLight','#7ab8d4')); }
-function saveBounds(){ sets('dayStart',document.getElementById('sStart').value); sets('dayEnd',document.getElementById('sEnd').value); }
+function applyTheme(){
+const t = document.getElementById('sTheme').value;
+document.body.className = t === 'light' ? 'light-theme' : '';
+sets('theme', t);
+applyAccent(sett('accent','#192B51'), sett('accentLight','#192B51'));
+}
+function saveBounds(){
+sets('dayStart', document.getElementById('sStart').value);
+sets('dayEnd', document.getElementById('sEnd').value);
+}
 
-function openNotes(){ currentScreen='notes'; document.getElementById('calendarView').style.display='none'; document.getElementById('notesView').style.display='flex'; renderNotes(); }
+// ================= ЗАМЕТКИ =================
+function openNotes(){
+currentScreen='notes';
+document.getElementById('calendarView').style.display='none';
+document.getElementById('notesView').style.display='flex';
+renderNotes();
+}
 function renderNotes(){
-const notes=localData.notes||[];
-document.getElementById('notesContainer').innerHTML=notes.length===0?'<div style="color:var(--sub);text-align:center;padding:40px;">Нет заметок</div>':
-notes.sort((a,b)=>b.date-a.date).map(n=>`<div class="note-card"><div class="note-date">${new Date(n.date).toLocaleString()}</div><textarea onchange="updateNote('${n.id}',this.value)">${n.text}</textarea><div class="note-actions"><button class="btn" onclick="deleteNote('${n.id}')">🗑️</button></div></div>`).join('');
+const notes = localData.notes || [];
+const box = document.getElementById('notesContainer');
+if(notes.length === 0){
+box.innerHTML = '<div style="color:var(--sub);text-align:center;padding:40px;">Нет заметок</div>';
+return;
 }
-function addNote(){ localData.notes.push({id:'n'+Date.now(),text:'',date:Date.now()}); saveLocal(); renderNotes(); }
-function updateNote(id,text){ const n=localData.notes.find(n=>n.id===id); if(n){n.text=text; saveLocal();} }
-function deleteNote(id){ if(confirm('Удалить заметку?')){ localData.notes=localData.notes.filter(n=>n.id!==id); saveLocal(); renderNotes(); } }
-function openCalendar(){ currentScreen='calendar'; document.getElementById('notesView').style.display='none'; document.getElementById('calendarView').style.display='flex'; drawCal(); }
-
-function cats(){ if(!localData.categories||localData.categories.length===0){ localData.categories=JSON.parse(JSON.stringify(DEF_CATS)); saveLocal(); } return localData.categories; }
-function catById(id){ return cats().find(c=>c.id===id); }
-function renderCatSelect(){ const sel=document.getElementById('tc'); if(sel) sel.innerHTML = cats().map(c=>`<option value="${c.id}">${c.emoji} ${c.name}</option>`).join(''); }
-function openCats(){
-document.getElementById('catList').innerHTML = cats().map(c=>`<div class="cat-item"><span>${c.emoji}</span><span class="cat-dot" style="background:${c.color};"></span><span>${c.name}</span><button class="cat-del" onclick="delCat('${c.id}')">Удалить</button></div>`).join('')||'<div style="color:var(--sub);text-align:center;">Нет разделов</div>';
-document.getElementById('palette').innerHTML = PALETTE.map(c=>`<div class="swatch${c===selColor?' sel':''}" style="background:${c};" onclick="selColor='${c}';openCats();"></div>`).join('');
-document.getElementById('emojiGrid').innerHTML = EMOJIS.map(e=>`<button onclick="selEmoji='${e}';document.getElementById('emojiBtn').textContent='${e}';document.getElementById('emojiGrid').style.display='none';">${e}</button>`).join('');
-document.getElementById('catMod').classList.add('show');
+box.innerHTML = notes.slice().sort((a,b)=>b.date-a.date).map(n=>`
+<div class="note-card">
+<div class="note-date">${new Date(n.date).toLocaleString()}</div>
+<textarea onchange="updateNote('${n.id}', this.value)">${n.text}</textarea>
+<div class="note-actions"><button class="btn" onclick="deleteNote('${n.id}')">🗑️ Удалить</button></div>
+</div>`).join('');
 }
-function toggleEmoji(){ document.getElementById('emojiGrid').style.display = document.getElementById('emojiGrid').style.display==='none'?'grid':'none'; }
-function addCat(){ const n=document.getElementById('newCatName')?.value.trim(); if(!n)return; localData.categories.push({id:'c'+Date.now(),name:n,emoji:selEmoji,color:selColor}); saveLocal(); document.getElementById('newCatName').value=''; selEmoji='📁';selColor=PALETTE[0]; renderCatSelect(); openCats(); drawCal(); }
-function delCat(id){ localData.categories=localData.categories.filter(c=>c.id!==id); localData.tasks=localData.tasks.filter(t=>t.catId!==id); saveLocal(); renderCatSelect(); openCats(); drawCal(); }
-
-function addTask(){
-const tn=document.getElementById('tn'); if(!tn) return;
-const n=tn.value.trim(), cid=document.getElementById('tc')?.value;
-const ti=document.getElementById('tt')?.value, d=parseInt(document.getElementById('td')?.value)||30;
-const u=document.getElementById('tu')?.value, f=document.getElementById('tf')?.checked;
-if(!n) return; let m=u==='h'?d*60:d; if(m<5)m=5;
-const ds=curDate.toISOString().split('T')[0], s=new Date(ds+'T'+ti+':00'), e=new Date(s.getTime()+m*60000);
-const c=catById(cid);
-localData.tasks.push({id:'t'+Date.now(), title:n, start:s.toISOString(), end:e.toISOString(), duration:m, catId:cid, color:c?.color||PALETTE[0], emoji:c?.emoji||'📌', fixed:f});
-saveLocal(); tn.value=''; drawCal();
-}
-function delTask(id){ localData.tasks=localData.tasks.filter(t=>t.id!==id); saveLocal(); drawCal(); }
-function duplicateTask(id){
-const original = localData.tasks.find(t=>t.id===id);
-if(!original) return;
-const newStart = new Date(new Date(original.start).getTime() + 30*60000);
-const newEnd = new Date(newStart.getTime() + (new Date(original.end)-new Date(original.start)));
-const copy = { ...original, id:'t'+Date.now(), start:newStart.toISOString(), end:newEnd.toISOString() };
-localData.tasks.push(copy);
-saveLocal();
+function addNote(){ localData.notes.push({id:'n'+Date.now(), text:'', date:Date.now()}); saveLocal(); renderNotes(); }
+function updateNote(id,text){ const n = localData.notes.find(x=>x.id===id); if(n){ n.text=text; saveLocal(); } }
+function deleteNote(id){ if(confirm('Удалить заметку?')){ localData.notes = localData.notes.filter(x=>x.id!==id); saveLocal(); renderNotes(); } }
+function openCalendar(){
+currentScreen='calendar';
+document.getElementById('notesView').style.display='none';
+document.getElementById('calendarView').style.display='flex';
 drawCal();
 }
-function updateTask(id,ns,ne){ const t=localData.tasks.find(t=>t.id===id); if(t&&!t.fixed){ t.start=ns.toISOString(); t.end=ne.toISOString(); saveLocal(); } }
-function setView(m){ viewMode=m; document.getElementById('btnDay')?.classList.toggle('active',m==='day'); document.getElementById('btnWeek')?.classList.toggle('active',m==='week'); document.getElementById('btnMonth')?.classList.toggle('active',m==='month'); drawCal(); }
-function chView(d){ if(viewMode==='day')curDate.setDate(curDate.getDate()+d); else if(viewMode==='week')curDate.setDate(curDate.getDate()+d*7); else curDate.setMonth(curDate.getMonth()+d); drawCal(); }
-function goToday(){ curDate=new Date(); drawCal(); }
+document.addEventListener('click', e=>{
+if(e.target.closest('.logo') || e.target.closest('h1')) openCalendar();
+});
+
+// ================= РАЗДЕЛЫ =================
+function cats(){
+if(!localData.categories || localData.categories.length === 0){
+localData.categories = JSON.parse(JSON.stringify(DEF_CATS));
+saveLocal();
+}
+return localData.categories;
+}
+function catById(id){ return cats().find(c=>c.id===id); }
+function renderCatSelect(){
+const sel = document.getElementById('tc');
+if(sel) sel.innerHTML = cats().map(c=>`<option value="${c.id}">${c.emoji} ${c.name}</option>`).join('');
+}
+function openCats(){
+document.getElementById('catList').innerHTML = cats().map(c=>`
+<div class="cat-item">
+<span>${c.emoji}</span>
+<span class="cat-dot" style="background:${c.color};"></span>
+<span>${c.name}</span>
+<button class="cat-del" onclick="delCat('${c.id}')">Удалить</button>
+</div>`).join('') || '<div style="color:var(--sub);text-align:center;">Нет разделов</div>';
+document.getElementById('palette').innerHTML = PALETTE.map(c=>
+`<div class="swatch${c===selColor?' sel':''}" style="background:${c};" onclick="selColor='${c}';openCats();"></div>`
+).join('');
+document.getElementById('emojiGrid').innerHTML = EMOJIS.map(e=>
+`<button onclick="selEmoji='${e}';document.getElementById('emojiBtn').textContent='${e}';document.getElementById('emojiGrid').style.display='none';">${e}</button>`
+).join('');
+document.getElementById('catMod').classList.add('show');
+}
+function toggleEmoji(){
+const g = document.getElementById('emojiGrid');
+g.style.display = g.style.display === 'none' ? 'grid' : 'none';
+}
+function addCat(){
+const n = document.getElementById('newCatName')?.value.trim();
+if(!n) return;
+localData.categories.push({id:'c'+Date.now(), name:n, emoji:selEmoji, color:selColor});
+saveLocal();
+document.getElementById('newCatName').value='';
+selEmoji='📁'; selColor=PALETTE[0];
+renderCatSelect(); openCats(); drawCal();
+}
+function delCat(id){
+localData.categories = localData.categories.filter(c=>c.id!==id);
+localData.tasks = localData.tasks.filter(t=>t.catId!==id);
+saveLocal();
+renderCatSelect(); openCats(); drawCal();
+}
+
+// ================= ЗАДАЧИ =================
+function addTask(){
+const tn = document.getElementById('tn');
+if(!tn) return;
+const name = tn.value.trim();
+const cid = document.getElementById('tc')?.value;
+const hh = parseInt(document.getElementById('th').value) || 0;
+const mm = parseInt(document.getElementById('tm').value) || 0;
+const dv = parseInt(document.getElementById('td')?.value) || 30;
+const unit = document.getElementById('tu')?.value;
+const fixed = document.getElementById('tf')?.checked;
+if(!name) return;
+
+let mins = unit === 'h' ? dv*60 : dv;
+if(mins < 5) mins = 5;
+
+const dayStr = localDateStr(curDate);
+const start = new Date(dayStr + 'T' + pad(hh) + ':' + pad(mm) + ':00');
+const end = new Date(start.getTime() + mins*60000);
+const cat = catById(cid);
+
+localData.tasks.push({
+id:'t'+Date.now(),
+title:name,
+start: localISO(start),
+end: localISO(end),
+duration: mins,
+catId: cid,
+color: cat ? cat.color : PALETTE[0],
+emoji: cat ? cat.emoji : '📌',
+fixed: !!fixed
+});
+saveLocal();
+
+tn.value = '';
+document.getElementById('th').value = '0'; // часы сбрасываются
+drawCal();
+}
+
+function delTask(id){
+localData.tasks = localData.tasks.filter(t=>t.id!==id);
+saveLocal(); drawCal();
+}
+
+function duplicateTask(id){
+const src = localData.tasks.find(t=>t.id===id);
+if(!src) return;
+const s = new Date(src.start);
+const e = new Date(src.end);
+const dur = e - s;
+const ns = new Date(s.getTime() + 30*60000);
+const ne = new Date(ns.getTime() + dur);
+localData.tasks.push({
+...src,
+id:'t'+Date.now(),
+start: localISO(ns),
+end: localISO(ne)
+});
+saveLocal(); drawCal();
+}
+
+function updateTask(id, startDate, endDate){
+const t = localData.tasks.find(x=>x.id===id);
+if(t && !t.fixed){
+t.start = localISO(startDate);
+t.end = localISO(endDate);
+t.duration = Math.round((endDate - startDate)/60000);
+saveLocal();
+}
+}
+
+function setView(m){
+viewMode = m;
+document.getElementById('btnDay')?.classList.toggle('active', m==='day');
+document.getElementById('btnWeek')?.classList.toggle('active', m==='week');
+document.getElementById('btnMonth')?.classList.toggle('active', m==='month');
+drawCal();
+}
+function chView(d){
+if(viewMode==='day') curDate.setDate(curDate.getDate()+d);
+else if(viewMode==='week') curDate.setDate(curDate.getDate()+d*7);
+else curDate.setMonth(curDate.getMonth()+d);
+drawCal();
+}
+function goToday(){ curDate = new Date(); drawCal(); }
 function scrollToNow(){
 const now = new Date();
 const slot = document.querySelector(`.day-slot[data-h="${now.getHours()}"][data-m="${Math.floor(now.getMinutes()/5)*5}"]`);
 if(slot) slot.scrollIntoView({behavior:'smooth', block:'center'});
 }
-function dayTasks(dt){ return localData.tasks.filter(t=>t.start.startsWith(dt.toISOString().split('T')[0])); }
-function isLight(h){ const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16); return(0.299*r+0.587*g+0.114*b)/255>0.65; }
-function fmtTime(iso){ const d=new Date(iso); return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); }
-function fmtDuration(mins){ return mins>=60?(mins/60)+' ч':mins+' мин'; }
-
-function drawCal(){
-if(currentScreen!=='calendar') return;
-const ms=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
-if(viewMode==='day'){ document.getElementById('dateLabel').textContent=`${['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][curDate.getDay()]}, ${curDate.getDate()} ${ms[curDate.getMonth()]}`; drawDay(); }
-else if(viewMode==='week'){ const w=getWeek(curDate); document.getElementById('dateLabel').textContent=`${w[0].getDate()} ${ms[w[0].getMonth()]} — ${w[6].getDate()} ${ms[w[6].getMonth()]}`; drawWeek(w); }
-else { document.getElementById('dateLabel').textContent=`${ms[curDate.getMonth()]} ${curDate.getFullYear()}`; drawMonth(); }
+function dayTasks(dt){
+const key = localDateStr(dt);
+return localData.tasks.filter(t=> localDateStr(new Date(t.start)) === key);
 }
 
+// ================= КАЛЕНДАРЬ =================
+function drawCal(){
+if(currentScreen !== 'calendar') return;
+const ms = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+if(viewMode==='day'){
+document.getElementById('dateLabel').textContent =
+`${['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][curDate.getDay()]}, ${curDate.getDate()} ${ms[curDate.getMonth()]}`;
+drawDay();
+} else if(viewMode==='week'){
+const w = getWeek(curDate);
+document.getElementById('dateLabel').textContent =
+`${w[0].getDate()} ${ms[w[0].getMonth()]} — ${w[6].getDate()} ${ms[w[6].getMonth()]}`;
+drawWeek(w);
+} else {
+document.getElementById('dateLabel').textContent =
+`${ms[curDate.getMonth()]} ${curDate.getFullYear()}`;
+drawMonth();
+}
+}
+
+// ---------- ДЕНЬ ----------
 function drawDay(){
-const sh=parseInt(sett('dayStart','06:00')), eh=parseInt(sett('dayEnd','23:00'));
-const all=dayTasks(curDate), now=new Date(), isToday=curDate.toDateString()===now.toDateString(), SLOT=20, showNow=document.getElementById('showNow')?.checked??true;
-let h='<div class="day-grid" style="position:relative;">';
-for(let hh=sh;hh<=eh;hh++) for(let m=0;m<60;m+=5) h+=`<div class="day-slot" data-h="${hh}" data-m="${m}"><div class="day-hour">${m===0?String(hh).padStart(2,'0')+':00':''}</div><div class="day-content"></div></div>`;
+const sh = parseInt(sett('dayStart','06:00'));
+const eh = parseInt(sett('dayEnd','23:00'));
+const all = dayTasks(curDate);
+const now = new Date();
+const isToday = sameDay(curDate, now);
+const showNow = document.getElementById('showNow')?.checked ?? true;
+const gs = sh*60;
+const ge = (eh+1)*60;
+
+let html = '<div class="day-grid" style="position:relative;">';
+
+for(let h=sh; h<=eh; h++){
+for(let m=0; m<60; m+=5){
+html += `<div class="day-slot" data-h="${h}" data-m="${m}">
+<div class="day-hour">${m===0 ? pad(h)+':00' : ''}</div>
+<div class="day-content"></div>
+</div>`;
+}
+}
+
 all.forEach(t=>{
-const s=new Date(t.start), e=new Date(t.end), sm=s.getHours()*60+s.getMinutes(), em=e.getHours()*60+e.getMinutes(), gs=sh*60, ge=(eh+1)*60;
-if(em<=gs||sm>=ge) return;
-const top=(Math.max(sm,gs)-gs)/5*SLOT, hgt=Math.max((Math.min(em,ge)-Math.max(sm,gs))/5*SLOT,22), tc=isLight(t.color)?'#2d2a24':'#fff';
-const dur=t.duration||Math.round((em-sm));
-h+=`<div class="task-block${t.fixed?' fixed':''}" data-id="${t.id}" style="top:${top}px;height:${hgt}px;background:${t.color};color:${tc};" onclick="event.stopPropagation();">
+const s = new Date(t.start);
+const e = new Date(t.end);
+const sm = s.getHours()*60 + s.getMinutes();
+const em = e.getHours()*60 + e.getMinutes();
+if(em <= gs || sm >= ge) return;
+
+const top = (Math.max(sm, gs) - gs) / 5 * SLOT;
+const hgt = Math.max((Math.min(em, ge) - Math.max(sm, gs)) / 5 * SLOT, SLOT);
+const tc = isLight(t.color) ? '#192B51' : '#ECE4E5';
+const dur = t.duration || Math.round(em - sm);
+
+html += `<div class="task-block${t.fixed?' fixed':''}" data-id="${t.id}"
+style="top:${top}px;height:${hgt}px;background:${t.color};color:${tc};"
+onclick="event.stopPropagation();">
 ${t.emoji||''} ${t.title}
 <span class="task-time">${fmtTime(t.start)}–${fmtTime(t.end)} (${fmtDuration(dur)})</span>
 <span class="task-dup" onclick="event.stopPropagation();duplicateTask('${t.id}')" title="Дублировать">⧉</span>
 <span class="task-del" onclick="event.stopPropagation();delTask('${t.id}')" title="Удалить">✕</span>
-${t.fixed?'':'<div class="resize-handle"></div>'}
+${t.fixed ? '' : '<div class="resize-handle"></div>'}
 </div>`;
 });
-if(isToday&&showNow){ const nm=now.getHours()*60+now.getMinutes(); if(nm>=sh*60&&nm<=(eh+1)*60) h+=`<div class="now-line" style="top:${(nm-sh*60)/5*SLOT}px;"></div>`; }
-h+='</div>'; document.getElementById('grid').innerHTML=h; setupDayDrag(SLOT,sh);
-document.querySelectorAll('.day-slot').forEach(s=>s.addEventListener('click',function(e){ if(e.target.closest('.task-block')) return; document.getElementById('tt').value=String(parseInt(this.dataset.h)).padStart(2,'0')+':'+String(parseInt(this.dataset.m)).padStart(2,'0'); document.getElementById('tn')?.focus(); }));
+
+if(isToday && showNow){
+const nm = now.getHours()*60 + now.getMinutes();
+if(nm >= gs && nm <= ge){
+html += `<div class="now-line" style="top:${(nm-gs)/5*SLOT}px;"></div>`;
+}
 }
 
-function setupDayDrag(SLOT,sh){
-const g=document.querySelector('.day-grid'); if(!g) return;
-const isTouch='ontouchstart' in window;
-let el=null,startY=0,startTop=0,startHeight=0,tid=null,resizing=false;
+html += '</div>';
+document.getElementById('grid').innerHTML = html;
+setupDayDrag(sh);
+
+document.querySelectorAll('.day-slot').forEach(slot=>{
+slot.addEventListener('click', function(e){
+if(e.target.closest('.task-block')) return;
+document.getElementById('th').value = String(parseInt(this.dataset.h));
+document.getElementById('tm').value = String(parseInt(this.dataset.m));
+document.getElementById('tn')?.focus();
+});
+});
+}
+
+function setupDayDrag(sh){
+const grid = document.querySelector('.day-grid');
+if(!grid) return;
+const isTouch = 'ontouchstart' in window;
+let el = null, startY = 0, startTop = 0, startHeight = 0, tid = null, resizing = false;
+
 function onStart(e){
-const point=isTouch?e.touches[0]:e;
-if(isTouch&&e.target.closest('.task-del, .task-dup')) return;
-const tb=(!isTouch?e.target:document.elementFromPoint(point.clientX,point.clientY))?.closest('.task-block');
-if(!tb||tb.classList.contains('fixed')) return;
-resizing=!!((isTouch?document.elementFromPoint(point.clientX,point.clientY):e.target)?.closest('.resize-handle'));
-el=tb; tid=tb.dataset.id; startY=point.clientY; startTop=tb.offsetTop; startHeight=tb.offsetHeight;
-tb.classList.add('dragging'); if(!isTouch) tb.setPointerCapture(e.pointerId); e.preventDefault();
+const point = isTouch ? e.touches[0] : e;
+if(isTouch && e.target.closest('.task-del, .task-dup')) return;
+const tb = (!isTouch ? e.target : document.elementFromPoint(point.clientX, point.clientY))?.closest('.task-block');
+if(!tb || tb.classList.contains('fixed')) return;
+
+const handleEl = (isTouch ? document.elementFromPoint(point.clientX, point.clientY) : e.target);
+resizing = !!(handleEl?.closest('.resize-handle'));
+
+el = tb;
+tid = tb.dataset.id;
+startY = point.clientY;
+startTop = tb.offsetTop;
+startHeight = tb.offsetHeight;
+
+tb.classList.add('dragging');
+if(!isTouch) tb.setPointerCapture(e.pointerId);
+e.preventDefault();
 }
-function onMove(e){ if(!el) return; const point=isTouch?e.touches[0]:e; const dy=point.clientY-startY; if(resizing) el.style.height=Math.max(22,startHeight+dy)+'px'; else el.style.top=Math.max(0,startTop+Math.round(dy/SLOT)*SLOT)+'px'; if(isTouch) e.preventDefault(); }
+
+function onMove(e){
+if(!el) return;
+const point = isTouch ? e.touches[0] : e;
+const dy = point.clientY - startY;
+if(resizing){
+el.style.height = Math.max(SLOT, startHeight + dy) + 'px';
+} else {
+el.style.top = Math.max(0, startTop + Math.round(dy/SLOT)*SLOT) + 'px';
+}
+if(isTouch) e.preventDefault();
+}
+
 function onEnd(){
-if(!tid||!el) return; const gs=sh*60;
-const ns=gs+Math.round(parseInt(el.style.top||0)/SLOT)*5;
-const ne=ns+Math.round(parseInt(el.style.height||22)/SLOT)*5;
-const ds=curDate.toISOString().split('T')[0];
-updateTask(tid, new Date(ds+'T'+String(Math.floor(ns/60)).padStart(2,'0')+':'+String(ns%60).padStart(2,'0')+':00'), new Date(ds+'T'+String(Math.floor(ne/60)).padStart(2,'0')+':'+String(ne%60).padStart(2,'0')+':00'));
-el.classList.remove('dragging'); el=null; tid=null; resizing=false; drawCal();
-}
-if(isTouch){ g.addEventListener('touchstart',onStart,{passive:false}); g.addEventListener('touchmove',onMove,{passive:false}); g.addEventListener('touchend',onEnd); }
-else { g.addEventListener('pointerdown',onStart); g.addEventListener('pointermove',onMove); g.addEventListener('pointerup',onEnd); }
+if(!tid || !el) return;
+const gs = sh*60;
+
+const topPx = parseInt(el.style.top || 0);
+const hgtPx = parseInt(el.style.height || SLOT);
+
+const newStartMin = gs + Math.round(topPx / SLOT) * 5;
+const newEndMin = newStartMin + Math.max(Math.round(hgtPx / SLOT) * 5, 5);
+
+const dayStr = localDateStr(curDate);
+const ns = new Date(dayStr + 'T' + pad(Math.floor(newStartMin/60)) + ':' + pad(newStartMin%60) + ':00');
+const ne = new Date(dayStr + 'T' + pad(Math.floor(newEndMin/60)) + ':' + pad(newEndMin%60) + ':00');
+
+updateTask(tid, ns, ne);
+
+el.classList.remove('dragging');
+el = null; tid = null; resizing = false;
+drawCal();
 }
 
-function getWeek(dt){ const fd=parseInt(sett('firstDay','1')), diff=(dt.getDay()-fd+7)%7, mon=new Date(dt); mon.setDate(dt.getDate()-diff); return Array.from({length:7},(_,i)=>{ const d=new Date(mon); d.setDate(mon.getDate()+i); return d; }); }
+if(isTouch){
+grid.addEventListener('touchstart', onStart, {passive:false});
+grid.addEventListener('touchmove', onMove, {passive:false});
+grid.addEventListener('touchend', onEnd);
+} else {
+grid.addEventListener('pointerdown', onStart);
+grid.addEventListener('pointermove', onMove);
+grid.addEventListener('pointerup', onEnd);
+}
+}
+
+// ---------- НЕДЕЛЯ ----------
+function getWeek(dt){
+const fd = parseInt(sett('firstDay','1'));
+const diff = (dt.getDay() - fd + 7) % 7;
+const mon = new Date(dt);
+mon.setDate(dt.getDate() - diff);
+return Array.from({length:7}, (_,i)=>{
+const d = new Date(mon);
+d.setDate(mon.getDate() + i);
+return d;
+});
+}
+
 function drawWeek(week){
-const days=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'], fd=parseInt(sett('firstDay','1')), od=Array.from({length:7},(_,i)=>days[(fd+i)%7]);
-const sh=parseInt(sett('dayStart','06:00')), eh=parseInt(sett('dayEnd','23:00')), ROWH=36;
-let h='<div class="week-scroll"><div class="week-table"><div class="week-header"><div class="whour"></div>';
-od.forEach((d,i)=>{ const dt=week[i]; h+=`<div class="wday" data-day="${i}" style="${dt.toDateString()===new Date().toDateString()?'color:var(--accent);':''}">${d}<br>${dt.getDate()}</div>`; });
-h+='</div>';
-for(let hh=sh;hh<=eh;hh++){ h+='<div class="week-row"><div class="whour">'+String(hh).padStart(2,'0')+':00</div>'; week.forEach((date,di)=>{ h+='<div class="wday" data-day="'+di+'">'; dayTasks(date).forEach(t=>{ const s=new Date(t.start), e=new Date(t.end); if(s.getHours()===hh||(s.getHours()<hh&&e.getHours()>hh)){ const sm=s.getHours()*60+s.getMinutes(), em=e.getHours()*60+e.getMinutes(), top=Math.max(0,(sm-hh*60)/60*ROWH), hgt=Math.max(Math.min(ROWH-top,(em-Math.max(hh*60,sm))/60*ROWH),18), tc=isLight(t.color)?'#2d2a24':'#fff'; h+=`<div class="week-task${t.fixed?' fixed':''}" data-id="${t.id}" data-day="${di}" style="top:${top}px;height:${hgt}px;background:${t.color};color:${tc};" onclick="event.stopPropagation();">
+const days = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+const fd = parseInt(sett('firstDay','1'));
+const od = Array.from({length:7}, (_,i)=> days[(fd+i)%7]);
+const sh = parseInt(sett('dayStart','06:00'));
+const eh = parseInt(sett('dayEnd','23:00'));
+
+let html = '<div class="week-scroll"><div class="week-table">';
+html += '<div class="week-header"><div class="whour"></div>';
+od.forEach((d,i)=>{
+const dt = week[i];
+const isToday = sameDay(dt, new Date());
+html += `<div class="wday" data-day="${i}" style="${isToday?'color:var(--accent);':''}">${d}<br>${dt.getDate()}</div>`;
+});
+html += '</div>';
+
+for(let h=sh; h<=eh; h++){
+html += `<div class="week-row"><div class="whour">${pad(h)}:00</div>`;
+week.forEach((date, di)=>{
+html += `<div class="wday" data-day="${di}">`;
+dayTasks(date).forEach(t=>{
+const s = new Date(t.start);
+const e = new Date(t.end);
+if(s.getHours() === h || (s.getHours() < h && e.getHours() > h)){
+const sm = s.getHours()*60 + s.getMinutes();
+const em = e.getHours()*60 + e.getMinutes();
+const top = Math.max(0, (sm - h*60)/60*ROWH);
+const hgt = Math.max(Math.min(ROWH - top, (em - Math.max(h*60, sm))/60*ROWH), 12);
+const tc = isLight(t.color) ? '#192B51' : '#ECE4E5';
+html += `<div class="week-task${t.fixed?' fixed':''}" data-id="${t.id}" data-day="${di}"
+style="top:${top}px;height:${hgt}px;background:${t.color};color:${tc};"
+onclick="event.stopPropagation();">
 ${t.emoji||''}${t.title}
-<span class="task-dup" onclick="event.stopPropagation();duplicateTask('${t.id}')" title="Дублировать">⧉</span>
-<span class="task-del" onclick="event.stopPropagation();delTask('${t.id}')" title="Удалить">✕</span>
-${t.fixed?'':'<div class="resize-handle"></div>'}
-</div>`; }}); h+='</div>'; }); h+='</div>'; }
-h+='</div></div>'; document.getElementById('grid').innerHTML=h; setupWeekDrag(week,ROWH);
+<span class="task-dup" onclick="event.stopPropagation();duplicateTask('${t.id}')">⧉</span>
+<span class="task-del" onclick="event.stopPropagation();delTask('${t.id}')">✕</span>
+${t.fixed ? '' : '<div class="resize-handle"></div>'}
+</div>`;
+}
+});
+html += '</div>';
+});
+html += '</div>';
+}
+html += '</div></div>';
+document.getElementById('grid').innerHTML = html;
+setupWeekDrag(week);
 }
 
-function setupWeekDrag(week,ROWH){
-const table=document.querySelector('.week-table'); if(!table) return;
-const isTouch='ontouchstart' in window;
-let el=null,startY=0,startTop=0,startHeight=0,tid=null,resizing=false,currentDay=0;
-function getDayColumns(){ const hd=table.querySelectorAll('.week-header .wday'); const c=[]; hd.forEach(d=>{ const r=d.getBoundingClientRect(); c.push({day:parseInt(d.dataset.day), left:r.left, right:r.right}); }); return c; }
-function getDayFromX(cx){ const c=getDayColumns(); for(let x of c) if(cx>=x.left&&cx<=x.right) return x.day; if(c.length>0&&cx<c[0].left) return c[0].day; if(c.length>0&&cx>c[c.length-1].right) return c[c.length-1].day; return currentDay; }
-function onStart(e){ const point=isTouch?e.touches[0]:e; if(isTouch&&e.target.closest('.task-del, .task-dup')) return; const tb=(!isTouch?e.target:document.elementFromPoint(point.clientX,point.clientY))?.closest('.week-task'); if(!tb||tb.classList.contains('fixed')) return; resizing=!!((isTouch?document.elementFromPoint(point.clientX,point.clientY):e.target)?.closest('.resize-handle')); el=tb; tid=tb.dataset.id; currentDay=parseInt(tb.dataset.day); startY=point.clientY; startTop=tb.offsetTop; startHeight=tb.offsetHeight; tb.classList.add('dragging'); if(!isTouch) tb.setPointerCapture(e.pointerId); e.preventDefault(); }
-function onMove(e){ if(!el) return; const point=isTouch?e.touches[0]:e; const nd=getDayFromX(point.clientX); if(nd!==currentDay){ currentDay=nd; el.dataset.day=currentDay; const tr=el.closest('.week-row'); if(tr){ const tc=tr.querySelector(`.wday[data-day="${currentDay}"]`); if(tc&&el.parentElement!==tc){ tc.appendChild(el); startY=point.clientY; startTop=0; el.style.top='0px'; } } } const dy=point.clientY-startY; if(resizing) el.style.height=Math.max(18,startHeight+dy)+'px'; else el.style.top=Math.max(0,startTop+Math.round(dy/ROWH)*ROWH)+'px'; if(isTouch) e.preventDefault(); }
-function onEnd(){ if(!tid||!el) return; const dt=new Date(week[currentDay]), hh=parseInt(sett('dayStart','06:00')), ft=parseInt(el.style.top||0), fh=parseInt(el.style.height||18), ns=hh*60+Math.round(ft/ROWH)*60, ne=ns+Math.round(fh/ROWH)*60, ds=dt.toISOString().split('T')[0]; updateTask(tid, new Date(ds+'T'+String(Math.floor(ns/60)).padStart(2,'0')+':'+String(ns%60).padStart(2,'0')+':00'), new Date(ds+'T'+String(Math.floor(ne/60)).padStart(2,'0')+':'+String(ne%60).padStart(2,'0')+':00')); el.classList.remove('dragging'); el=null; tid=null; currentDay=0; resizing=false; drawCal(); }
-if(isTouch){ table.addEventListener('touchstart',onStart,{passive:false}); table.addEventListener('touchmove',onMove,{passive:false}); table.addEventListener('touchend',onEnd); }
-else { table.addEventListener('pointerdown',onStart); table.addEventListener('pointermove',onMove); table.addEventListener('pointerup',onEnd); }
+function setupWeekDrag(week){
+const table = document.querySelector('.week-table');
+if(!table) return;
+const isTouch = 'ontouchstart' in window;
+let el = null, tid = null, resizing = false;
+let startY = 0, startTop = 0, startHeight = 0, currentDay = 0;
+
+function getDayColumns(){
+const hd = table.querySelectorAll('.week-header .wday');
+const cols = [];
+hd.forEach(d=>{
+const r = d.getBoundingClientRect();
+cols.push({day: parseInt(d.dataset.day), left: r.left, right: r.right});
+});
+return cols;
+}
+function getDayFromX(cx){
+const cols = getDayColumns();
+for(const c of cols){ if(cx >= c.left && cx <= c.right) return c.day; }
+if(cols.length > 0 && cx < cols[0].left) return cols[0].day;
+if(cols.length > 0 && cx > cols[cols.length-1].right) return cols[cols.length-1].day;
+return currentDay;
 }
 
+function onStart(e){
+const point = isTouch ? e.touches[0] : e;
+if(isTouch && e.target.closest('.task-del, .task-dup')) return;
+const tb = (!isTouch ? e.target : document.elementFromPoint(point.clientX, point.clientY))?.closest('.week-task');
+if(!tb || tb.classList.contains('fixed')) return;
+
+const handleEl = (isTouch ? document.elementFromPoint(point.clientX, point.clientY) : e.target);
+resizing = !!(handleEl?.closest('.resize-handle'));
+
+el = tb;
+tid = tb.dataset.id;
+currentDay = parseInt(tb.dataset.day);
+startY = point.clientY;
+startTop = tb.offsetTop;
+startHeight = tb.offsetHeight;
+
+tb.classList.add('dragging');
+if(!isTouch) tb.setPointerCapture(e.pointerId);
+e.preventDefault();
+}
+
+function onMove(e){
+if(!el) return;
+const point = isTouch ? e.touches[0] : e;
+const nd = getDayFromX(point.clientX);
+if(nd !== currentDay){
+currentDay = nd;
+el.dataset.day = currentDay;
+const row = el.closest('.week-row');
+if(row){
+const cell = row.querySelector(`.wday[data-day="${currentDay}"]`);
+if(cell && el.parentElement !== cell){
+cell.appendChild(el);
+startY = point.clientY;
+startTop = 0;
+el.style.top = '0px';
+}
+}
+}
+const dy = point.clientY - startY;
+if(resizing) el.style.height = Math.max(12, startHeight + dy) + 'px';
+else el.style.top = Math.max(0, startTop + Math.round(dy/ROWH)*ROWH) + 'px';
+if(isTouch) e.preventDefault();
+}
+
+function onEnd(){
+if(!tid || !el) return;
+const date = week[currentDay];
+const h = parseInt(sett('dayStart','06:00'));
+const topPx = parseInt(el.style.top || 0);
+const hgtPx = parseInt(el.style.height || 12);
+
+const startMin = h*60 + Math.round(topPx/ROWH)*60;
+const endMin = startMin + Math.max(Math.round(hgtPx/ROWH)*60, 5);
+const ds = localDateStr(date);
+const ns = new Date(ds + 'T' + pad(Math.floor(startMin/60)) + ':' + pad(startMin%60) + ':00');
+const ne = new Date(ds + 'T' + pad(Math.floor(endMin/60)) + ':' + pad(endMin%60) + ':00');
+
+updateTask(tid, ns, ne);
+
+el.classList.remove('dragging');
+el = null; tid = null; currentDay = 0; resizing = false;
+drawCal();
+}
+
+if(isTouch){
+table.addEventListener('touchstart', onStart, {passive:false});
+table.addEventListener('touchmove', onMove, {passive:false});
+table.addEventListener('touchend', onEnd);
+} else {
+table.addEventListener('pointerdown', onStart);
+table.addEventListener('pointermove', onMove);
+table.addEventListener('pointerup', onEnd);
+}
+}
+
+// ---------- МЕСЯЦ ----------
 function drawMonth(){
-const y=curDate.getFullYear(), m=curDate.getMonth(), fd=parseInt(sett('firstDay','1')), first=new Date(y,m,1), last=new Date(y,m+1,0), pad=(first.getDay()-fd+7)%7;
-const od=Array.from({length:7},(_,i)=>['Пн','Вт','Ср','Чт','Пт','Сб','Вс'][(fd+i)%7]);
-let h='<div class="month-grid">'; od.forEach(d=>h+=`<div class="month-day-name">${d}</div>`);
-for(let i=0;i<pad;i++) h+='<div class="month-day"></div>';
-for(let d=1;d<=last.getDate();d++){ const dt=new Date(y,m,d), ds=dt.toISOString().split('T')[0], isToday=dt.toDateString()===new Date().toDateString(); h+=`<div class="month-day" onclick="curDate=new Date('${ds}');setView('day');"><div class="month-day-num" style="${isToday?'color:var(--accent);':''}">${d}</div>`; dayTasks(dt).slice(0,3).forEach(t=>h+=`<div class="month-task" style="background:${t.color};color:${isLight(t.color)?'#2d2a24':'#fff'};">${t.emoji||''}${t.title}</div>`); if(dayTasks(dt).length>3) h+=`<div style="font-size:9px;color:var(--sub);">+${dayTasks(dt).length-3}</div>`; h+='</div>'; }
-h+='</div>'; document.getElementById('grid').innerHTML=h;
-}
-function closeMod(id){ document.getElementById(id)?.classList.remove('show'); }
-document.addEventListener('click', e=>{ if(e.target.classList.contains('modal-bg')) e.target.classList.remove('show'); });
+const y = curDate.getFullYear();
+const m = curDate.getMonth();
+const fd = parseInt(sett('firstDay','1'));
+const first = new Date(y, m, 1);
+const last = new Date(y, m+1, 0);
+const pad0 = (first.getDay() - fd + 7) % 7;
+const od = Array.from({length:7}, (_,i)=> ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'][(fd+i)%7]);
 
-function init() {
+let html = '<div class="month-grid">';
+od.forEach(d=> html += `<div class="month-day-name">${d}</div>`);
+for(let i=0; i<pad0; i++) html += '<div class="month-day"></div>';
+
+for(let d=1; d<=last.getDate(); d++){
+const dt = new Date(y, m, d);
+const ds = localDateStr(dt);
+const isToday = sameDay(dt, new Date());
+html += `<div class="month-day" onclick="curDate=new Date('${ds}T12:00:00');setView('day');">
+<div class="month-day-num" style="${isToday?'color:var(--accent);font-weight:800;':''}">${d}</div>`;
+const list = dayTasks(dt);
+list.slice(0,3).forEach(t=>{
+const tc = isLight(t.color) ? '#192B51' : '#ECE4E5';
+html += `<div class="month-task" style="background:${t.color};color:${tc};">${t.emoji||''}${t.title}</div>`;
+});
+if(list.length > 3) html += `<div style="font-size:9px;color:var(--sub);">+${list.length-3}</div>`;
+html += '</div>';
+}
+html += '</div>';
+document.getElementById('grid').innerHTML = html;
+}
+
+// ================= МОДАЛКИ =================
+function closeMod(id){ document.getElementById(id)?.classList.remove('show'); }
+document.addEventListener('click', e=>{
+if(e.target.classList.contains('modal-bg')) e.target.classList.remove('show');
+});
+
+// ================= ИНИЦИАЛИЗАЦИЯ =================
+function fillTimeSelects(){
+const th = document.getElementById('th');
+const tm = document.getElementById('tm');
+th.innerHTML = Array.from({length:24}, (_,h)=> `<option value="${h}">${pad(h)}</option>`).join('');
+tm.innerHTML = Array.from({length:12}, (_,i)=> {
+const m = i*5;
+return `<option value="${m}">${pad(m)}</option>`;
+}).join('');
+th.value = '0';
+tm.value = '0';
+}
+
+function init(){
 loadLocal();
 document.getElementById('app').style.display = 'flex';
+fillTimeSelects();
 renderCatSelect();
 setView('day');
-const now = new Date();
-document.getElementById('tt').value = String(now.getHours()).padStart(2,'0')+':'+String(Math.floor(now.getMinutes()/5)*5).padStart(2,'0');
-setInterval(() => { if(viewMode==='day' && curDate.toDateString()===new Date().toDateString()) drawCal(); }, 60000);
-setTimeout(initFirebase, 100);
+
+setInterval(()=>{
+if(viewMode==='day' && sameDay(curDate, new Date())) drawCal();
+}, 60000);
 }
 
 document.addEventListener('DOMContentLoaded', init);
