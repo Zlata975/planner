@@ -71,9 +71,16 @@ transition:background 0.25s,color 0.25s; overscroll-behavior:none;
 .row select { flex:1; min-width:0; }
 input::placeholder { color:var(--sub); }
 .time-pick { display:flex; gap:3px; align-items:center; flex:0 0 auto; }
-.time-pick select { width:54px; padding:8px 2px; text-align:center; }
+.time-pick select { width:52px; padding:8px 2px; text-align:center; }
 .time-pick span { color:var(--sub); font-weight:700; font-size:13px; }
-input[type="number"] { width:52px; text-align:center; flex:0 0 52px!important; }
+.dur-pick { display:flex; gap:3px; align-items:center; flex:0 0 auto; }
+.dur-pick input {
+width:44px; padding:8px 2px; text-align:center; flex:0 0 44px!important;
+-moz-appearance:textfield;
+}
+.dur-pick input::-webkit-outer-spin-button,
+.dur-pick input::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
+.dur-pick span { color:var(--sub); font-weight:700; font-size:12px; }
 .pin { display:flex; align-items:center; gap:4px; font-size:12px; color:var(--sub); padding:7px 9px; border-radius:8px; background:var(--input); border:1px solid var(--border); white-space:nowrap; cursor:pointer; font-weight:600; }
 .pin input { width:14px; height:14px; flex:0 0 14px!important; accent-color:var(--accent-light); }
 /* КАЛЕНДАРЬ */
@@ -86,19 +93,48 @@ input[type="number"] { width:52px; text-align:center; flex:0 0 52px!important; }
 .grid { border:1px solid var(--border); border-radius:12px; overflow:hidden; position:relative; background:var(--card); }
 /* ДЕНЬ */
 .day-grid { position:relative; }
-.day-slot { display:flex; border-bottom:1px solid var(--border); height:14px; cursor:pointer; position:relative; }
+.day-slot { display:flex; border-bottom:1px solid var(--border); height:16px; cursor:pointer; position:relative; }
 .day-slot:hover { background:rgba(var(--accent-rgb),0.05); }
-.day-hour { width:42px; padding:0 4px; font-size:9px; line-height:13px; color:var(--sub); border-right:1px solid var(--border); flex-shrink:0; overflow:hidden; }
+.day-hour { width:42px; padding:0 4px; font-size:9px; line-height:15px; color:var(--sub); border-right:1px solid var(--border); flex-shrink:0; overflow:hidden; }
 .day-content { flex:1; position:relative; }
-.task-block { position:absolute; left:44px; right:2px; border-radius:4px; padding:1px 5px; font-size:9px; font-weight:600; cursor:grab; z-index:2; display:flex; align-items:center; gap:4px; overflow:hidden; white-space:nowrap; border:1px solid rgba(43,43,48,0.12); box-shadow:0 1px 3px rgba(43,43,48,0.12); }
+.task-block { position:absolute; left:44px; right:2px; border-radius:4px; padding:2px 6px; font-size:10px; font-weight:600; cursor:grab; z-index:2; display:flex; align-items:center; gap:5px; overflow:hidden; white-space:nowrap; border:1px solid rgba(43,43,48,0.12); box-shadow:0 1px 3px rgba(43,43,48,0.12); }
 .task-block:active { cursor:grabbing; }
 .task-block.dragging { opacity:0.75; box-shadow:0 8px 22px rgba(43,43,48,0.35); z-index:10; }
 .task-block.fixed { cursor:default!important; border-left:3px solid rgba(43,43,48,0.35); }
-.task-block .resize-handle { position:absolute; bottom:0; left:0; right:0; height:5px; cursor:ns-resize; z-index:5; }
+.task-block .resize-handle { position:absolute; bottom:0; left:0; right:0; height:6px; cursor:ns-resize; z-index:5; }
 .task-block.fixed .resize-handle { display:none; }
 .task-time { margin-left:auto; font-size:9px; opacity:0.8; flex-shrink:0; white-space:nowrap; }
-.task-del, .task-dup { margin-left:4px; cursor:pointer; opacity:0.55; font-size:11px; flex-shrink:0; z-index:10; }
-.task-del:hover, .task-dup:hover { opacity:1; }
+/* ==== КРУПНЫЙ КРЕСТИК УДАЛЕНИЯ ==== */
+.task-del {
+margin-left:4px;
+cursor:pointer;
+opacity:0.75;
+font-size:17px;
+line-height:1;
+font-weight:700;
+flex-shrink:0;
+z-index:10;
+padding:3px 6px;
+border-radius:5px;
+background:rgba(255,255,255,0.28);
+display:flex;
+align-items:center;
+justify-content:center;
+min-width:24px;
+min-height:24px;
+transition:background 0.15s, opacity 0.15s;
+}
+.task-del:hover, .task-del:active { opacity:1; background:rgba(255,255,255,0.55); }
+.task-dup {
+margin-left:3px;
+cursor:pointer;
+opacity:0.55;
+font-size:12px;
+flex-shrink:0;
+z-index:10;
+padding:2px 4px;
+}
+.task-dup:hover { opacity:1; }
 .now-line { position:absolute; left:44px; right:0; height:2px; background:var(--danger); z-index:3; pointer-events:none; }
 .now-line::before { content:''; position:absolute; left:-4px; top:-3px; width:8px; height:8px; background:var(--danger); border-radius:50%; }
 /* НЕДЕЛЯ */
@@ -107,14 +143,15 @@ input[type="number"] { width:52px; text-align:center; flex:0 0 52px!important; }
 .week-header { display:flex; border-bottom:1px solid var(--border); background:var(--glass); }
 .week-header .whour { width:42px; flex-shrink:0; }
 .week-header .wday { flex:1; text-align:center; padding:6px 2px; font-size:11px; font-weight:700; border-left:1px solid var(--border); min-width:68px; color:var(--sub); }
-.week-row { display:flex; border-bottom:1px solid var(--border); height:26px; position:relative; }
+.week-row { display:flex; border-bottom:1px solid var(--border); height:28px; position:relative; }
 .week-row .whour { width:42px; font-size:9px; color:var(--sub); padding:1px 4px; flex-shrink:0; overflow:hidden; }
-.week-row .wday { flex:1; position:relative; border-left:1px solid var(--border); height:26px; padding:1px; min-width:68px; }
+.week-row .wday { flex:1; position:relative; border-left:1px solid var(--border); height:28px; padding:1px; min-width:68px; }
 .week-task { position:absolute; left:1px; right:1px; font-size:9px; padding:1px 4px; border-radius:4px; cursor:grab; overflow:hidden; white-space:nowrap; z-index:2; display:flex; align-items:center; gap:2px; border:1px solid rgba(43,43,48,0.12); }
 .week-task.fixed { cursor:default!important; border-left:2px solid rgba(43,43,48,0.35); }
 .week-task .resize-handle { position:absolute; bottom:0; left:0; right:0; height:4px; cursor:ns-resize; z-index:5; }
 .week-task.fixed .resize-handle { display:none; }
-.week-task .task-del, .week-task .task-dup { margin-left:2px; font-size:9px; }
+.week-task .task-del { font-size:14px; min-width:20px; min-height:20px; padding:2px 5px; margin-left:2px; }
+.week-task .task-dup { margin-left:2px; font-size:10px; }
 /* МЕСЯЦ */
 .month-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:1px; background:var(--border); border-radius:12px; overflow:hidden; }
 .month-day-name { background:var(--glass); text-align:center; padding:5px; font-size:11px; font-weight:700; color:var(--sub); }
@@ -179,11 +216,12 @@ input[type="number"] { width:52px; text-align:center; flex:0 0 52px!important; }
 <span>:</span>
 <select id="tm"></select>
 </div>
-<input type="number" id="td" value="30" min="5" max="480" step="5">
-<select id="tu" style="width:52px;flex:0 0 52px!important;">
-<option value="m">мин</option>
-<option value="h">ч</option>
-</select>
+<div class="dur-pick" title="Продолжительность: часы и минуты">
+<input type="number" id="tdh" value="0" min="0" max="23">
+<span>ч</span>
+<input type="number" id="tdm" value="30" min="0" max="59" step="5">
+<span>мин</span>
+</div>
 <label class="pin"><input type="checkbox" id="tf" checked>📌</label>
 </div>
 <button class="btn accent" onclick="addTask()" style="width:100%;padding:9px;">✨ Добавить</button>
@@ -270,8 +308,8 @@ const DEF_CATS = [
 {id:'c3', name:'Личное', emoji:'🌱', color:'#eecfff'}
 ];
 
-const SLOT = 14; // высота 5 минут в дне
-const ROWH = 26; // высота часа в неделе
+const SLOT = 16; // высота 5 минут в дне
+const ROWH = 28; // высота часа в неделе
 
 // ================= СОСТОЯНИЕ =================
 let localData = {
@@ -310,7 +348,6 @@ function loadLocal(){
 const saved = localStorage.getItem('flexiday_data_v2');
 if(saved){ try{ localData = JSON.parse(saved); }catch(e){} }
 
-// Миграция: если сохранён акцент не из списка разрешённых — ставим тёмно-красный
 if(!localData.settings) localData.settings = {};
 if(!ALLOWED_ACCENTS.includes(localData.settings.accent)){
 localData.settings.accent = '#72251F';
@@ -328,7 +365,6 @@ document.body.className = localData.settings.theme === 'light' ? 'light-theme' :
 applyAccent(localData.settings.accent || '#72251F', localData.settings.accentLight || '#72251F');
 }
 
-// ВАЖНО: переменные ставим на body (а не на html), чтобы они перебивали .light-theme
 function applyAccent(c,l){
 const el = document.body;
 if(!el) return;
@@ -341,7 +377,6 @@ el.style.setProperty('--accent-rgb',
 parseInt(h.substring(0,2),16)+','+
 parseInt(h.substring(2,4),16)+','+
 parseInt(h.substring(4,6),16));
-// цвет текста на акцентных кнопках
 el.style.setProperty('--accent-text', isLight(a) ? '#2B2B30' : '#ECE4E5');
 }
 
@@ -470,13 +505,16 @@ const name = tn.value.trim();
 const cid = document.getElementById('tc')?.value;
 const hh = parseInt(document.getElementById('th').value) || 0;
 const mm = parseInt(document.getElementById('tm').value) || 0;
-const dv = parseInt(document.getElementById('td')?.value) || 30;
-const unit = document.getElementById('tu')?.value;
+
+// Продолжительность: часы + минуты отдельно
+const dh = parseInt(document.getElementById('tdh')?.value) || 0;
+const dm = parseInt(document.getElementById('tdm')?.value) || 0;
+
 const fixed = document.getElementById('tf')?.checked;
 if(!name) return;
 
-let mins = unit === 'h' ? dv*60 : dv;
-if(mins < 5) mins = 5;
+let mins = dh*60 + dm;
+if(mins < 5) mins = 5; // минимум 5 минут
 
 const dayStr = localDateStr(curDate);
 const start = new Date(dayStr + 'T' + pad(hh) + ':' + pad(mm) + ':00');
@@ -497,7 +535,7 @@ fixed: !!fixed
 saveLocal();
 
 tn.value = '';
-document.getElementById('th').value = '0';
+document.getElementById('th').value = '0'; // часы начала сбрасываются
 drawCal();
 }
 
@@ -753,7 +791,7 @@ if(s.getHours() === h || (s.getHours() < h && e.getHours() > h)){
 const sm = s.getHours()*60 + s.getMinutes();
 const em = e.getHours()*60 + e.getMinutes();
 const top = Math.max(0, (sm - h*60)/60*ROWH);
-const hgt = Math.max(Math.min(ROWH - top, (em - Math.max(h*60, sm))/60*ROWH), 12);
+const hgt = Math.max(Math.min(ROWH - top, (em - Math.max(h*60, sm))/60*ROWH), 14);
 const tc = isLight(t.color) ? '#2B2B30' : '#ECE4E5';
 html += `<div class="week-task${t.fixed?' fixed':''}" data-id="${t.id}" data-day="${di}"
 style="top:${top}px;height:${hgt}px;background:${t.color};color:${tc};"
@@ -838,7 +876,7 @@ el.style.top = '0px';
 }
 }
 const dy = point.clientY - startY;
-if(resizing) el.style.height = Math.max(12, startHeight + dy) + 'px';
+if(resizing) el.style.height = Math.max(14, startHeight + dy) + 'px';
 else el.style.top = Math.max(0, startTop + Math.round(dy/ROWH)*ROWH) + 'px';
 if(isTouch) e.preventDefault();
 }
@@ -848,7 +886,7 @@ if(!tid || !el) return;
 const date = week[currentDay];
 const h = parseInt(sett('dayStart','06:00'));
 const topPx = parseInt(el.style.top || 0);
-const hgtPx = parseInt(el.style.height || 12);
+const hgtPx = parseInt(el.style.height || 14);
 
 const startMin = h*60 + Math.round(topPx/ROWH)*60;
 const endMin = startMin + Math.max(Math.round(hgtPx/ROWH)*60, 5);
