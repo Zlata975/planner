@@ -70,12 +70,17 @@ transition:background 0.25s,color 0.25s; overscroll-behavior:none;
 .row input { flex:2; min-width:0; }
 .row select { flex:1; min-width:0; }
 input::placeholder { color:var(--sub); }
-.time-pick { display:flex; gap:3px; align-items:center; flex:0 0 auto; }
-.time-pick select { width:52px; padding:8px 2px; text-align:center; }
-.time-pick span { color:var(--sub); font-weight:700; font-size:13px; }
+/* ВРЕМЯ НАЧАЛА — ОДНО ПОЛЕ */
+input[type="time"] {
+color-scheme: var(--time-scheme);
+flex: 0 0 96px !important;
+text-align: center;
+}
+input[type="time"]::-webkit-calendar-picker-indicator { cursor:pointer; opacity:0.85; }
+/* ПРОДОЛЖИТЕЛЬНОСТЬ */
 .dur-pick { display:flex; gap:3px; align-items:center; flex:0 0 auto; }
 .dur-pick input {
-width:44px; padding:8px 2px; text-align:center; flex:0 0 44px!important;
+width:46px; padding:8px 2px; text-align:center; flex:0 0 46px!important;
 -moz-appearance:textfield;
 }
 .dur-pick input::-webkit-outer-spin-button,
@@ -173,6 +178,7 @@ padding:2px 4px;
 .modal label { font-size:11px; color:var(--sub); font-weight:600; }
 .modal input, .modal select, .modal textarea { padding:10px; border-radius:8px; border:1px solid var(--border); background:var(--input); color:var(--text); font-size:13px; outline:none; width:100%; }
 .modal textarea { min-height:100px; resize:vertical; font-family:inherit; }
+.modal input[type="time"] { flex:none !important; width:100% !important; }
 .cat-row { display:flex; gap:6px; }
 .cat-row input { flex:1; }
 .emoji-btn { width:42px; height:42px; border-radius:8px; border:1px solid var(--border); background:var(--input); font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
@@ -211,11 +217,7 @@ padding:2px 4px;
 <select id="tc"></select>
 </div>
 <div class="row">
-<div class="time-pick">
-<select id="th"></select>
-<span>:</span>
-<select id="tm"></select>
-</div>
+<input type="time" id="tt" value="12:00" step="300">
 <div class="dur-pick" title="Продолжительность: часы и минуты">
 <input type="number" id="tdh" value="0" min="0" max="23">
 <span>ч</span>
@@ -503,10 +505,14 @@ const tn = document.getElementById('tn');
 if(!tn) return;
 const name = tn.value.trim();
 const cid = document.getElementById('tc')?.value;
-const hh = parseInt(document.getElementById('th').value) || 0;
-const mm = parseInt(document.getElementById('tm').value) || 0;
 
-// Продолжительность: часы + минуты отдельно
+// Время начала — одно поле «часы:минуты»
+const timeVal = document.getElementById('tt')?.value || '00:00';
+const parts = timeVal.split(':');
+const hh = parseInt(parts[0]) || 0;
+const mm = parseInt(parts[1]) || 0;
+
+// Продолжительность — отдельно часы и минуты
 const dh = parseInt(document.getElementById('tdh')?.value) || 0;
 const dm = parseInt(document.getElementById('tdm')?.value) || 0;
 
@@ -534,8 +540,13 @@ fixed: !!fixed
 });
 saveLocal();
 
+// Сброс полей
 tn.value = '';
-document.getElementById('th').value = '0'; // часы начала сбрасываются
+const dEl = document.getElementById('tdh');
+const mEl = document.getElementById('tdm');
+if(dEl) dEl.value = '0';
+if(mEl) mEl.value = '0';
+
 drawCal();
 }
 
@@ -674,8 +685,8 @@ setupDayDrag(sh);
 document.querySelectorAll('.day-slot').forEach(slot=>{
 slot.addEventListener('click', function(e){
 if(e.target.closest('.task-block')) return;
-document.getElementById('th').value = String(parseInt(this.dataset.h));
-document.getElementById('tm').value = String(parseInt(this.dataset.m));
+const tt = document.getElementById('tt');
+if(tt) tt.value = pad(parseInt(this.dataset.h)) + ':' + pad(parseInt(this.dataset.m));
 document.getElementById('tn')?.focus();
 });
 });
@@ -951,22 +962,21 @@ if(e.target.classList.contains('modal-bg')) e.target.classList.remove('show');
 });
 
 // ================= ИНИЦИАЛИЗАЦИЯ =================
-function fillTimeSelects(){
-const th = document.getElementById('th');
-const tm = document.getElementById('tm');
-th.innerHTML = Array.from({length:24}, (_,h)=> `<option value="${h}">${pad(h)}</option>`).join('');
-tm.innerHTML = Array.from({length:12}, (_,i)=> {
-const m = i*5;
-return `<option value="${m}">${pad(m)}</option>`;
-}).join('');
-th.value = '0';
-tm.value = '0';
-}
-
 function init(){
 loadLocal();
 document.getElementById('app').style.display = 'flex';
-fillTimeSelects();
+
+// Время начала по умолчанию — ближайшие 5 минут
+const now = new Date();
+const tt = document.getElementById('tt');
+if(tt) tt.value = pad(now.getHours()) + ':' + pad(Math.floor(now.getMinutes()/5)*5);
+
+// Продолжительность по умолчанию
+const dEl = document.getElementById('tdh');
+const mEl = document.getElementById('tdm');
+if(dEl) dEl.value = '0';
+if(mEl) mEl.value = '30';
+
 renderCatSelect();
 setView('day');
 
